@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Sistema DLE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="/gestao/css/style.css">
+    <style> body { font-family: 'Inter', sans-serif, system-ui; } </style>
+</head>
+<body class="bg-gray-900 text-gray-300">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white flex flex-col flex-shrink-0">
+            <div class="p-3.5 border-b border-gray-700">
+                <h2 class="text-2xl font-bold">Sistema DLE</h2>
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <% if (typeof plantaId !== 'undefined' && plantaId) { %>
+                    <a href="/gestao/gestao-maquinas?planta=<%= plantaId %>" id="nav-gestao" class="sidebar-link">Gestão da Planta</a>
+                    <a href="/gestao/indicadores?planta=<%= plantaId %>" id="nav-fabrica" class="sidebar-link">Indicador Horas (Fábrica)</a>
+                    <a href="#" class="sidebar-link-disabled">Indicador Horas (RH)</a>
+                    <a href="#" class="sidebar-link-disabled">Indicador Horas (ERP)</a>
+                    <a href="#" class="sidebar-link-disabled">Indicador Cálculo (DLE)</a>
+                <% } else { %>
+                    <div class="p-3 text-gray-500 text-sm">Selecione uma planta.</div>
+                <% } %>
+            </nav>
+            <div class="p-5 border-t border-gray-700 text-xs text-gray-500">
+                Alfa 0.0.1
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-gray-800 shadow-md p-4 flex justify-between items-center border-b border-gray-700">
+                <div class="flex-1"></div>
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-white">
+                        <% if (typeof plantaId !== 'undefined' && plantaId) { %>
+                            Planta <%= plantaId.toUpperCase() %>
+                        <% } else { %>
+                            Seleção de Unidades
+                        <% } %>
+                    </h3>
+                </div>
+                <div class="flex-1 text-right">
+                    <p class="font-semibold text-white"><%= userName %></p>
+                    <p class="text-sm text-gray-400"><%= userCargo %></p>
+                </div>
+            </header>
+
+            <!-- Área de Conteúdo com Scroll e Padding Corrigido -->
+            <main class="flex-1 p-6 lg:p-8 overflow-y-auto">
+                <%- body %>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

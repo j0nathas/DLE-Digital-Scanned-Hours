@@ -1,0 +1,200 @@
+<header>
+    <h2>Controle de Usuários</h2>
+    <div class="user-profile"></div>
+</header>
+
+<style>
+    .admin-wrapper { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        padding: 40px 20px; 
+        animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; 
+    }
+
+    .admin-card { 
+        width: 100%; 
+        max-width: 460px; 
+        background: var(--card); 
+        border: 1px solid var(--border); 
+        border-radius: 16px; 
+        box-shadow: 0 0 60px rgba(99,102,241,0.08), 0 24px 48px rgba(0,0,0,0.5); 
+        overflow: hidden; 
+    }
+
+    .admin-card-header { 
+        padding: 30px; 
+        border-bottom: 1px solid var(--border); 
+        position: relative; 
+        text-align: center; 
+    }
+
+    .admin-card-header::before { 
+        content: ''; 
+        position: absolute; 
+        top: 0; left: 0; right: 0; height: 3px; 
+        background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent)); 
+        background-size: 200% 100%; 
+        animation: shimmer 3s linear infinite; 
+    }
+
+    .admin-card-title { 
+        font-family: 'Rajdhani', sans-serif; 
+        font-size: 22px; 
+        font-weight: 700; 
+        color: #fff; 
+        text-transform: uppercase; 
+        letter-spacing: 1px;
+    }
+
+    .admin-card-title span { color: var(--accent2); }
+
+    .admin-card-subtitle { color: var(--muted); font-size: 12px; margin-top: 5px; }
+
+    .admin-card-body { padding: 30px; }
+
+    .admin-field { margin-bottom: 20px; }
+
+    .admin-label { 
+        display: block; 
+        font-size: 10px; 
+        font-weight: 600; 
+        text-transform: uppercase; 
+        color: var(--muted); 
+        margin-bottom: 8px; 
+        letter-spacing: 1px; 
+    }
+
+    .admin-input, .admin-select { 
+        width: 100%; 
+        background: var(--input-bg); 
+        border: 1px solid rgba(99,102,241,0.2); 
+        border-radius: 8px; 
+        padding: 12px; 
+        color: #fff; 
+        font-size: 14px; 
+        outline: none; 
+    }
+
+    .admin-select { 
+        cursor: pointer; 
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+    }
+
+    .admin-select option { background: #0e1220; color: #fff; }
+
+    .admin-btn { 
+        width: 100%; 
+        background: linear-gradient(135deg, var(--accent), #4f46e5); 
+        color: #fff; 
+        border: none; 
+        border-radius: 8px; 
+        padding: 14px; 
+        font-family: 'Rajdhani'; 
+        font-size: 16px; 
+        font-weight: 600; 
+        text-transform: uppercase; 
+        cursor: pointer; 
+    }
+
+    .alert-sucesso-admin {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #6ee7b7;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        display: none;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="admin-wrapper">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <div class="admin-card-title">⚙️ GESTÃO DE <span>ACESSOS</span></div>
+            <div class="admin-card-subtitle">Autorize novos colaboradores no sistema DLE.</div>
+        </div>
+        
+        <div class="admin-card-body">
+            <div id="msgSucessoAdmin" class="alert-sucesso-admin">
+                <span>✅</span> <span id="txtSucessoAdmin"></span>
+            </div>
+
+            <div class="admin-field">
+                <label class="admin-label">ID Magna (sAMAccountName)</label>
+                <input type="text" id="newLogin" class="admin-input" placeholder="ex: gustsan6" autocomplete="off">
+            </div>
+
+            <div class="admin-field">
+                <label class="admin-label">Planta de Atuação</label>
+                <select id="newPlanta" class="admin-select">
+                    <option value="MLB">MLB — São Bernardo do Campo</option>
+                    <option value="MJN">MJN — Jarinu</option>
+                    <option value="MMB">MMB — Vinhedo</option>
+                </select>
+            </div>
+
+            <div class="admin-field">
+                <label class="admin-label">Nível de Permissão</label>
+                <select id="newPerfil" class="admin-select">
+                    <option value="">Carregando perfis...</option>
+                </select>
+            </div>
+
+            <button class="admin-btn" id="btnAutorizar" onclick="executarAutorizacao()">
+                <span id="txtBtn">Liberar Acesso</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.iniciarGestaoAcessos = async function() {
+        const select = document.getElementById('newPerfil');
+        if (!select) return;
+        try {
+            const res = await window.apiFetch('/api/usuarios/perfis');
+            const perfis = await res.json();
+            select.innerHTML = perfis.map(p => `<option value="${p.id}">${p.nome.toUpperCase()}</option>`).join('');
+        } catch (e) {
+            console.error('Erro:', e);
+            select.innerHTML = '<option value="">Erro ao carregar</option>';
+        }
+    };
+
+    async function executarAutorizacao() {
+        const loginInput = document.getElementById('newLogin');
+        const planta = document.getElementById('newPlanta').value;
+        const perfil_id = document.getElementById('newPerfil').value;
+        const login = loginInput.value.trim();
+
+        if (!login) return alert('Informe o login.');
+
+        document.getElementById('txtBtn').textContent = 'PROCESSANDO...';
+
+        try {
+            const res = await window.apiFetch('/api/usuarios/salvar', {
+                method: 'POST',
+                body: JSON.stringify({ login, planta, perfil_id })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.erro);
+
+            const msg = document.getElementById('msgSucessoAdmin');
+            document.getElementById('txtSucessoAdmin').textContent = data.mensagem;
+            msg.style.display = 'flex';
+            loginInput.value = '';
+            setTimeout(() => msg.style.display = 'none', 5000);
+        } catch (e) {
+            alert('Erro: ' + e.message);
+        } finally {
+            document.getElementById('txtBtn').textContent = 'LIBERAR ACESSO';
+        }
+    };
+
+    window.iniciarGestaoAcessos();
+</script>

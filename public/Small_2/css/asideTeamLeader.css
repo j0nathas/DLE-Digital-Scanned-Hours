@@ -1,0 +1,481 @@
+/*************************************************************************/
+/**************************ASIDE TEAM LEADER******************************/
+/*************************************************************************/
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none;
+    /* Controlado via JS */
+}
+
+.aside-teamleader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95vw;
+    height: auto;
+    background-color: var(--cor-fundo-modal);
+    border-radius: 20px;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    /* Evita que o modal seja maior que a tela */
+}
+
+/* --- Cabeçalho do Modal --- */
+.cabecalho-teamleader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 1px solid var(--cor-borda);
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1000;
+    box-shadow: 0px 20px 30px -10px rgb(226, 226, 226);
+}
+
+.titulo-teamleader-texto:first-child {
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+.titulo-teamleader-texto:last-child {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.sair-teamleader {
+    all: unset;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.botoes-uaps-tl {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 50px 0;
+    overflow: auto;
+}
+
+.botoes-uaps-tl::-webkit-scrollbar {
+    width: 18px;
+}
+
+.botoes-uaps-tl::-webkit-scrollbar-track {
+    border-radius: 15px;
+}
+
+.botoes-uaps-tl::-webkit-scrollbar-thumb {
+    background-color: rgb(196, 217, 240);
+    border-radius: 10px;
+}
+
+.botoes-uaps-tl::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+.botoes-uaps-tl-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.botoes-uaps-tl-botao {
+    all: unset;
+    box-sizing: border-box;
+    width: 285px;
+    height: 180px;
+    background-color: var(--cor-fundo-botao);
+    border-radius: 10px 10px 10px 10px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 20px 0 20px;
+}
+
+.botoes-uaps-tl-botao:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.botao-uaps-tl-selecionado {
+    border-color: var(--cor-verde);
+    color: var(--cor-verde-escuro);
+    background-color: #eafaf1;
+}
+
+.botoes-uaps-tl-guia {
+    position: relative;
+    display: none;
+    width: 285px;
+    background-color: white;
+    height: 50px;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0px 5px 10px 1px rgb(231, 231, 231);
+    font-weight: bold;
+}
+
+.botoes-uaps-tl-guia-selecionado,
+.botoes-uaps-tl-guia-selecionado-segundo {
+    margin: 0;
+    margin-left: 5px;
+    width: 160px;
+    font-weight: 400;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.lista-lados {
+    margin-top: 5px;
+    display: flex;
+    gap: 8px;
+}
+
+/***MUDANÇAS**/
+
+.botao-lado {
+    padding: 15px 15px;
+    font-size: 0.9rem;
+    background-color: rgb(217, 234, 255);
+    border: 2px solid rgb(217, 234, 255);
+    color: rgb(104, 167, 245);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.botao-lado:hover {
+    background-color: rgb(207, 228, 253);
+}
+
+.selecionado {
+    background-color: rgb(201, 252, 201);
+    color: green;
+    font-weight: bold;
+}
+
+
+/***MUDANÇAS**/
+
+.botoes-uaps-tl-guia-editar {
+    display: none;
+    position: absolute;
+    right: 10px;
+}
+
+.overlay-lista {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1199;
+    display: none;
+}
+
+.botoes-uaps-tl-divlista {
+    position: absolute;
+    display: none;
+    width: 98%;
+    height: 90vh;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    background-color: rgb(235, 235, 235);
+    border-radius: 20px;
+}
+
+.botao-pares {
+    all: unset;
+    margin: 20px 0;
+    padding: 20px 50px;
+    background-color: white;
+    border-radius: 50px;
+    z-index: 1050;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.botao-pares-selecionado {
+    background-color: rgb(208, 255, 212);
+    color: green;
+    border: 1px solid rgb(0, 214, 0);
+}
+
+.area-branco {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    padding: 2.5rem 0;
+    background-color: white;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px -20px 20px 3px rgba(70, 70, 70, 0.1);
+    z-index: 1000;
+}
+
+.botoes-uaps-tl-divlista-pesquisa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    padding: 2.5rem 0;
+    background-color: white;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 20px 20px 5px rgba(70, 70, 70, 0.1);
+    z-index: 1000;
+}
+
+.pesquisa-produtos {
+    width: 85%;
+    border-radius: 50px;
+    padding: 1.5rem 0 1.5rem 3rem;
+    border: 2px solid rgb(232, 232, 232);
+    background-color: rgb(232, 232, 232);
+    background-image: url('/images/lupa.svg');
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    background-position: 1rem center;
+    background text-align: center;
+    font-family: var(--fonte-poppins);
+    font-size: 1rem;
+}
+
+.pesquisa-produtos:focus {
+    border: 3px solid rgb(185, 185, 185);
+    outline: none;
+}
+
+.botoes-uaps-tl-produtos {
+    display: flex;
+    flex-wrap: wrap;
+    width: 99%;
+    height: 90%;
+    overflow-y: auto;
+    border-radius: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+.botoes-uaps-tl-produtos-lista {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 1%;
+    width: 31.3%;
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px 0.5px rgb(228, 228, 228);
+    cursor: pointer;
+    transition: transform 0.3s;
+    font-family: var(--fonte-poppins);
+    font-size: 1rem;
+    text-align: center;
+    white-space: normal;
+}
+
+.nome-produto-selecao {
+    width: 100%;
+    height: 150px;
+    border: none;
+    margin: 0;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0.5px rgb(228, 228, 228);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.3s;
+    align-content: center;
+    white-space: normal;
+}
+
+.lista-lados {
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.botoes-uaps-tl-produtos-lista-selecionado {
+    background-color: rgb(212, 255, 212);
+    color: green;
+}
+
+.botoes-uaps-tl-produtos-lista:hover {
+    transform: translateY(-3px);
+    z-index: 100;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Scrollbar personalizada */
+.botoes-uaps-tl-produtos::-webkit-scrollbar {
+    width: 20px;
+}
+
+.botoes-uaps-tl-produtos::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 15px;
+}
+
+.botoes-uaps-tl-produtos::-webkit-scrollbar-thumb {
+    background-color: rgb(204, 225, 247);
+    border-radius: 10px;
+}
+
+.botoes-uaps-tl-produtos::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+
+
+/* --- Rodapé do Modal (Contador e Confirmação) --- */
+.container-contador {
+    width: 100%;
+    padding: 20px 30px;
+    background-color: var(--cor-fundo-botao);
+    border-top: 1px solid var(--cor-borda);
+    border-radius: 0 0 20px 20px;
+    box-sizing: border-box;
+    display: block;
+    z-index: 1000;
+    box-shadow: 0px -20px 30px -10px rgb(235, 235, 235);
+    /* Controlado via JS */
+}
+
+.text-contador-confimar {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.contador {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.contador-confirmar-operadores {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 285px;
+    gap: 20px;
+    z-index: 100;
+    background-color: white;
+    padding: 10px 0 10px 0;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.1);
+}
+
+.contador-confirmar-operadores-text {
+    padding: 0;
+    margin: 0;
+    font-size: 0.8rem;
+    color: gray;
+}
+
+.contador-confirmar-operadores-ad-sub {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.contador-confirmar-scroll-diminuir,
+.contador-confirmar-scroll-aumentar {
+    width: 4.5rem;
+    height: 4.5rem;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 1px solid var(--cor-borda);
+    background-color: hsl(211, 73%, 85%);
+    cursor: pointer;
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+    align-content: center;
+}
+
+.contador-confirmar-scroll-diminuir:active,
+.contador-confirmar-scroll-aumentar:active {
+    background-color: #5bbdff;
+}
+
+.contador-confirmar-numero {
+    font-size: 3.5rem;
+    font-weight: bold;
+    min-width: 70px;
+    text-align: center;
+}
+
+.contador-confirmar-botao {
+    all: unset;
+    display: none;
+    padding: 40px 40px;
+    border-radius: 10px;
+    background-color: var(--cor-verde);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.contador-confirmar-botao:hover {
+    background-color: var(--cor-verde-escuro);
+}
+
+
+/*************************************************************************/
+/**************************ASIDE TEAM LEADER******************************/
+/*************************************************************************/

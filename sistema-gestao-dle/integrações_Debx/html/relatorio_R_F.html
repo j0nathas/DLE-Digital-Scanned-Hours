@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Análise de Refugo e Faturamento</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js" defer></script>
+  <script src="/js/scripts.js" defer></script>
+</head>
+<body>
+
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <span>Carregando dados...</span>
+  </div>
+
+  <aside id="sidebar-filtros" class="sidebar">
+    <div class="sidebar-header">
+      <h3>Filtros Avançados</h3>
+      <button id="btn-close-sidebar" class="close-btn">×</button>
+    </div>
+    <div class="sidebar-content">
+        <div class="filter-group-secondary">
+            
+            <div class="filter-container">
+                <label>Máquina:</label>
+                <div class="multiselect-box">
+                    <div class="multiselect-actions">
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-maquina', true)">Selecionar Tudo</button>
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-maquina', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="filtro-maquina"></div>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <label>Motivo:</label>
+                <div class="multiselect-box">
+                    <div class="multiselect-actions">
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-motivo', true)">Selecionar Tudo</button>
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-motivo', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="filtro-motivo"></div>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <label>Material:</label>
+                <div class="multiselect-box">
+                    <div class="multiselect-actions">
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-material', true)">Selecionar Tudo</button>
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-material', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="filtro-material"></div>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <label>Turno:</label>
+                <div class="multiselect-box">
+                    <div class="multiselect-actions">
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-turno', true)">Selecionar Tudo</button>
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-turno', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="filtro-turno"></div>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <label>Projeto:</label>
+                <div class="multiselect-box">
+                    <div class="multiselect-actions">
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-projeto', true)">Selecionar Tudo</button>
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-projeto', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="filtro-projeto"></div>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <label>Tipo Prod.:</label>
+                <div class="multiselect-box">
+                    <div class="multiselect-actions">
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-tipoprod', true)">Selecionar Tudo</button>
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-tipoprod', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="filtro-tipoprod"></div>
+                </div>
+            </div>
+
+            <div class="filter-container">
+                <label>Negócio:</label>
+                <div class="multiselect-box">
+                    <div class="multiselect-actions">
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-negocio', true)">Selecionar Tudo</button>
+                        <button type="button" class="btn-select-all" onclick="toggleFilterCheckboxes('filtro-negocio', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="filtro-negocio"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+  </aside>
+
+  <header class="main-header">
+    <div class="header-top-row">
+        <div class="filter-group-main">
+            <div id="btn-group-planta" class="button-group tab-like planta-selector">
+                <button class="ativo" data-planta="olsa">MLB</button>
+                <button data-planta="jarinu">MJN</button>
+            </div>
+            <label>Período:</label>
+            <input type="date" id="startDate" class="date-input">
+            <span>a</span>
+            <input type="date" id="endDate" class="date-input">
+        </div>
+        <h1 id="dashboard-title">Dashboard Refugo & Faturamento - OLSA</h1>
+        <div class="header-actions">
+           <button id="btn-update" class="button-primary">Atualizar</button>
+           <button id="btn-open-sidebar" class="button-secondary">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3 4h18v2H3V4zm6 7h12v2H9v-2zm-6 7h18v2H3v-2z"/></svg>
+             Filtros
+           </button>
+        </div>
+    </div>
+    <div class="header-bottom-row">
+        <div class="button-group-container">
+            <div id="btn-group-ano" class="button-group"></div>
+        </div>
+        <div class="button-group-container-grid">
+            <div id="btn-group-mes" class="button-group grid-mes"></div>
+        </div>
+        <div class="button-group-container">
+            <div id="btn-group-ff" class="button-group"></div>
+        </div>
+        <div class="button-group-container">
+            <div id="btn-group-setor" class="button-group"></div>
+        </div>
+         <div class="button-group-container">
+            <div id="btn-group-categoria" class="button-group tab-like">
+                <button class="btn-filtro-categoria ativo" data-tipo="todos">Geral</button>
+                <button class="btn-filtro-categoria" data-tipo="engenharia">Engenharia</button>
+                <button class="btn-filtro-categoria" data-tipo="qualidade">Qualidade/Dev</button>
+                <button class="btn-filtro-categoria" data-tipo="obsoleto">Obsoleto</button>
+            </div>
+        </div>
+    </div>
+  </header>
+
+<main class="dashboard-grid">
+    <div class="card chart-daily-value">
+        <div class="card-header">
+            <h2 id="daily-chart-title">Refugo Diário (Valor)</h2>
+            <div class="card-header-actions">
+                <div class="kpi-display" id="kpi-refugo-container">
+                    <span class="kpi-value-main" id="kpi-current-percent">--%</span>
+                    <span class="kpi-details" id="kpi-details-text">T: --% (--)</span>
+                </div>
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span>
+                    <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div>
+        <div id="chart-daily-container" class="chart-container"></div>
+    </div>
+    
+    <div class="card chart-monthly-value">
+        <div class="card-header">
+            <h2 id="monthly-chart-title">Refugo Mensal (Valor)</h2>
+             <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span>
+                    <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div>
+        <div id="chart-monthly-container" class="chart-container"></div>
+    </div>
+
+    <div class="card chart-monthly-pct">
+        <div class="card-header">
+            <h2>Refugo Mensal (%)</h2>
+            <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span>
+                    <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div>
+        <div id="chart-monthly-pct-container" class="chart-container"></div>
+    </div>
+
+    <div class="card chart-daily-value">
+        <div class="card-header">
+            <h2>Faturamento Diário (Valor)</h2>
+            <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span>
+                    <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div>
+        <div id="chart-faturamento-diario" class="chart-container"></div>
+    </div>
+
+    <div class="card chart-monthly-value">
+        <div class="card-header">
+            <h2 id="faturamento-mensal-titulo">Faturamento Mensal (Valor)</h2>
+            <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span>
+                    <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div>
+        <div id="chart-faturamento-mensal" class="chart-container"></div>
+    </div>
+
+    <div class="card chart-monthly-pct">
+        <div class="card-header">
+            <h2>Faturamento Mensal (% da Meta)</h2>
+            <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span>
+                    <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div>
+        <div id="chart-faturamento-mensal-pct" class="chart-container"></div>
+    </div>
+
+    <div class="card chart-pie">
+        <div class="card-header"> <h2>Refugo por FF</h2>
+             <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span> <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div> <div id="chart-pie-ff" class="chart-container"></div>
+    </div>
+    <div class="card chart-pie">
+        <div class="card-header"> <h2>Refugo por Setor</h2>
+             <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span> <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div> <div id="chart-pie-setor" class="chart-container"></div>
+    </div>
+    <div class="card chart-pie">
+        <div class="card-header"> <h2>Refugo por Turno</h2>
+             <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span> <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div> <div id="chart-pie-turno" class="chart-container"></div>
+    </div>
+    <div class="card chart-pie">
+        <div class="card-header"> <h2>Refugo por Negócio</h2>
+             <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span> <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div> <div id="chart-pie-negocio" class="chart-container"></div>
+    </div>
+
+    <div class="card chart-project-breakdown">
+        <div class="card-header">
+            <h2>Top 5 Projetos por Refugo e Motivo</h2>
+            <div class="card-header-actions">
+                <button class="btn-expand-chart" aria-label="Expandir gráfico">
+                    <span class="text-expand">expandir</span>
+                    <span class="text-collapse" style="display:none;">recolher</span>
+                </button>
+            </div>
+        </div>
+        <div id="chart-projeto-motivo" class="chart-container"></div>
+    </div>
+
+</main>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('sidebar-filtros');
+        const btnOpen = document.getElementById('btn-open-sidebar');
+        const btnClose = document.getElementById('btn-close-sidebar');
+        if(sidebar && btnOpen && btnClose) {
+            btnOpen.addEventListener('click', (event) => { event.stopPropagation(); sidebar.classList.add('open'); });
+            btnClose.addEventListener('click', () => { sidebar.classList.remove('open'); });
+            document.addEventListener('click', (event) => {
+                if (sidebar.classList.contains('open') && !sidebar.contains(event.target) && !btnOpen.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        }
+    });
+  </script>
+</body>
+</html>

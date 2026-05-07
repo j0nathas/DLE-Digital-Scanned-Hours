@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Inicial - Apontamento</title>
+    <link rel="stylesheet" href="/injecao_small/css/telaInicial.css">
+    <link rel="stylesheet" href="/injecao_small/css/asideTeamLeader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+
+    <header>
+         <div class="carrossel-container">
+            <div class="carrossel-inner" id="carrosselInner">
+            <div class="frase">Pense <strong class="grande">GRANDE</strong></div>
+            <div class="frase">Seja <strong class="colaborativo">COLABORATIVO</strong></div>
+            <div class="frase"><strong class="nunca">NUNCA</strong> se acomode</div>
+            <div class="frase">Assuma <strong class="responsabilidade">RESPONSABILIDADE</strong></div>
+            </div>
+         </div>
+    </header>    
+    <main class="linha-e-logo">
+        <p class="texto horario" id="hora-atual">Hora Atual</p>
+        <img src="/images/magna-logo.png" alt="Ícone Magna" class="logo-magna" width="600">
+        <p class="texto linha" id="linha-producao"><strong>Injeção</strong></p>
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto"> <strong>Team Leader:</strong> Aproxime o cartão de identificação do leitor para <strong>INICIAR</strong> a produção.</p>
+                <img src="/images/scanner.png" alt="" width="150" class="scanner-cartao">
+            </section>
+        </div>
+    </main>
+
+    <div id="overlay" class="overlay"></div>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+        <div id="container-botoes" class="botoes-injetoras">
+
+    <button class="botoes-injetoras-botao" data-produto="s.I01h1k160">
+        <p>s.I<strong class="destaque-injetora">01</strong>h1k160</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I02h1k200">
+        <p>s.I<strong class="destaque-injetora">02</strong>h1k200</p> 
+    </button>
+
+
+    <!-- CONJUNTO 03 -->
+    <div class="div-botoes-conjunto" data-div="s.I03h1k100">
+        <button class="botoes-injetoras-botao-conjunto" data-produto="s.I03h1k100">
+            <p>s.I<strong class="destaque-injetora">03</strong>h3k100</p> 
+        </button>
+
+        <section class="botoes-maquinas-conjunto">
+            <p class="botoes-maquinas-conjunto-text">
+                Produzirá com o mesmo operador na s.I09h1k86?
+            </p>
+            <div>
+                <button class="botoes-maquinas-conjunto-botao btn-sim">SIM</button>
+                <button class="botoes-maquinas-conjunto-botao btn-nao">NÃO</button>
+            </div>
+        </section>
+    </div>
+
+
+    <button class="botoes-injetoras-botao" data-produto="s.I04h1k120">
+        <p>s.I<strong class="destaque-injetora">04</strong>h1k120</p> 
+    </button>
+
+
+    <!-- CONJUNTO 05 -->
+    <div class="div-botoes-conjunto" data-div="s.I05h1k65">
+        <button class="botoes-injetoras-botao-conjunto" data-produto="s.I05h1k65">
+            <p>s.I<strong class="destaque-injetora">05</strong>h1k65</p> 
+        </button>
+
+        <section class="botoes-maquinas-conjunto">
+            <p class="botoes-maquinas-conjunto-text">
+                Produzirá com o mesmo operador na s.I08h1k65?
+            </p>
+            <div>
+                <button class="botoes-maquinas-conjunto-botao btn-sim">SIM</button>
+                <button class="botoes-maquinas-conjunto-botao btn-nao">NÃO</button>
+            </div>
+        </section>
+    </div>
+
+
+    <button class="botoes-injetoras-botao" data-produto="s.I06h1k150">
+        <p>s.I<strong class="destaque-injetora">06</strong>h1k150</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I07h1k150">
+        <p>s.I<strong class="destaque-injetora">07</strong>h1k150</p> 
+    </button>
+
+
+    <!-- CONJUNTO 08 -->
+    <div class="div-botoes-conjunto" data-div="s.I08h1k65">
+        <button class="botoes-injetoras-botao-conjunto" data-produto="s.I08h1k65">
+            <p>s.I<strong class="destaque-injetora">08</strong>h1k65</p> 
+        </button>
+
+        <section class="botoes-maquinas-conjunto">
+            <p class="botoes-maquinas-conjunto-text">
+                Produzirá com o mesmo operador na s.I05h1k65?
+            </p>
+            <div>
+                <button class="botoes-maquinas-conjunto-botao btn-sim">SIM</button>
+                <button class="botoes-maquinas-conjunto-botao btn-nao">NÃO</button>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- CONJUNTO 09 -->
+    <div class="div-botoes-conjunto" data-div="s.I09h1k86">
+        <button class="botoes-injetoras-botao-conjunto" data-produto="s.I09h1k86">
+            <p>s.I<strong class="destaque-injetora">09</strong>h1k86</p> 
+        </button>
+
+        <section class="botoes-maquinas-conjunto">
+            <p class="botoes-maquinas-conjunto-text">
+                Produzirá com o mesmo operador na s.I03h1k100?
+            </p>
+            <div>
+                <button class="botoes-maquinas-conjunto-botao btn-sim">SIM</button>
+                <button class="botoes-maquinas-conjunto-botao btn-nao">NÃO</button>
+            </div>
+        </section>
+    </div>
+
+
+    <button class="botoes-injetoras-botao" data-produto="s.I10h1k220">
+        <p>s.I<strong class="destaque-injetora">10</strong>h1k220</p> 
+    </button>
+
+
+    <!-- CONJUNTO 11 -->
+    <div class="div-botoes-conjunto" data-div="s.I11h1k120">
+        <button class="botoes-injetoras-botao-conjunto" data-produto="s.I11h1k120">
+            <p>s.I<strong class="destaque-injetora">11</strong>h1k120</p> 
+        </button>
+
+        <section class="botoes-maquinas-conjunto">
+            <p class="botoes-maquinas-conjunto-text">
+                Produzirá com o mesmo operador na s.I12h1k120?
+            </p>
+            <div>
+                <button class="botoes-maquinas-conjunto-botao btn-sim">SIM</button>
+                <button class="botoes-maquinas-conjunto-botao btn-nao">NÃO</button>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- CONJUNTO 12 -->
+    <div class="div-botoes-conjunto" data-div="s.I12h1k120">
+        <button class="botoes-injetoras-botao-conjunto" data-produto="s.I12h1k120">
+            <p>s.I<strong class="destaque-injetora">12</strong>h1k120</p> 
+        </button>
+
+       
+
+        <section class="botoes-maquinas-conjunto">
+            <p class="botoes-maquinas-conjunto-text">
+                Produzirá com o mesmo operador na s.I11h1k120?
+            </p>
+            <div>
+                <button class="botoes-maquinas-conjunto-botao btn-sim">SIM</button>
+                <button class="botoes-maquinas-conjunto-botao btn-nao">NÃO</button>
+            </div>
+        </section>
+    </div>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I13h1k320">
+        <p>s.I<strong class="destaque-injetora">13</strong>h1k320</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I14h1k160">
+        <p>s.I<strong class="destaque-injetora">14</strong>h1k160</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I15h1k140">
+        <p>s.I<strong class="destaque-injetora">15</strong>h1k140</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I16h1k200">
+        <p>s.I<strong class="destaque-injetora">16</strong>h1k200</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I17h1k220">
+        <p>s.I<strong class="destaque-injetora">17</strong>h1k220</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I18h1k220">
+        <p>s.I<strong class="destaque-injetora">18</strong>h1k220</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I19h1k220">
+        <p>s.I<strong class="destaque-injetora">19</strong>h1k220</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I20h1k320">
+        <p>s.I<strong class="destaque-injetora">20</strong>h1k320</p> 
+    </button>
+
+    <button class="botoes-injetoras-botao" data-produto="s.I28h1k320">
+        <p>s.I<strong class="destaque-injetora">28</strong>h1k320</p> 
+    </button>
+
+</div>
+
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+                     <button class="selecionar-todas">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+                     <div class="legenda-recarregar">
+                        <img class="legenda-recarregar-img" src="/images/recarregar.svg" width="45" alt="">
+                        <p class="legenda-recarregar-text">Desagrupar ou voltar seleção de agrupamento.</p>
+                     </div>
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+        </div>
+    </aside>
+
+    <footer>
+        <p class="texto turno" id="turno-atual">Turno Atual</p>
+        <p class="texto data" id="data-atual">Data Atual</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <script type="module" src="/injecao_small/js/telaInicial.js"></script>
+    <script type="module" src="/injecao_small/js/asideTeamLeader.js"></script> 
+    
+    <link rel="stylesheet" href="/toast/toastr-custom.css">
+
+</body>
+</html>

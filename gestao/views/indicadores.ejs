@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard por Setores</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        /* Estilo para um scrollbar mais bonito no tema escuro */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-300 font-sans">
+
+    <header class="bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <div>
+                <a href="/gestao/selecao" class="text-indigo-400 hover:text-indigo-300 text-sm mb-1 inline-flex items-center">
+                    &larr; Voltar para seleção
+                </a>
+                <h1 id="header-title" class="text-2xl font-bold text-white">Dashboard Analítico</h1>
+            </div>
+            <!-- NOVO FILTRO DE PERÍODO -->
+            <div class="flex items-center space-x-2 text-sm">
+                <label for="filtro-data-inicio" class="font-medium text-gray-400">Período:</label>
+                <input type="date" id="filtro-data-inicio" class="bg-gray-700 border-gray-600 text-white rounded-md">
+                <span class="text-gray-400">a</span>
+                <input type="date" id="filtro-data-fim" class="bg-gray-700 border-gray-600 text-white rounded-md">
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <h2 id="page-subtitle" class="text-4xl font-extrabold text-white">Visão Geral dos Setores</h2>
+            <p id="planta-name" class="text-gray-400 mt-1">Carregando dados operacionais...</p>
+        </div>
+
+        <div id="setores-container" class="space-y-8">
+            <!-- Template de Loading -->
+            <div id="loading-spinner" class="text-center py-10">
+                <svg class="animate-spin h-8 w-8 text-indigo-400 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <p class="mt-3 text-gray-400">Buscando dados na galáxia...</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="/gestao/js/indicadores.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Inicial - Apontamento</title>
+    <link rel="stylesheet" href="/Injecao/css/telaInicial.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+
+    <header>
+         <div class="carrossel-container">
+            <div class="carrossel-inner" id="carrosselInner">
+            <div class="frase">Pense <strong class="grande">GRANDE</strong></div>
+            <div class="frase">Seja <strong class="colaborativo">COLABORATIVO</strong></div>
+            <div class="frase"><strong class="nunca">NUNCA</strong> se acomode</div>
+            <div class="frase">Assuma <strong class="responsabilidade">RESPONSABILIDADE</strong></div>
+            </div>
+         </div>
+    </header>    
+    <main class="linha-e-logo">
+        <p class="texto horario" id="hora-atual">Hora Atual</p>
+        <img src="/images/magna-logo.png" alt="Ícone Magna" class="logo-magna" width="600">
+        <p class="texto linha" id="linha-producao"><strong>Injeção</strong></p>
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto"> <strong>Team Leader:</strong> Aproxime o cartão de identificação do leitor para <strong>INICIAR</strong> a produção.</p>
+                <img src="/images/scanner.png" alt="" width="150" class="scanner-cartao">
+            </section>
+        </div>
+    </main>
+
+    <div id="overlay" class="overlay"></div>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+        <div class="botoes-injetoras">
+            <button class="botoes-injetoras-botao" data-produto="s.I21h1k530">s.I<strong class="destaque-injetora">21</strong>h1k530</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I22h1k1300">s.I<strong class="destaque-injetora">22</strong>h1k1300</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I23h3k1000">s.I<strong class="destaque-injetora">23</strong>h3k1000</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I24h1k1300">s.I<strong class="destaque-injetora">24</strong>h1k1300</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I25h3k1000">s.I<strong class="destaque-injetora">25</strong>h3k1000</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I26h1k530">s.I<strong class="destaque-injetora">26</strong>h1k530</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I27h2k1000">s.I<strong class="destaque-injetora">27</strong>h2k1000</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I29h1k1300">s.I<strong class="destaque-injetora">29</strong>h1k1300</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I30h2k1700">s.I<strong class="destaque-injetora">30</strong>h2k1700</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I31h2k1000">s.I<strong class="destaque-injetora">31</strong>h2k1000</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I32h1k1000">s.I<strong class="destaque-injetora">32</strong>h1k1000</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I33h2k1000">s.I<strong class="destaque-injetora">33</strong>h2k1000</button>
+            <button class="botoes-injetoras-botao" data-produto="s.I34h1k1300">s.I<strong class="destaque-injetora">34</strong>h1k1300</button>
+        </div>
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+            <div class="contador">
+                     <button class="selecionar-todas">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+            </div>
+        </div>
+    </aside>
+
+    <footer>
+        <p class="texto turno" id="turno-atual">Turno Atual</p>
+        <p class="texto data" id="data-atual">Data Atual</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <script type="module" src="/Injecao/js/telaInicial.js"></script>
+    
+    <link rel="stylesheet" href="/toast/toastr-custom.css">
+
+</body>
+</html>

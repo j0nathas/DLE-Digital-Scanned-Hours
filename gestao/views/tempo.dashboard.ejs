@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Tempo por Máquina</title>
+    <!-- Você pode linkar um CSS externo aqui se preferir, ex: /gestao/css/tempo-dashboard.css -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #495057; }
+        .container { max-width: 1200px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: #343a40; border-bottom: 2px solid #dee2e6; padding-bottom: 15px; margin-top: 0; font-size: 28px; }
+        .filtros { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-bottom: 30px; padding: 20px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; }
+        .filtros label { font-weight: 600; margin-right: 5px; }
+        .filtros input, .filtros select, .filtros button { padding: 10px 15px; border-radius: 5px; border: 1px solid #ced4da; font-size: 16px; transition: all 0.2s; }
+        .filtros input:focus, .filtros select:focus { border-color: #80bdff; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); outline: none; }
+        .filtros button { background-color: #007bff; color: white; cursor: pointer; border: none; font-weight: bold; }
+        .filtros button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        thead th { background-color: #343a40; color: white; position: sticky; top: 0; }
+        tbody tr:nth-child(even) { background-color: #f8f9fa; }
+        tbody tr:hover { background-color: #e9ecef; }
+        #loading, #no-data { text-align: center; padding: 40px; font-size: 18px; color: #6c757d; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard de Tempo por Máquina</h1>
+        <div class="filtros">
+            <div>
+                <label for="data-filtro">Data:</label>
+                <input type="date" id="data-filtro">
+            </div>
+            <div>
+                <label for="local-filtro">Local:</label>
+                <select id="local-filtro">
+                    <option value="Todos">Todos</option>
+                    <option value="MLB">MLB (Sorocaba)</option>
+                    <option value="Jarinu">Jarinu</option>
+                    <option value="MMB">MMB (Vinhedo)</option>
+                </select>
+            </div>
+            <button id="btn-filtrar">Filtrar</button>
+        </div>
+
+        <div id="loading">Buscando dados, por favor aguarde...</div>
+        <div id="no-data">Nenhum apontamento encontrado para os filtros selecionados.</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Máquina / Linha</th>
+                    <th>Tempo Total de Apontamento (HH:MM:SS)</th>
+                </tr>
+            </thead>
+            <tbody id="results-tbody">
+                <!-- Os resultados serão inseridos aqui dinamicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dataFiltro = document.getElementById('data-filtro');
+            const localFiltro = document.getElementById('local-filtro');
+            const btnFiltrar = document.getElementById('btn-filtrar');
+            const resultsTbody = document.getElementById('results-tbody');
+            const loadingDiv = document.getElementById('loading');
+            const noDataDiv = document.getElementById('no-data');
+
+            // Define a data de hoje como valor padrão
+            dataFiltro.value = new Date().toISOString().split('T')[0];
+
+            const fetchData = async () => {
+                const data = dataFiltro.value;
+                const local = localFiltro.value;
+
+                if (!data) {
+                    alert('Por favor, selecione uma data para filtrar.');
+                    return;
+                }
+
+                resultsTbody.innerHTML = '';
+                loadingDiv.style.display = 'block';
+                noDataDiv.style.display = 'none';
+
+                try {
+                    // A URL da API deve corresponder à rota que definiremos no server.js
+                    const response = await fetch(`/api/gestao/dashboard-tempo-dados?data=${data}&local=${local}`);
+                    if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                    
+                    const dados = await response.json();
+                    loadingDiv.style.display = 'none';
+
+                    if (dados.length === 0) {
+                        noDataDiv.style.display = 'block';
+                    } else {
+                        dados.forEach(item => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.linha}</td>
+                                <td>${item.tempoTotal}</td>
+                            `;
+                            resultsTbody.appendChild(row);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Falha ao buscar dados do dashboard:', error);
+                    loadingDiv.style.display = 'none';
+                    noDataDiv.innerText = 'Ocorreu um erro ao carregar os dados. Verifique o console.';
+                    noDataDiv.style.display = 'block';
+                }
+            };
+
+            btnFiltrar.addEventListener('click', fetchData);
+            
+            // Carrega os dados da data atual assim que a página abre
+            fetchData();
+        });
+    </script>
+</body>
+</html>

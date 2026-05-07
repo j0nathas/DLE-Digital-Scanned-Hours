@@ -1,0 +1,54 @@
+<header>
+    <h2>Indicador de Horas MOD - Painel por Planta</h2>
+    <div class="user-profile">Veloso, Jonathan</div>
+</header>
+
+<div class="dashboard">
+    <div class="filter-bar">
+        <div class="filter-group-main">
+            <button id="btn-rh-voltar-global" class="btn-filter btn-back hidden">
+                <i class="fas fa-arrow-up"></i> Subir Nível
+            </button>
+            <div class="filter-item">
+                <label>Data Início</label>
+                <input type="date" id="rh-startDate">
+            </div>
+            <div class="filter-item">
+                <label>Data Fim</label>
+                <input type="date" id="rh-endDate">
+            </div>
+            <button id="btn-filtrar-rh" class="btn-filter btn-primary">
+                <i class="fas fa-sync-alt"></i> Aplicar Filtro
+            </button>
+        </div>
+    </div>
+
+    <div class="rh-dashboard-container">
+        <!-- LINHA 1: EVOLUÇÃO -->
+        <div class="rh-row">
+            <div class="rh-box"><div class="rh-box-header">MLB: Evolução</div><div id="chart-bar-MLB" class="rh-chart-container"></div></div>
+            <div class="rh-box"><div class="rh-box-header">MJN: Evolução</div><div id="chart-bar-MJN" class="rh-chart-container"></div></div>
+            <div class="rh-box"><div class="rh-box-header">MMB: Evolução</div><div id="chart-bar-MMB" class="rh-chart-container"></div></div>
+        </div>
+
+        <!-- LINHA 2: MIX CENTROS DE CUSTO -->
+        <div class="rh-row">
+            <div class="rh-box"><div class="rh-box-header">MLB: Mix Centros de Custo</div><div id="chart-donut-MLB" class="rh-chart-container"></div></div>
+            <div class="rh-box"><div class="rh-box-header">MJN: Mix Centros de Custo</div><div id="chart-donut-MJN" class="rh-chart-container"></div></div>
+            <div class="rh-box"><div class="rh-box-header">MMB: Mix Centros de Custo</div><div id="chart-donut-MMB" class="rh-chart-container"></div></div>
+        </div>
+
+        <!-- LINHA 3: TABELAS DETALHADAS -->
+        <div class="rh-row">
+            <div class="rh-box rh-table-container">
+                <div class="rh-table-mini"><table id="table-MLB"><thead><tr><th>CC Agrup.</th><th>Original</th><th style="text-align:right">Horas</th></tr></thead><tbody></tbody></table></div>
+            </div>
+            <div class="rh-box rh-table-container">
+                <div class="rh-table-mini"><table id="table-MJN"><thead><tr><th>CC Agrup.</th><th>Original</th><th style="text-align:right">Horas</th></tr></thead><tbody></tbody></table></div>
+            </div>
+            <div class="rh-box rh-table-container">
+                <div class="rh-table-mini"><table id="table-MMB"><thead><tr><th>CC Agrup.</th><th>Original</th><th style="text-align:right">Horas</th></tr></thead><tbody></tbody></table></div>
+            </div>
+        </div>
+    </div>
+</div>

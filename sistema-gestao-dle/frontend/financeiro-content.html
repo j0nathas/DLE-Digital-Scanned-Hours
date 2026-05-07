@@ -1,0 +1,29 @@
+<!--frontend/financeiro-content.html -->
+<header>
+    <h2>Indicador Horas (Financeiro)</h2>
+    <div class="user-profile">Veloso, Jonathan</div>
+</header>
+<div class="dashboard" id="dashboard-financeiro" style="height: 100%; display: flex; flex-direction: column; overflow: hidden; padding: 1.5rem;">
+    <div class="dle-filter-card" style="flex-shrink: 0; margin-bottom: 1rem;">
+        <div class="dle-filter-header"><i class="fas fa-calculator"></i> Parâmetros de Análise</div>
+        <div class="dle-inputs-row">
+            <div class="dle-input-group"><label>Data Início</label><input type="date" id="startDate"></div>
+            <div class="dle-input-group"><label>Data Fim</label><input type="date" id="endDate"></div>
+            <div class="dle-input-group"><label>Agrupar Por</label><select id="select-agrupamento"><option value="planta">Planta</option><option value="setor" selected>Setor / Centro de Custo</option><option value="dia">Dia</option></select></div>
+            <div class="dle-input-group" style="flex: 0 0 150px; display: flex; align-items: flex-end; gap: 10px;">
+                <button id="btn-filtrar-financeiro" class="btn-primary w-100" style="height: 38px;"><i class="fas fa-search"></i> Calcular</button>
+                <div id="loading-spinner" class="loading-spinner-inline hidden" style="margin-bottom: 8px; display: flex; align-items: center; gap: 5px;"><i class="fas fa-stopwatch spinning" style="color: var(--accent-yellow);"></i><span id="loading-percentage" style="font-size: 0.8rem; color: #fff;">0%</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="table-grid" id="main-financeiro-grid" style="flex-grow: 1; overflow-y: auto; padding-right: 5px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem;">
+        <div class="grid-cell" style="background: var(--bg-card); border-radius: 8px; padding: 1.2rem; border: 1px solid var(--border-color); display: flex; flex-direction: column;">
+            <h3>Resumo por Grupo</h3>
+            <div class="content-wrapper" style="flex-grow: 1; display: flex; flex-direction: column; gap: 1rem;"><div class="chart-wrapper" id="chart-resumo-grupo" style="height: 250px; width: 100%;"></div><div class="table-wrapper" style="flex-grow: 1; overflow-y: auto;"><table id="tabelaGrupo"><thead><tr><th>Planta</th><th>Grupo</th><th>HH Gerada</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></div>
+        </div>
+        <div class="grid-cell" style="background: var(--bg-card); border-radius: 8px; padding: 1.2rem; border: 1px solid var(--border-color); display: flex; flex-direction: column;">
+            <h3 id="periodoInfo">Detalhado por Centro de Custo</h3>
+            <div class="content-wrapper" style="flex-grow: 1; display: flex; flex-direction: column; gap: 1rem;"><div class="chart-container-scrollable" style="overflow-y: auto; max-height: 400px;"><div class="chart-wrapper" id="chart-detalhado-cc" style="height: 400px; width: 100%;"></div></div><div class="table-wrapper" style="flex-grow: 1; overflow-y: auto;"><table id="tabelaFiltrado"><thead><tr><th>Planta</th><th>Centro de Custo</th><th>HH Gerada</th><th>Grupo</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></div>
+        </div>
+    </div>
+</div>

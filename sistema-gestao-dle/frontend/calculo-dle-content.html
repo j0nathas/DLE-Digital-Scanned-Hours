@@ -1,0 +1,79 @@
+<header>
+    <h2>Cálculo DLE</h2>
+    <div class="user-profile"></div>
+</header>
+<div class="dashboard" style="height: 100%; display: flex; flex-direction: column; overflow: hidden; padding: 1.5rem;">
+    <!-- CARD DE FILTROS: Re-alinhado com o seletor de Planta -->
+    <div class="dle-filter-card" style="flex-shrink: 0; margin-bottom: 1rem;">
+        <div class="dle-filter-header">
+            <i class="fas fa-calculator"></i> Parâmetros de Análise
+        </div>
+        <div class="dle-inputs-row" style="display: flex; gap: 1rem; align-items: flex-end; padding: 10px;">
+            <div class="dle-input-group" style="flex: 1;">
+                <label style="display: block; font-size: 0.75rem; color: #81a1c1; margin-bottom: 5px; text-transform: uppercase;">Planta</label>
+                <select id="dle-plant-select" class="form-select" style="background: #1a1d27; color: #fff; border: 1px solid #2d3241; padding: 8px; border-radius: 4px; width: 100%; outline: none;">
+                    <option value="TODAS">TODAS AS PLANTAS</option>
+                    <option value="MLB">MLB</option>
+                    <option value="MJN">MJN</option>
+                    <option value="MMB">MMB</option>
+                </select>
+            </div>
+            <div class="dle-input-group" style="flex: 1;">
+                <label style="display: block; font-size: 0.75rem; color: #81a1c1; margin-bottom: 5px; text-transform: uppercase;">Data Início</label>
+                <input type="text" id="dle-start-date" placeholder="Selecione a data" style="width: 100%;">
+            </div>
+            <div class="dle-input-group" style="flex: 1;">
+                <label style="display: block; font-size: 0.75rem; color: #81a1c1; margin-bottom: 5px; text-transform: uppercase;">Data Fim</label>
+                <input type="text" id="dle-end-date" placeholder="Selecione a data" style="width: 100%;">
+            </div>
+            <div class="dle-input-group" style="flex: 0 0 150px;">
+                <button id="btn-calcular-dle" class="btn-primary w-100" style="height: 38px;">
+                    <i class="fas fa-search"></i> Calcular
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRID DE KPIs GLOBAIS -->
+    <div style="flex-shrink: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem; margin-bottom: 1rem;">
+        <div class="dle-kpi-card financeiro">
+            <div class="dle-kpi-title">Earned Hours</div>
+            <div class="dle-kpi-value" id="val-earned">0.0 h</div>
+        </div>
+        <div class="dle-kpi-card fabrica">
+            <div class="dle-kpi-title">Scanned Hours</div>
+            <div class="dle-kpi-value" id="val-scanned">0.0 h</div>
+        </div>
+        <div class="dle-kpi-card">
+            <div class="dle-kpi-title">Paid Hours</div>
+            <div class="dle-kpi-value" id="val-paid">0.0 h</div>
+        </div>
+        <div class="dle-kpi-card global">
+            <div class="dle-kpi-title">DLE Earned %</div>
+            <div class="dle-kpi-value" id="kpi-dle-earned">0.00 %</div>
+        </div>
+        <div class="dle-kpi-card">
+            <div class="dle-kpi-title">DLE Accuracy %</div>
+            <div class="dle-kpi-value" id="kpi-dle-accuracy">0.00 %</div>
+        </div>
+    </div>
+
+    <!-- CARD DO RESULTADO FINAL -->
+    <div class="dle-card" style="text-align: center; margin-bottom: 1rem; flex-shrink: 0;">
+        <h3 style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Resultado DLE Final</h3>
+        <div id="res-dle-final" style="font-size: 1.5rem; font-weight: bold; color: var(--text-primary);">0.00 %</div>
+    </div>
+
+    <!-- CONTÊINER DINÂMICO DE TABELAS -->
+    <div id="dle-main-tables-container" class="dle-tables-wrapper" style="flex-grow: 1; overflow-y: auto; padding-right: 5px;">
+        <div class="text-center p-4 opacity-50" style="background: var(--bg-dark); border-radius: 12px; border: 1px dashed var(--border-color);">
+            Selecione a planta, o período e clique em <b>Calcular</b> para gerar os dados.
+        </div>
+    </div>
+
+    <!-- Elemento oculto para compatibilidade -->
+    <div id="table-dle-body" style="display:none;"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="js/calculo-dle.js" defer></script>

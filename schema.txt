@@ -1,0 +1,46 @@
+﻿meu-projeto/
+├── node_modules/
+├── public/             # Arquivos estáticos do front-end (CSS, JS do cliente, imagens)
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── main.js
+│   └── images/
+│       └── logo.png
+│
+├── src/                # TODO o código do seu back-end (servidor)
+│   ├── config/         # Arquivos de configuração (banco de dados, variáveis de ambiente)
+│   │   └── db.js
+│   ├── controllers/    # A lógica que cada rota executa (ex: buscar usuário, criar produto)
+│   │   └── userController.js
+│   ├── models/         # Definição dos dados para o banco de dados (ex: Schema de Usuário)
+│   │   └── userModel.js
+│   ├── routes/         # Definição das rotas da sua API (ex: /api/users, /api/products)
+│   │   └── userRoutes.js
+│   └── server.js       # Ponto de entrada do servidor (configura Express, middlewares e rotas)
+│
+├── views/              # (Opcional) Para templates HTML gerados pelo servidor (EJS, Pug)
+│   └── index.ejs
+│
+├── .env                # Arquivo para variáveis de ambiente (senhas, chaves de API) - NUNCA ENVIE PARA O GIT
+├── .gitignore
+└── package.json
+
+Cores do Ícone Masculino (Lado Esquerdo)
+Código Hexadecimal	Cor	Onde é Usada
+#00ABD5	Azul Ciano Brilhante	Fundo principal do card.
+#FFD248	Amarelo Claro	Corpo / Camisa.
+#FFE1B2	Bege / Tom de Pele Claro	Rosto / Cabeça.
+#A97C50	Marrom Médio	Cabelo.
+Cores do Ícone Feminino (Lado Direito)
+Código Hexadecimal	Cor	Onde é Usada
+#D43020	Vermelho Escuro	Fundo principal do card.
+#31C0D8	Azul Ciano Claro	Corpo / Blusa.
+#FFE1B2	Bege / Tom de Pele Claro	Rosto / Cabeça.
+#8C6239	Marrom Escuro	Cabelo.
+#FFFFFF	Branco	Gola da blusa.
+Cores Comuns a Ambos (na versão final, com moldura)
+Código Hexadecimal	Cor	Onde é Usada
+#FFFFFF	Branco	Marcações de canto em forma de "L".
+#231F20	Preto (quase preto)	Contorno/borda do card (em versões com moldura).
+black	Preto Puro	Nariz (na versão corrigida).

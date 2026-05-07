@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head class="head-telaPrincipal"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/lista-operadores.css">
+    <link rel="stylesheet" href="/Metalizacao/css/telaPrincipal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <title>Tela de Gestão - Linha</title>
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+
+    <div id="loadingOverlay">
+        <img src="/images/magna-logo.png" alt="">
+        <div class="spinner"></div>
+    </div>
+
+    <p class="horario" id="hora-atual"></p>
+    <button class="terminarProducao"><img src="/images/exit.svg" class="sair-producao" alt="" width="55"></button>
+    <main class="informacaoPrincipal">
+        <h1 class="setor" id="linha-producao">Metalização</h1>
+            <section class="cards">
+
+                 <nav class="cards-metalizadoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.MT04</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p class="OperadoresNaLinha" id="real-s.MT04">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.MT04" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                        <img src="/images/alert.png" class="alert-icon" width="45" alt="" style="display: none;">
+                    </div>
+                </nav>
+
+                <nav class="cards-metalizadoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.MT02</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p class="OperadoresNaLinha" id="real-s.MT02">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.MT02" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                        <img src="/images/alert.png" class="alert-icon" width="45" alt="" style="display: none;">
+                    </div>
+                </nav>
+                <nav class="cards-metalizadoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.MT03</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p class="OperadoresNaLinha" id="real-s.MT03">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.MT03" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                        <img src="/images/alert.png" class="alert-icon" width="45" alt="" style="display: none;">
+                    </div>
+                </nav>
+                <nav class="cards-metalizadoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.MT01</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p class="OperadoresNaLinha" id="real-s.MT01">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.MT01" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                        <img src="/images/alert.png" class="alert-icon" width="45" alt="" style="display: none;">
+                    </div>
+                </nav>
+
+                <button class="abrir-lista-operadores"><img src="/images/operadores.svg" width="80" alt=""></button>
+            </section>
+
+        <img src="/images/magna-logo.png" class="logo-sem-nome" width="175">
+
+        <div class="data-horario">
+            <p class="turno" id="turno-atual"></p>
+            <p class="data" id="data-atual"></p>
+        </div>
+
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto">Aproxime o cartão de identificação do leitor para: <br><br><strong style="color: rgb(0, 155, 0);">ENTRAR</strong> na produção <br> ou <br> <strong style="color: rgb(241, 0, 0);">SAIR</strong> do seu posto.</p>
+                <img src="/images/scanner.png" alt="" width="90" class="scanner-cartao">
+            </section>
+            <section class="guia-legenda">
+                <img src="/images/alert.png" width="45" alt=""> 
+                <p>= Quantidade esperada fora do conforme.</p>
+            </section>
+        </div>
+
+        <button id="operador" style="display: none;">operador</button>
+    </main>
+
+
+    <div class="overlay"></div>
+
+
+
+
+
+
+    <nav class="finalizacao-metalizadoras">
+        <div class="finalizacao-metalizadoras-header">
+            <section class="finalizacao-metalizadoras-header-textos">
+            <p class="finalizacao-metalizadoras-header-textos-text texto-Ola-encerramento" style="font-size: 2rem; font-weight: bold;">Olá, Rogério!</p>
+            <p class="finalizacao-metalizadoras-header-textos-text">Escolha as metalizadoras que serão <strong style="color: rgb(250, 0, 0);">finalizadas</strong>.</p>
+            </section>
+            <img src="/images/close.svg" class="finalizacao-metalizadoras-header-close" width="65" alt="">
+        </div>
+
+
+        <div class="finalizacao-metalizadoras-botoes">
+            <button class="finalizacao-metalizadoras-botoes-botao" data-finalizar="s.MT04">s.MT04</button>
+            <button class="finalizacao-metalizadoras-botoes-botao" data-finalizar="s.MT02">s.MT02</button>
+            <button class="finalizacao-metalizadoras-botoes-botao" data-finalizar="s.MT03">s.MT03</button>
+            <button class="finalizacao-metalizadoras-botoes-botao" data-finalizar="s.MT01">s.MT01</button>
+        </div>
+
+
+        <div class="finalizacao-metalizadoras-confirmacao">
+            <button class="finalizacao-metalizadoras-confirmacao-select">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+            <button class="finalizacao-metalizadoras-confirmacao-finalizar">FINALIZAR</button>
+        </div>
+
+    </nav>
+
+
+    <div class="overlay-finalizacao"></div>
+
+        <div class="overlay-saida"></div>
+
+        <div id="overlay-teamleader" class="overlay-teamleader"></div>
+
+    <aside class="aside-operador">
+        <section class="bloco-boasvindas">
+                    <div class="boasvindas-aside">
+                        <h2 class="texto-boasvindas-aside" style="font-size: 2rem;">Bem-vindo, Leandro!</h2>
+                        <p class="texto-boasvindas-aside" style="font-size: 1.2rem;">Onde você irá trabalhar hoje?</p>
+                    </div>
+
+                    <button class="sair-operador"><img src="/images/close.svg" alt="" width="70"></button>
+
+                </section>
+
+                <ul class="metalizadoras">
+                    <li class="botoes-metalizadoras">
+                        <button class="botoes-metalizadoras-botao" data-metalizadora="s.MT04">s.MT04
+                            <div class="botao-metalizadora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p id="realSelect-s.MT04" class="text-qntOperadores-metalizadora">0</p>
+                                <p class="text-qntOperadores-metalizadora">/</p>
+                                <p class="text-qntOperadores-metalizadora">2</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+                        <button  class="botoes-metalizadoras-botao" data-metalizadora="s.MT02">s.MT02
+                            <div class="botao-metalizadora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p id="realSelect-s.MT02" class="text-qntOperadores-metalizadora">0</p>
+                                <p class="text-qntOperadores-metalizadora">/</p>
+                                <p class="text-qntOperadores-metalizadora">2</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+                    </li>
+                    
+                    <li class="botoes-metalizadoras">
+                        <button class="botoes-metalizadoras-botao" data-metalizadora="s.MT03">s.MT03
+                            <div class="botao-metalizadora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p  id="realSelect-s.MT03" class="text-qntOperadores-metalizadora">0</p>
+                                <p class="text-qntOperadores-metalizadora">/</p>
+                                <p class="text-qntOperadores-metalizadora">2</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+                        <button class="botoes-metalizadoras-botao" data-metalizadora="s.MT01">s.MT01
+                            <div class="botao-metalizadora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p  id="realSelect-s.MT01" class="text-qntOperadores-metalizadora">0</p>
+                                <p class="text-qntOperadores-metalizadora">/</p>
+                                <p class="text-qntOperadores-metalizadora">2</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+                        
+                    </li>
+                </ul>
+                    
+                        <button class="bloco-confirmar-botao">Entrar</button>
+    </aside>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+        <div class="botoes-metalizadoras-tl">
+
+            <nav class="botoes-metalizadoras-nav" id="s.MT04">
+               <button class="botoes-metalizadoras-botao-tl" data-produto="s.MT04">s.MT04</button>
+                 <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                    <button class="contador-confirmar-scroll-diminuir">-</button>
+                    <span class="contador-confirmar-numero">1</span>
+                    <button id="aumentar" class="contador-confirmar-scroll-aumentar">+</button>
+                    </div>
+                </section>
+                
+            </nav>
+
+            <nav class="botoes-metalizadoras-nav" id="s.MT02">
+                 <button class="botoes-metalizadoras-botao-tl" id="btn-s.MT02" data-produto="s.MT02">s.MT02</button>
+
+                 <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-diminuir">-</button>
+                        <span class="contador-confirmar-numero">1</span>
+                        <button id="aumentar" class="contador-confirmar-scroll-aumentar">+</button>
+                    </div>
+                </section>
+
+            </nav>
+            <nav class="botoes-metalizadoras-nav" id="s.MT03">
+                 <button class="botoes-metalizadoras-botao-tl" id="btn-s.MT03" data-produto="s.MT03">s.MT03</button>
+
+                 <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-diminuir">-</button>
+                        <span class="contador-confirmar-numero">1</span>
+                        <button id="aumentar" class="contador-confirmar-scroll-aumentar">+</button>
+                    </div>
+                </section>
+                
+            </nav>
+            <nav class="botoes-metalizadoras-nav" id="s.MT01">
+                 <button class="botoes-metalizadoras-botao-tl" id="btn-s.MT01" data-produto="s.MT01">s.MT01</button>
+
+                 <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-diminuir">-</button>
+                        <span class="contador-confirmar-numero">1</span>
+                        <button id="aumentar" class="contador-confirmar-scroll-aumentar">+</button>
+                    </div>
+                </section>
+                
+            </nav>        
+        </div>
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+            <div class="contador">
+                
+                <section class="contador-confirmar-area">
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+                </section>
+            </div>
+        </div>
+    </aside>
+
+
+    <nav class="encerrar">
+        <button class="encerrar-sair"><img src="/images/close.svg" alt="" width="70"></button>
+
+        <p class="encerrar-iden">Identifique-se, <br>Team Leader!</p>
+
+        <img src="/images/scanner.png" alt="" class="imagem-scanner">
+
+        <p class="encerrar-txt-guia">Aproxime o cartão de identificação do leitor para <strong>ENCERRAR</strong> a produção do produto atual.</p>
+
+    </nav>
+
+
+    <nav class="lista-operadores">
+
+        <button class="lista-operadores-sair"><img src="/images/close.svg" width="75" alt=""></button>
+
+        <div class="lista-operadores-linha" data-lista="s.MT04">
+
+            <p class="lista-operadores-linha-nome">s.MT04</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+         <div class="lista-operadores-linha" data-lista="s.MT02">
+
+            <p class="lista-operadores-linha-nome">s.MT02</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+        </div>
+
+        <div class="lista-operadores-linha" data-lista="s.MT03">
+
+            <p class="lista-operadores-linha-nome">s.MT03</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+        </div>
+
+        <div class="lista-operadores-linha" data-lista="s.MT01">
+
+            <p class="lista-operadores-linha-nome">s.MT01</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-guia">
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia"></div>
+                <p>Dentro do turno apontado</p>
+            </section>
+
+            <section class="lista-operadores-guia-status barras-guia">
+                <div class="status-pessoa-guia status-pessoa-amarelo"></div>
+                <p>Fora do turno e dentro do limite de HE</p>
+            </section>
+            
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia status-pessoa-vermelho"></div>
+                <p>Fora do turno apontado</p>
+            </section>
+        </div>
+
+
+    </nav>
+
+
+    <div class="overlay-encerrar"></div>
+
+    <div class="overlay-popup"></div>
+
+    <nav class="popup-entrada">
+        <p class="popup-entrada-nome">Leandro Almeida</p>
+        <p class="popop-entrada-mensagem"> <strong>Entrou</strong> no posto!</p>
+    </nav>
+
+    <nav class="popup-saida">
+        <p class="popup-saida-nome">Leandro Almeida</p>
+        <p class="popop-saida-mensagem"> <strong>Saiu</strong> do posto!</p>
+    </nav>
+
+
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+ <script type="module" src="/Metalizacao/js/telaPrincipal.js"></script> 
+
+ <link rel="stylesheet" href="/toast/toastr-custom.css">
+
+</html>

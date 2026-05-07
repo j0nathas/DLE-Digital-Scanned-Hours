@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head class="head-telaPrincipal"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/lista-operadores.css">
+    <link rel="stylesheet" href="/injecao_small/css/telaPrincipal.css">
+    <link rel="stylesheet" href="/injecao_small/css/asideTeamLeader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <title>Tela de Gestão - Linha</title>
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+
+    <div id="loadingOverlay">
+        <img src="/images/magna-logo.png" alt="">
+        <div class="spinner"></div>
+    </div>
+
+    <p class="horario" id="hora-atual"></p>
+    <button class="terminarProducao"><img src="/images/exit.svg" class="sair-producao" alt="" width="55"></button>
+    <main class="informacaoPrincipal">
+        <h1 class="setor" id="linha-producao">Injeção - Lanterna</h1>
+            <section class="cards">
+                <nav class="cards-injetoras" data-card="s.I01h1k160">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>01</strong>h1k160</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I01h1k160" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I01h1k160" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                <nav class="cards-injetoras" data-card="s.I02h1k200">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>02</strong>h1k200</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I02h1k200" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I02h1k200" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                <nav class="cards-injetoras" data-card="s.I03h1k100">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>03</strong>h1k100</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I03h1k100" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I03h1k100" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                <nav class="cards-injetoras" data-card="s.I04h1k120">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>04</strong>h1k120</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I04h1k120" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I04h1k120" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I05h1k65">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>05</strong>h1k65</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I05h1k65" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I05h1k65" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I06h1k150">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>06</strong>h1k150</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I06h1k150" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I06h1k150" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I07h1k150">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>07</strong>h1k150</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I07h1k150" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I07h1k150" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I08h1k65">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>08</strong>h1k65</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I08h1k65" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I08h1k65" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I09h1k86">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>09</strong>h1k86</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I09h1k86" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I09h1k86" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I10h1k220">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>10</strong>h1k220</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I10h1k220" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I10h1k220" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I11h1k120">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>11</strong>h1k120</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I11h1k120" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I11h1k120" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I12h1k120">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>12</strong>h1k120</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I12h1k120" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I12h1k120" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                 <nav class="cards-injetoras" data-card="s.I13h1k320">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>13</strong>h1k320</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I13h1k320" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I13h1k320" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+                <nav class="cards-injetoras" data-card="s.I14h1k160">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>14</strong>h1k160</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I14h1k160" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I14h1k160" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I15h1k140">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>15</strong>h1k140</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I15h1k140" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I15h1k140" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I16h1k200">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>16</strong>h1k200</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I16h1k200" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I16h1k200" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I17h1k220">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>17</strong>h1k220</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I17h1k220" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I17h1k220" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I18h1k220">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>18</strong>h1k220</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I18h1k220" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I18h1k220" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I19h1k220">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>19</strong>h1k220</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I19h1k220" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I19h1k220" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I20h1k320">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>20</strong>h1k320</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I20h1k320" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I20h1k320" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras" data-card="s.I28h1k320">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">s.I<strong>28</strong>h1k320</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.I28h1k320" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.I28h1k320" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                  <button class="abrir-lista-operadores"><img src="/images/operadores.svg" width="80" alt=""></button>
+            </section>
+
+        <img src="/images/magna-logo.png" class="logo-sem-nome" width="175">
+
+        <div class="data-horario">
+            <p class="turno" id="turno-atual"></p>
+            <p class="data" id="data-atual"></p>
+        </div>
+
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto">Aproxime o cartão de identificação do leitor para: <br><br><strong style="color: rgb(0, 155, 0);">ENTRAR</strong> na produção <br> ou <br> <strong style="color: rgb(241, 0, 0);">SAIR</strong> do seu posto.</p>
+                <img src="/images/scanner.png" alt="" width="90" class="scanner-cartao">
+            </section>
+        </div>
+
+        <button id="operador" style="display: none;">operador</button>
+    </main>
+
+
+    <div class="overlay"></div>
+
+
+
+
+
+
+    <nav class="finalizacao-injetoras">
+        <div class="finalizacao-injetoras-header">
+            <section class="finalizacao-injetoras-header-textos">
+            <p class="finalizacao-injetoras-header-textos-text texto-Ola-encerramento" style="font-size: 2rem; font-weight: bold;">Olá, Rogério!</p>
+            <p class="finalizacao-injetoras-header-textos-text">Escolha as injetoras que serão <strong style="color: rgb(250, 0, 0);">finalizadas</strong>.</p>
+            </section>
+            <img src="/images/close.svg" class="finalizacao-injetoras-header-close" width="65" alt="">
+        </div>
+
+
+        <div class="finalizacao-injetoras-botoes">
+           
+        </div>
+
+
+        <div class="finalizacao-injetoras-confirmacao">
+            <button class="finalizacao-injetoras-confirmacao-select">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+            <button class="finalizacao-injetoras-confirmacao-finalizar">FINALIZAR</button>
+        </div>
+
+    </nav>
+
+
+    <div class="overlay-finalizacao"></div>
+
+        <div class="overlay-saida"></div>
+
+        <div id="overlay" class="overlay-teamleader"></div>
+
+    <aside class="aside-operador">
+        <section class="bloco-boasvindas">
+                    <div class="boasvindas-aside">
+                        <h2 class="texto-boasvindas-aside" style="font-size: 2rem;">Bem-vindo, Leandro!</h2>
+                        <p class="texto-boasvindas-aside" style="font-size: 1.2rem;">Onde você irá trabalhar hoje?</p>
+                    </div>
+
+                    <button class="sair-operador"><img src="/images/close.svg" alt="" width="70"></button>
+
+                </section>
+
+                <section class="bloco-selecao">
+
+                <div class="corredor-guia">CORREDOR</div>
+
+                <ul class="injetoras">
+                     <button  class="botoesOp-injetoras-botao" data-injetora="s.I14h1k160">s.I<strong>14</strong>h1k160
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                    <button  class="botoesOp-injetoras-botao" data-injetora="s.I15h1k140">s.I<strong>15</strong>h1k140
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                     <button  class="botoesOp-injetoras-botao" data-injetora="s.I18h1k220">s.I<strong>18</strong>h1k220
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+                    
+                    <button  class="botoesOp-injetoras-botao" data-injetora="s.I19h1k220">s.I<strong>19</strong>h1k220
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                     <button  class="botoesOp-injetoras-botao" data-injetora="s.I06h1k150">s.I<strong>06</strong>h1k150
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                      <button  class="botoesOp-injetoras-botao" data-injetora="s.I07h1k150">s.I<strong>07</strong>h1k150
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                    <button class="botoesOp-injetoras-botao" data-injetora="s.I01h1k160">s.I<strong>01</strong>h1k160
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                         <button  class="botoesOp-injetoras-botao" data-injetora="s.I16h1k200">s.I<strong>16</strong>h1k200
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                    <button class="botoesOp-injetoras-botao" data-injetora="s.I02h1k200">s.I<strong>02</strong>h1k200
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                    <button  class="botoesOp-injetoras-botao" data-injetora="s.I10h1k220">s.I<strong>10</strong>h1k200
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                        <div class="area-gaiolas">GAIOLAS</div>
+                    
+                    <button  class="botoesOp-injetoras-botao" data-injetora="s.I17h1k220">s.I<strong>17</strong>h1k220
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                      <button  class="botoesOp-injetoras-botao" data-injetora="s.I20h1k320">s.I<strong>20</strong>h1k320
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                    <button  class="botoesOp-injetoras-botao" data-injetora="s.I13h1k320">s.I<strong>13</strong>h1k320
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                    <button  class="botoesOp-injetoras-botao" data-injetora="s.I28h1k320">s.I<strong>28</strong>h1k320
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+
+                    <div class="area-moldes">MOLDES</div>
+                    
+                </ul>
+
+                <ul class="injetoras">
+                 <div class="injetoras-dupla" data-conjunto="s.I05h1k65_s.I08h1k65">
+
+
+                   
+                </div>
+
+
+                <div class="injetoras-dupla" data-conjunto="s.I03h1k100_s.I09h1k86">
+
+
+                   
+                </div>
+
+                    <button  class="botoesOp-injetoras-botao" data-injetora="s.I04h1k120">s.I<strong>04</strong>h1k120
+                        <div class="botao-injetora-info">
+                            <img src="/images/operador-real.svg" width="35" alt="">
+                            <p class="text-qntOperadores-injetora">0</p>
+                            <p class="text-qntOperadores-injetora">/</p>
+                            <p class="text-qntOperadores-injetora">1</p>
+                            <img src="/images/operador-esperado.svg" width="35" alt="">
+                        </div>
+                    </button>
+                    
+                 <div class="injetoras-dupla" data-conjunto="s.I11h1k120_s.I12h1k120">
+
+
+                   
+                </div>
+
+                    <div class="area-estufa">ESTUFA LAN</div>
+                    <div class="area-lideres">LÍDERES</div>
+                    <div class="area-mezanino">MEZANINO</div>
+                    <div class="area-sucata">SUCATA</div>
+
+                </ul>
+
+            </section>
+                    
+                        <button class="bloco-confirmar-botao">Entrar</button>
+                        <button class="bloco-sair-botao" id="btn-sair-posto">Sair</button>
+    </aside>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+    <div id="container-botoes" class="botoes-injetoras">
+
+    </div>
+
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+                     <button class="selecionar-todas">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+                     <div class="legenda-recarregar">
+                        <img class="legenda-recarregar-img" src="/images/recarregar.svg" width="45" alt="">
+                        <p class="legenda-recarregar-text">Desagrupar ou voltar seleção de agrupamento.</p>
+                     </div>
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+        </div>
+    </aside>
+
+
+    <nav class="encerrar">
+        <button class="encerrar-sair"><img src="/images/close.svg" alt="" width="70"></button>
+
+        <p class="encerrar-iden">Identifique-se, <br>Team Leader!</p>
+
+        <img src="/images/scanner.png" alt="" class="imagem-scanner">
+
+        <p class="encerrar-txt-guia">Aproxime o cartão de identificação do leitor para <strong>ENCERRAR</strong> a produção do produto atual.</p>
+
+    </nav>
+
+
+    <nav class="lista-operadores">
+
+        <button class="lista-operadores-sair"><img src="/images/close.svg" width="75" alt=""></button>
+
+
+        <div class="lista-operadores-guia">
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia"></div>
+                <p>Dentro do turno apontado</p>
+            </section>
+
+            <section class="lista-operadores-guia-status barras-guia">
+                <div class="status-pessoa-guia status-pessoa-amarelo"></div>
+                <p>Fora do turno e dentro do limite de HE</p>
+            </section>
+            
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia status-pessoa-vermelho"></div>
+                <p>Fora do turno apontado</p>
+            </section>
+        </div>
+
+
+    </nav>
+
+    <div class="overlay-encerrar"></div>
+
+    <div class="overlay-popup"></div>
+
+    <nav class="popup-entrada">
+        <p class="popup-entrada-nome">Leandro Almeida</p>
+        <p class="popop-entrada-mensagem"> <strong>Entrou</strong> no posto!</p>
+    </nav>
+
+    <nav class="popup-saida">
+        <p class="popup-saida-nome">Leandro Almeida</p>
+        <p class="popop-saida-mensagem"> <strong>Saiu</strong> do posto!</p>
+    </nav>
+
+
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script type="module" src="/injecao_small/js/telaPrincipal.js"></script> 
+<script type="module" src="/injecao_small/js/asideTeamLeader.js"></script> 
+<script type="module" src="/injecao_small/js/criarConteudo.js"></script> 
+
+<link rel="stylesheet" href="/toast/toastr-custom.css">
+ 
+</html>

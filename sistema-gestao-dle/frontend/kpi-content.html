@@ -1,0 +1,75 @@
+<header>
+    <h2>KPI's fabrica</h2>
+    <div class="user-profile"></div>
+</header>
+<div class="rf-container-spa">
+    <div id="loading-overlay-rf" class="loading-overlay" style="display:none;">
+        <div class="spinner"></div>
+        <span>Carregando dados...</span>
+    </div>
+
+    <!-- Sidebar de Filtros (Interna à aba) -->
+    <aside id="sidebar-filtros-rf" class="sidebar-rf">
+        <div class="sidebar-rf-header">
+            <h3>Filtros Avançados</h3>
+            <button id="btn-close-sidebar-rf" class="close-btn">×</button>
+        </div>
+        <div class="sidebar-rf-content">
+            <div class="filter-group-secondary">
+                <!-- Filtros populados dinamicamente pelo JS -->
+                <div class="filter-container"><label>Máquina:</label><div class="checkbox-list" id="filtro-maquina"></div></div>
+                <div class="filter-container"><label>Motivo:</label><div class="checkbox-list" id="filtro-motivo"></div></div>
+                <div class="filter-container"><label>Projeto:</label><div class="checkbox-list" id="filtro-projeto"></div></div>
+                <div class="filter-container"><label>Negócio:</label><div class="checkbox-list" id="filtro-negocio"></div></div>
+            </div>
+        </div>
+    </aside>
+
+    <header class="rf-header">
+        <div class="header-top-row">
+            <div class="filter-group-main">
+                <div id="btn-group-planta-rf" class="button-group tab-like planta-selector">
+                    <button class="ativo" data-planta="olsa">MLB</button>
+                    <button data-planta="jarinu">MJN</button>
+                </div>
+                <label>Período:</label>
+                <input type="date" id="startDate-rf" class="date-input">
+                <span>a</span>
+                <input type="date" id="endDate-rf" class="date-input">
+            </div>
+            <div class="header-actions">
+               <button id="btn-update-rf" class="button-primary">Atualizar</button>
+               <button id="btn-open-sidebar-rf" class="button-secondary">Filtros</button>
+            </div>
+        </div>
+        <div class="header-bottom-row">
+            <div id="btn-group-ano-rf" class="button-group"></div>
+            <div id="btn-group-mes-rf" class="button-group grid-mes"></div>
+            <div id="btn-group-categoria-rf" class="button-group tab-like">
+                <button class="btn-filtro-categoria ativo" data-tipo="todos">Geral</button>
+                <button class="btn-filtro-categoria" data-tipo="engenharia">Engenharia</button>
+                <button class="btn-filtro-categoria" data-tipo="qualidade">Qualidade/Dev</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- Gráfico Diário com KPI -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Refugo Diário (Valor)</h2>
+                <div class="kpi-display" id="kpi-refugo-container">
+                    <span class="kpi-value-main" id="kpi-current-percent">--%</span>
+                    <small id="kpi-details-text">T: --%</small>
+                </div>
+            </div>
+            <div id="chart-daily-container" class="chart-container"></div>
+        </div>
+        <div class="card"><div class="card-header"><h2>Refugo Mensal (Valor)</h2></div><div id="chart-monthly-container" class="chart-container"></div></div>
+        <div class="card"><div class="card-header"><h2>Refugo Mensal (%)</h2></div><div id="chart-monthly-pct-container" class="chart-container"></div></div>
+        <div class="card"><div class="card-header"><h2>Faturamento Diário</h2></div><div id="chart-faturamento-diario" class="chart-container"></div></div>
+        <div class="card"><div class="card-header"><h2>Faturamento Mensal</h2></div><div id="chart-faturamento-mensal" class="chart-container"></div></div>
+        <div class="card"><div class="card-header"><h2>Faturamento % Meta</h2></div><div id="chart-faturamento-mensal-pct" class="chart-container"></div></div>
+        <div class="card full-width"><div class="card-header"><h2>Top 5 Projetos por Refugo</h2></div><div id="chart-projeto-motivo" class="chart-container"></div></div>
+    </main>
+</div>

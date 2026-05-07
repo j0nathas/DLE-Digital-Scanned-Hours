@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Inicial - Apontamento</title>
+    <link rel="stylesheet" href="/j.FA01_j.FA02/css/telaInicial.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+    <header>
+         <div class="carrossel-container">
+            <div class="carrossel-inner" id="carrosselInner">
+            <div class="frase">Pense <strong class="grande">GRANDE</strong></div>
+            <div class="frase">Seja <strong class="colaborativo">COLABORATIVO</strong></div>
+            <div class="frase"><strong class="nunca">NUNCA</strong> se acomode</div>
+            <div class="frase">Assuma <strong class="responsabilidade">RESPONSABILIDADE</strong></div>
+            </div>
+         </div>
+    </header>    
+    <main class="linha-e-logo">
+        <p class="texto horario" id="hora-atual">Hora Atual</p>
+        <img src="/images/magna-logo.png" alt="Ícone Magna" class="logo-magna" width="600">
+        <p class="texto linha" id="linha-producao"><strong>j.FA01</strong> & <strong>j.FA02</strong></p>
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto"> <strong>Team Leader:</strong> Aproxime o cartão de identificação do leitor para <strong>INICIAR</strong> a produção.</p>
+                <img src="/images/scanner.png" alt="" width="150" class="scanner-cartao">
+            </section>
+            <button class="btn-principal" id="btn-entrar-linha" style="display: none;">Produzir <img class="scanner-img" src="/images/entrar-producao.svg" width="25" alt=""></button>
+        </div>
+    </main>
+
+    <div id="overlay" class="overlay"></div>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">O que vamos produzir hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+            <input class="pesquisa-produtos" type="text" id="pesquisa-produtos" placeholder="Busque pelo nome ou código do produto...">
+
+        <div class="botoes-produtos">
+            
+        </div>
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador" style="display: none;">
+             <p class="text-contador-confimar">Adicione a quantidade de operadores:</p>
+
+            <div class="contador">
+                
+                 <div class="produtos-selecionados-div">
+                <p class="produtos-selecionado-text">SELECIONADO:</p>
+                <section class="produtos-selecionados">
+
+                </section>
+            </div>
+
+                <section class="contador-confirmar-operadores">
+                    <button id="diminuir" class="contador-confirmar-scroll">-</button>
+                    <span id="numero" class="contador-confirmar-numero">1</span>
+                    <button id="aumentar" class="contador-confirmar-scroll">+</button>
+                </section>
+
+            
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+            </div>
+        </div>
+    </aside>
+
+    <footer>
+        <p class="texto turno" id="turno-atual">Turno Atual</p>
+        <p class="texto data" id="data-atual">Data Atual</p>
+    </footer>
+
+    
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script type="module" src="/j.FA01_j.FA02/js/telaInicial.js"></script>
+
+    <link rel="stylesheet" href="/toast/toastr-custom.css">
+    
+</body>
+</html>

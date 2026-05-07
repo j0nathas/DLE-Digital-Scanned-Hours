@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTE - Dashboard de Apontamentos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        body { background-color: #111827; color: #d1d5db; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        .accordion-content { transition: max-height 0.4s ease-out; }
+    </style>
+</head>
+<body class="font-sans">
+
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <h1 id="header-title" class="text-3xl font-bold text-white">Teste de Dashboard Geral</h1>
+            <p id="planta-name" class="text-gray-400 mt-1">Buscando e processando todos os apontamentos...</p>
+        </div>
+
+        <div id="setores-container" class="space-y-8">
+            <!-- Template de Loading -->
+            <div id="loading-spinner" class="text-center py-10">
+                <svg class="animate-spin h-8 w-8 text-indigo-400 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <p class="mt-3 text-gray-400">Buscando dados...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // === ELEMENTOS DO DOM ===
+        const setoresContainer = document.getElementById('setores-container');
+        const loadingSpinner = document.getElementById('loading-spinner');
+
+        let chartInstances = [];
+
+        const carregarDadosDashboard = async () => {
+            console.log('Iniciando busca de dados da API...');
+            loadingSpinner.style.display = 'block';
+            setoresContainer.innerHTML = '';
+            setoresContainer.appendChild(loadingSpinner);
+
+            try {
+                // USANDO A URL COMPLETA E ABSOLUTA DA API
+                const response = await fetch('http://172.22.132.18:3000/api/gestao/debug/apontamentos');
+                
+                // Log do status da resposta para depuração
+                console.log('Status da resposta da API:', response.status, response.statusText);
+
+                if (!response.ok) {
+                    throw new Error(`Falha na API: ${response.status} ${response.statusText}`);
+                }
+                
+                const todosApontamentos = await response.json();
+                
+                // !!! PONTO DE DEBUG MAIS IMPORTANTE !!!
+                console.log('DADOS BRUTOS RECEBIDOS DA API:', todosApontamentos);
+                if (!Array.isArray(todosApontamentos) || todosApontamentos.length === 0) {
+                     console.warn('A API não retornou um array com dados. Verifique o endpoint.');
+                }
+
+                const dadosProcessados = processarApontamentos(todosApontamentos);
+                console.log('DADOS PROCESSADOS E AGRUPADOS POR SETOR:', dadosProcessados);
+
+                renderizarSetores(dadosProcessados);
+
+            } catch (error) {
+                console.error('ERRO CRÍTICO AO BUSCAR OU PROCESSAR DADOS:', error);
+                loadingSpinner.style.display = 'none';
+                setoresContainer.innerHTML = `<div class="bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-lg">
+                    <h3 class="font-bold">Falha ao Carregar os Dados</h3>
+                    <p class="mt-2 text-sm">Não foi possível conectar ou processar os dados da API.</p>
+                    <p class="mt-1 text-xs font-mono">Erro: ${error.message}</p>
+                    <p class="mt-3 text-sm">Verifique o console (F12) para mais detalhes. Pode ser um erro de CORS.</p>
+                </div>`;
+            }
+        };
+
+        const processarApontamentos = (apontamentos) => {
+            const sessoesEmAberto = {};
+            const horasPorMaquina = {};
+
+            if (!Array.isArray(apontamentos)) return [];
+
+            apontamentos.forEach(ap => {
+                // Validação mínima do objeto de apontamento
+                if (!ap || !ap.Status || !ap.Hora || !ap.Linha || !ap.Operador || !ap.Data || !ap.Turno) {
+                    return; // Pula apontamentos malformados
+                }
+
+                const chaveSessao = `${ap.Operador}-${ap.Linha}-${ap.Data}-${ap.Turno}`;
+                
+                if (ap.Status === 'Entrada') {
+                    sessoesEmAberto[chaveSessao] = new Date(ap.Hora);
+                } else if (ap.Status === 'Saida' && sessoesEmAberto[chaveSessao]) {
+                    const horaEntrada = sessoesEmAberto[chaveSessao];
+                    const horaSaida = new Date(ap.Hora);
+
+                    const diffMs = horaSaida - horaEntrada;
+                    if (diffMs > 0) {
+                        const diffHoras = diffMs / (1000 * 60 * 60);
+                        horasPorMaquina[ap.Linha] = (horasPorMaquina[ap.Linha] || 0) + diffHoras;
+                    }
+                    
+                    delete sessoesEmAberto[chaveSessao];
+                }
+            });
+            console.log('Horas calculadas por máquina (antes de agrupar):', horasPorMaquina);
+
+            const dadosPorSetor = {};
+            for (const maquinaNome in horasPorMaquina) {
+                const parts = maquinaNome.split('.');
+                if (parts.length < 2 || parts[1].length < 2) continue; // Pula nomes de máquina malformados
+                const setorNome = parts[1].substring(0, 2).toUpperCase();
+
+                if (!dadosPorSetor[setorNome]) {
+                    dadosPorSetor[setorNome] = { nome: setorNome, totalHorasSetor: 0, maquinas: [] };
+                }
+
+                dadosPorSetor[setorNome].maquinas.push({ nome: maquinaNome, horas: horasPorMaquina[maquinaNome] });
+                dadosPorSetor[setorNome].totalHorasSetor += horasPorMaquina[maquinaNome];
+            }
+
+            return Object.values(dadosPorSetor).sort((a, b) => a.nome.localeCompare(b.nome));
+        };
+
+        const renderizarSetores = (setores) => {
+            loadingSpinner.style.display = 'none';
+            setoresContainer.innerHTML = ''; 
+
+            if (!setores || setores.length === 0) {
+                setoresContainer.innerHTML = `<p class="text-gray-400 text-center text-lg">Nenhum apontamento válido encontrado após processamento.</p>`;
+                return;
+            }
+
+            chartInstances.forEach(chart => chart.destroy());
+            chartInstances = [];
+
+            setores.forEach((setor, index) => {
+                const chartId = `chart-${index}`;
+                const maquinasOrdenadas = [...setor.maquinas].sort((a, b) => b.horas - a.horas);
+
+                const setorHtml = `
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                    <button id="toggle-setor-${index}" class="w-full flex justify-between items-center p-5 bg-gray-700/50 hover:bg-gray-700 transition-colors focus:outline-none">
+                        <span class="font-bold text-xl text-white">Setor ${setor.nome}</span>
+                        <div class="flex items-center space-x-3 text-gray-400">
+                            <span>${setor.maquinas.length} Máquinas</span>
+                            <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </button>
+                    <div id="content-setor-${index}" class="accordion-content p-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-start" style="max-height: 0px; overflow: hidden;">
+                        <div>
+                            <h4 class="font-semibold text-gray-300 mb-4 text-lg">Total de Horas por Máquina</h4>
+                            <ul class="space-y-3 max-h-80 overflow-y-auto">
+                                ${maquinasOrdenadas.map(m => `
+                                    <li class="flex justify-between items-center p-3 bg-gray-700/70 rounded-lg">
+                                        <span class="text-gray-200">${m.nome}</span>
+                                        <span class="font-bold text-white text-lg">${m.horas.toFixed(1)}h</span>
+                                    </li>`).join('')}
+                            </ul>
+                        </div>
+                        <div id="${chartId}" class="w-full h-80"></div>
+                    </div>
+                </div>`;
+                setoresContainer.insertAdjacentHTML('beforeend', setorHtml);
+
+                // GRÁFICO DE BARRAS
+                const options = {
+                    series: [{ name: 'Total de Horas', data: maquinasOrdenadas.map(m => m.horas.toFixed(1)) }],
+                    chart: { type: 'bar', height: 320, toolbar: { show: false }, background: 'transparent' },
+                    theme: { mode: 'dark' },
+                    plotOptions: { bar: { horizontal: false, columnWidth: '60%', distributed: true, dataLabels: { position: 'top' } } },
+                    dataLabels: { enabled: true, formatter: (val) => `${val}h`, offsetY: -20, style: { fontSize: '12px', colors: ["#fff"] } },
+                    xaxis: { categories: maquinasOrdenadas.map(m => m.nome), labels: { style: { colors: '#9ca3af', fontSize: '10px' } } },
+                    yaxis: { title: { text: 'Horas', style: { color: '#9ca3af' } }, labels: { style: { colors: '#9ca3af' } } },
+                    grid: { borderColor: '#374151', strokeDashArray: 4 },
+                    tooltip: { theme: 'dark', y: { formatter: (val) => `${val} horas` } },
+                    legend: { show: false }
+                };
+                const chart = new ApexCharts(document.querySelector(`#${chartId}`), options);
+                chart.render();
+                chartInstances.push(chart);
+
+                // LÓGICA DO ACORDEÃO
+                const toggleButton = document.getElementById(`toggle-setor-${index}`);
+                const content = document.getElementById(`content-setor-${index}`);
+                toggleButton.addEventListener('click', () => {
+                    const isOpen = content.style.maxHeight !== '0px';
+                    content.style.maxHeight = isOpen ? '0px' : content.scrollHeight + 'px';
+                    toggleButton.querySelector('svg').classList.toggle('rotate-180');
+                });
+            });
+        };
+
+        carregarDadosDashboard();
+    });
+    </script>
+</body>
+</html>

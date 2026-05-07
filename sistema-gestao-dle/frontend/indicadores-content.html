@@ -1,0 +1,42 @@
+<header>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <h2>Indicador Horas (Fábrica)</h2>
+        <div class="view-toggle-container">
+            <button id="btn-visao-graficos" class="btn-toggle active"><i class="fas fa-chart-pie"></i> Gráficos</button>
+            <button id="btn-visao-operadores" class="btn-toggle"><i class="fas fa-users"></i> Operadores (Logs)</button>
+        </div>
+    </div>
+    <div class="user-profile">Veloso, Jonathan</div>
+</header>
+
+<div class="dashboard">
+    <div class="filter-bar">
+        <div class="filter-group-main">
+            <div class="filter-item">
+                <label for="start-date">Data Início</label>
+                <input type="text" id="start-date">
+            </div>
+            <div class="filter-item">
+                <label for="end-date">Data Fim</label>
+                <input type="text" id="end-date">
+            </div>
+            <button id="apply-filter" class="btn-filter btn-primary"><i class="fas fa-filter"></i> Aplicar</button>
+        </div>
+    </div>
+
+    <!-- VIEW GRÁFICOS -->
+    <div id="view-charts" class="charts-grid-final">
+        <div class="chart-container" id="chart-barras"></div>
+        <div class="chart-container" id="chart-pizza"></div>
+        <div class="chart-container" id="chart-linha"></div>
+    </div>
+
+    <!-- VIEW HIERARQUIA -->
+    <div id="view-operators" style="display: none; margin-top: 20px;">
+        <div class="hierarchy-card" style="background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden;">
+            <div style="background: #0f172a; padding: 15px 20px; color: #fff; font-weight: bold;">Relação de Apontamento por Operador (Capacidade: 8h/dia)</div>
+            <div id="hierarchy-list-content"></div>
+        </div>
+    </div>
+</div>
+<footer>Alfa 0.0.1</footer>

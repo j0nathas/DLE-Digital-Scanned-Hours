@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analítico de Apontamentos</title>
+    <link rel="stylesheet" href="/gestao/css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PLUGIN PARA MOSTRAR OS RÓTULOS (VALORES) NOS GRÁFICOS -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+</head>
+<body>
+    <header class="header">
+        <h1>Dashboard Analítico de Apontamentos</h1>
+        <button id="btn-sair">Sair</button>
+    </header>
+
+    <main>
+        <div id="error-container" style="display: none;"></div>
+        <div id="main-content">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="filtro-mes-ano">Mês e Ano:</label>
+                    <input type="month" id="filtro-mes-ano">
+                </div>
+                <div class="filter-group">
+                    <label for="filtro-planta">Planta:</label>
+                    <select id="filtro-planta">
+    <option value="">Todas as Plantas</option>
+    <option value="vinhedo">Vinhedo</option>
+    <option value="sao_bernardo">São Bernardo</option>
+    <option value="jarinu">Jarinu</option>
+</select>
+                </div>
+            </div>
+
+            <!-- GRID PARA OS GRÁFICOS -->
+            <div class="charts-grid-container">
+                <div class="chart-container">
+                    <h2>Horas por Área</h2>
+                    <canvas id="chartPorArea"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h2>Horas por Dispositivo</h2>
+                    <canvas id="chartPorDispositivo"></canvas>
+                </div>
+                <div class="chart-container-full">
+                    <h2>Tendência Diária de Horas Apontadas</h2>
+                    <canvas id="chartTendenciaDiaria"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="/gestao/js/dashboard.js"></script>
+</body>
+</html>

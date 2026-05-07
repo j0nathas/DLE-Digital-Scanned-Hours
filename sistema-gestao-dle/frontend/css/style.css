@@ -1,0 +1,1084 @@
+/* =================================================================== */
+/* ==                  1. CONFIGURAÇÃO E RESET GLOBAL                 == */
+/* =================================================================== */
+/* Define as variáveis de cores (tema) e a fonte padrão para todo o projeto. */
+:root {
+  --bg-dark: #0f172a;
+  --bg-medium: #1e293b;
+  --bg-light: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-blue: #4f46e5;
+  --accent-blue-hover: #4338ca;
+  --accent-yellow: #facc15;
+  --accent-green: #22c55e;
+  --accent-red: #ef4444;
+  --accent-info: #0ea5e9; /* Azul claro para Scanned Hours */
+  --border-color: #4b5563;
+  --border-color-box: #94a3b8;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Reseta margens/preenchimentos e define o box-sizing e a fonte globalmente. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Garante que a página ocupe toda a altura e esconde barras de rolagem desnecessárias. */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Define o fundo e a cor de texto padrão para a aplicação. */
+body {
+  background-color: var(--bg-medium);
+  color: var(--text-primary);
+}
+
+/* =================================================================== */
+/* ==                 2. ESTRUTURA E LAYOUT PRINCIPAL                 == */
+/* =================================================================== */
+/* Container principal que organiza a sidebar e o conteúdo lado a lado. */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Barra lateral de navegação. */
+.sidebar {
+  width: 220px;
+  background-color: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-color-box);
+}
+
+/* Área do logotipo ou título na sidebar. */
+.sidebar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 1.2rem;
+  color: var(--text-primary);
+}
+
+/* Área de navegação principal na sidebar. */
+.sidebar nav {
+  flex-grow: 1;
+  padding: 0 0.8rem;
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+}
+
+.sidebar nav li {
+  margin-bottom: 0.4rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar nav li a {
+  display: block;
+  padding: 0.7rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+/* Efeito visual ao passar o mouse sobre um item de menu. */
+.sidebar nav li:hover {
+  background-color: var(--bg-light);
+}
+
+.sidebar nav li:hover a {
+  color: var(--text-primary);
+}
+
+/* Estilo para o item de menu atualmente ativo. */
+.sidebar nav li.active a, .sidebar nav a.active {
+  background-color: var(--accent-blue);
+  color: white;
+  font-weight: bold;
+}
+
+/* Informação de versão no rodapé da sidebar. */
+.sidebar .version {
+  padding: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Container para o conteúdo principal, à direita da sidebar. */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Cabeçalho do conteúdo principal. */
+.main-content header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-dark);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.header-info .info-item {
+  position: relative;
+  padding: 0 1rem;
+}
+
+/* Adiciona uma barra vertical separadora, exceto no último item */
+.header-info .info-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 16px;
+  width: 1px;
+  background-color: var(--border-color);
+}
+
+.main-content header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* Ícone de perfil do usuário no cabeçalho. */
+.user-profile {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: var(--bg-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Área principal do dashboard, com rolagem interna para o conteúdo. */
+.dashboard {
+  flex-grow: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+/* =================================================================== */
+/* ==                3. COMPONENTES DE FILTRO E INPUTS                == */
+/* =================================================================== */
+.filter-bar {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: var(--bg-medium);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.filter-group-main {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filter-item label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding-left: 0.2rem;
+}
+
+.btn-filter {
+  padding: 0.55rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: fit-content;
+}
+
+.btn-primary {
+  background-color: var(--accent-blue);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-blue-hover);
+}
+
+.btn-back {
+  background-color: #475569;
+  color: #e2e8f0;
+}
+
+.btn-back:hover {
+  background-color: #64748b;
+}
+
+input[type="date"], input[type="text"], select {
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.9rem;
+  color-scheme: dark;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+input:focus, select:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+input[type="date"].flatpickr-input {
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.9rem;
+}
+
+.flatpickr-calendar.dark {
+  background: var(--bg-dark);
+  border-color: var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.flatpickr-months .flatpickr-month, .flatpickr-weekdays, .flatpickr-day { color: var(--text-primary); }
+.flatpickr-day:hover { background: var(--bg-light); }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: var(--accent-blue); border-color: var(--accent-blue); }
+.flatpickr-day.today { border-color: var(--accent-yellow); }
+.flatpickr-months .flatpickr-prev-month:hover svg, .flatpickr-months .flatpickr-next-month:hover svg { fill: var(--accent-blue); }
+
+/* =================================================================== */
+/* ==                    4. DASHBOARD DE GESTÃO                       == */
+/* =================================================================== */
+.machine-group {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+.machine-group:hover {
+  z-index: 10;
+}
+.group-title {
+  background-color: var(--bg-light);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  min-height: 60px;
+}
+.group-title .sector-name { margin-bottom: 0.3rem; }
+.group-title .sector-total { font-size: 1.5rem; font-weight: 700; color: var(--text-secondary); }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.75rem;
+  min-width: 0;
+}
+.card {
+  position: relative;
+  background-color: var(--bg-light);
+  border-radius: 0.4rem;
+  padding: 0.5rem;
+  text-align: center;
+  border: 1px solid var(--border-color-box);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 60px;
+  transition: all 0.2s ease-in-out;
+}
+.card:hover {
+  transform: scale(1.05);
+  z-index: 20;
+}
+.card h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  min-height: 2.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+}
+.op-count-box {
+  border-radius: 0.25rem;
+  padding: 0.2rem 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border-color-box);
+}
+.op-count-box .numero { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+.op-count-box .texto { font-size: 0.65rem; color: var(--text-secondary); }
+.meta-display { font-size: 0.8rem; color: var(--text-secondary); opacity: 0.7; }
+.group-title.card-ok, .op-count-box.card-ok { background-color: var(--accent-green); color: var(--bg-dark); }
+.group-title.card-attention, .op-count-box.card-attention { background-color: var(--accent-yellow); color: var(--bg-dark); }
+.group-title.card-excess, .op-count-box.card-excess { background-color: var(--accent-red); color: white; }
+.group-title.card-ok .sector-total, .group-title.card-attention .sector-total { color: var(--bg-dark); }
+.group-title.card-excess .sector-total { color: white; }
+.op-count-box.card-ok .texto, .op-count-box.card-attention .texto { color: #4b5563; }
+.op-count-box.card-excess .texto { color: #d1d5db; }
+
+/* =================================================================== */
+/* ==               [NOVO] ESTILO FINAL DO MODAL POPUP                == */
+/* =================================================================== */
+
+/* --- Fundo Escurecido (Overlay) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  
+  /* Escondido por padrão */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* --- Caixa de Conteúdo do Modal --- */
+.modal-content {
+  background-color: var(--bg-medium);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  width: auto;
+  min-width: 500px;
+  max-width: 700px;
+  max-height: 80vh; /* Ocupa no máximo 80% da altura da tela */
+  display: flex;
+  flex-direction: column;
+  
+  /* Animação de entrada */
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.visible .modal-content {
+    transform: scale(1);
+}
+
+/* --- Cabeçalho do Modal --- */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+/* --- Corpo do Modal (com a tabela) --- */
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto; /* Adiciona rolagem se o conteúdo for grande */
+  font-size: 0.9rem;
+}
+.modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.modal-body th, .modal-body td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--bg-light);
+}
+.modal-body th {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+.modal-body tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =================================================================== */
+/* ==                6. OUTROS COMPONENTES E LAYOUTS                  == */
+/* =================================================================== */
+.charts-grid-final { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 55% 1fr; gap: 1.5rem; flex-grow: 1; min-height: 0; }
+.chart-container { background-color: var(--bg-light); padding: 1.5rem; border-radius: 0.5rem; display: flex; flex-direction: column; }
+#chart-barras { grid-column: span 2; }
+#chart-pizza { grid-column: span 1; }
+#chart-linha { grid-column: span 3; }
+.table-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; flex-grow: 1; min-height: 0; }
+.grid-cell { background-color: var(--bg-light); border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; overflow: hidden; }
+.grid-cell h3 { margin-bottom: 1rem; color: var(--text-primary); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; flex-shrink: 0; }
+.content-wrapper { display: flex; flex-direction: column; flex-grow: 1; min-height: 0; }
+.chart-wrapper { width: 100%; height: 250px; flex-shrink: 0; margin-bottom: 1.5rem; }
+.table-wrapper { flex-grow: 1; overflow-y: auto; position: relative; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.table-wrapper table thead { position: sticky; top: -1.5rem; background-color: var(--bg-light); z-index: 1; }
+table th { padding: 0.75rem 0.5rem; text-align: left; color: var(--text-secondary); border-bottom: 2px solid var(--border-color); }
+table td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--bg-dark); }
+table tbody tr:hover { background-color: var(--bg-medium); }
+table tfoot tr { font-weight: bold; color: var(--text-primary); background-color: var(--bg-dark); }
+.group-injection { background-color: rgba(79, 70, 229, 0.1); }
+.group-coating { background-color: rgba(250, 204, 21, 0.1); }
+.group-assembly-small { background-color: rgba(78, 230, 133, 0.1); }
+.group-assembly-lamp { background-color: rgba(239, 68, 68, 0.1); }
+.selection-container { padding: 2rem; }
+.plant-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.plant-card { background-color: var(--bg-medium); border: 1px solid var(--bg-light); border-radius: 8px; padding: 1.5rem; cursor: pointer; transition: all 0.2s ease-in-out; display: flex; flex-direction: column; gap: 0.5rem; }
+.plant-card:focus, .plant-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
+.plant-card h3 { font-size: 1.75rem; color: var(--text-primary); font-weight: 600; margin: 0; }
+.plant-card .location { font-size: 1rem; color: var(--text-secondary); margin: 0; margin-bottom: 1rem; }
+.plant-card .code { font-size: 0.875rem; color: #cbd5e1; background-color: var(--bg-light); padding: 0.25rem 0.75rem; border-radius: 4px; align-self: flex-start; }
+footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+.legend { display: flex; justify-content: space-around; align-items: center; list-style: none; font-size: 0.8rem; width: 100%; max-width: 1200px; }
+.legend li { display: flex; align-items: center; gap: 0.4rem; }
+.color-box { width: 14px; height: 14px; border-radius: 3px; }
+.color-box.red { background-color: var(--accent-red); }
+.color-box.green { background-color: var(--accent-green); }
+.color-box.yellow { background-color: var(--accent-yellow); }
+.color-box.gray { background-color: var(--bg-light); border: 1px solid var(--border-color-box); }
+
+/* Estilos para os indicadores de status no modal */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.status-green { background-color: #22c55e; }
+.status-yellow { background-color: #facc15; }
+.status-red { background-color: #ef4444; }
+.status-gray { background-color: #9ca3af; }
+
+/* Estilos para a legenda no topo do modal */
+.modal-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 10px 15px 10px;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #444;
+    margin-bottom: 15px;
+}
+.legend-item { display: flex; align-items: center; }
+
+.development-notice {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem;
+}
+.development-notice .icon {
+    font-size: 4rem; 
+    margin-bottom: 1.5rem; 
+}
+.development-notice h1 {
+    font-size: 1.875rem; 
+    color: var(--text-primary);
+    margin-bottom: 0.5rem; 
+}
+.development-notice p {
+    font-size: 1.125rem; 
+    max-width: 600px;
+}
+
+/* =================================================================== */
+/* ==                     7. ANIMAÇÕES E LOADERS                      == */
+/* =================================================================== */
+.loading-spinner { display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary); font-size: 1.2rem; font-weight: 600; min-width: 100px; justify-content: center; }
+.loading-spinner.hidden { display: none; }
+.pocket-watch { width: 38px; height: 38px; transform-origin: top center; }
+.pocket-watch svg { width: 100%; height: 100%; }
+.watch-hands { transform-box: fill-box; transform-origin: 255.99px 255.99px; }
+.loading-spinner.spinning .watch-hands { animation: spin 1s linear infinite; }
+.loading-spinner.spinning .pocket-watch { animation: swing 1.5s ease-in-out infinite; }
+@keyframes swing { 0%, 100% { transform: rotate(-15deg); } 50% { transform: rotate(15deg); } }
+.custom-loader { width: 60px; height: 60px; border: 5px solid var(--bg-light); border-top: 5px solid var(--accent-blue); border-radius: 50%; animation: custom-loader-spin 1s linear infinite; }
+.custom-loader.green { border-top-color: var(--accent-green); }
+.custom-loader.yellow { border-top-color: var(--accent-yellow); }
+@keyframes custom-loader-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* =================================================================== */
+/* ==                   8. ESTILOS ESPECÍFICOS: CÁLCULO DLE          == */
+/* =================================================================== */
+
+/* Container de Filtros do DLE - Card principal para inputs */
+.dle-filter-card {
+  background-color: var(--bg-dark);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Título e ícone do cabeçalho de filtros */
+.dle-filter-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Linha que agrupa os inputs e o botão */
+.dle-inputs-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+
+/* Grupo individual de input (Label + Campo) */
+.dle-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.dle-input-group label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Cards de KPI (Resumo) - Grid responsivo */
+.dle-kpi-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card individual de KPI */
+.dle-kpi-card {
+  background-color: var(--bg-dark);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 140px;
+}
+
+.dle-kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Borda superior colorida para distinguir categorias */
+.dle-kpi-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+.dle-kpi-card.financeiro::after { background-color: var(--accent-blue); }
+.dle-kpi-card.fabrica::after { background-color: var(--accent-info); }
+.dle-kpi-card.global::after { background-color: var(--accent-green); }
+
+/* Título dentro do KPI Card */
+.dle-kpi-title {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+/* Valor numérico dentro do KPI Card */
+.dle-kpi-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+/* Layout da área de detalhes (Gráfico e Tabela lado a lado) */
+.dle-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 50% para cada */
+  gap: 1.5rem;
+  min-height: 400px;
+}
+
+/* Responsividade: Empilha em telas menores */
+@media (max-width: 1100px) {
+  .dle-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards gerais de conteúdo do DLE */
+.dle-card {
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.dle-card-header {
+  padding: 1rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.dle-card-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.dle-card-body.no-padding {
+  padding: 0;
+}
+
+/* Tabela Específica do DLE */
+.table-dle {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-dle th, 
+.table-dle td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.table-dle th {
+  background-color: rgba(0,0,0,0.2);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-dle td {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.table-dle tr:last-child td {
+  border-bottom: none;
+}
+
+.table-dle tr:hover {
+  background-color: rgba(255,255,255,0.02);
+}
+
+/* Classes utilitárias para alinhamento e texto */
+.table-dle .text-end {
+  text-align: right;
+}
+
+.table-dle .fw-bold {
+  font-weight: 700;
+}
+
+/* Cores de texto condicionais para DLE/Status */
+.text-success { color: var(--accent-green) !important; }
+.text-warning { color: var(--accent-yellow) !important; }
+.text-danger { color: var(--accent-red) !important; }
+.text-info { color: var(--accent-info) !important; }
+
+/* =================================================================== */
+/* ==                 9. ESTILOS ESPECÍFICOS: DASHBOARD RH          == */
+/* =================================================================== */
+
+.rh-dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+.rh-row {
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Garante que cada box tenha o mesmo tamanho na linha */
+.rh-box {
+    flex: 1;
+    background-color: var(--bg-dark); /* Usando as variáveis que você já definiu */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+}
+
+.rh-box-header {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Altura para os containers do ECharts (obrigatório para o gráfico aparecer) */
+.rh-chart-container {
+    flex-grow: 1;
+    width: 100%;
+    min-height: 250px;
+}
+
+/* Estilo das tabelas dentro do RH */
+.rh-table-container {
+    padding: 0;
+    overflow: hidden;
+}
+
+.rh-table-mini {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.rh-table-mini table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.rh-table-mini th {
+    position: sticky;
+    top: 0;
+    background-color: var(--bg-light);
+    color: var(--text-secondary);
+    padding: 0.75rem;
+    text-align: left;
+    z-index: 1;
+}
+
+.rh-table-mini td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.rh-table-mini tbody tr:hover {
+    background-color: rgba(255,255,255,0.02);
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 1200px) {
+    .rh-row {
+        flex-direction: column;
+    }
+}
+
+/* Ajuste do botão de voltar que está no HTML */
+.hidden {
+    display: none !important;
+}
+
+/* Estilos para o Toggle de Visão no Header */
+.view-toggle-container {
+    display: flex;
+    background: #1e293b;
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+}
+
+.btn-toggle {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-toggle.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-toggle:hover:not(.active) {
+    background: #2d3e5a;
+    color: #f8fafc;
+}
+
+/* Estilos para a Hierarquia de Operadores */
+.hierarchy-container {
+    margin-top: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.hierarchy-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.hierarchy-header-main {
+    background: #0f172a;
+    padding: 15px 20px;
+    color: #f8fafc;
+    font-weight: bold;
+    border-bottom: 1px solid #334155;
+}
+
+.hierarchy-item {
+    border-bottom: 1px solid #334155;
+}
+
+.hierarchy-node {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    background: #1e293b;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.hierarchy-node:hover {
+    background: #2d3e5a;
+}
+
+.hierarchy-node i.chevron {
+    margin-right: 10px;
+    transition: transform 0.2s;
+    color: #94a3b8;
+}
+
+.hierarchy-node.expanded i.chevron {
+    transform: rotate(90deg);
+}
+
+.node-title { color: #f8fafc; font-weight: 500; }
+.node-info { margin-left: auto; display: flex; gap: 15px; align-items: center; }
+
+/* Badge de Horas */
+.badge-hours {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.badge-success { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
+.badge-warning { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid #eab308; }
+.badge-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+
+/* Detalhes do Operador (Logs) */
+.operator-details {
+    background: #0f172a;
+    padding: 15px 40px;
+}
+
+.log-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+.log-table th {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #334155;
+    color: #94a3b8;
+}
+
+.log-table td {
+    padding: 8px;
+    border-bottom: 1px dotted #1e293b;
+}
+
+.empty-state {
+    padding: 40px;
+    text-align: center;
+    color: #64748b;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Dashboard Refugo & Faturamento SPA Scope */
+.rf-container-spa {
+    padding: 20px;
+    background-color: #0f172a;
+    min-height: 100%;
+}
+
+.rf-header {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #4b5563;
+}
+
+.rf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.rf-card {
+    background: #1e293b;
+    border: 1px solid #4b5563;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Estilo para a sidebar de filtros interna */
+.sidebar-rf {
+    position: fixed;
+    right: -380px;
+    top: 0;
+    width: 380px;
+    height: 100%;
+    background-color: #1e293b;
+    z-index: 2000;
+    transition: right 0.3s ease;
+    border-left: 1px solid #4b5563;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+}
+
+.sidebar-rf.open { right: 0; }
+
+.rf-btn-group {
+    display: flex;
+    background: rgba(255,255,255,0.1);
+    padding: 2px;
+    border-radius: 4px;
+    gap: 2px;
+}
+
+.rf-btn-group button {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.rf-btn-group button.ativo {
+    background: #4f46e5;
+    color: white;
+}

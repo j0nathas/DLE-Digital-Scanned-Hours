@@ -1,0 +1,25 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+dist/
+build/
+
+# Histórico de edições do VS Code
+.history/
+
+# Cache do sistema
+.DS_Store
+Thumbs.db
+
+# Configurações locais de IDEsa
+.vscode/
+.idea/

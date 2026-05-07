@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Inicial - Apontamento</title>
+    <link rel="stylesheet" href="/injecao-mjn/css/telaInicial.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+
+    <header>
+         <div class="carrossel-container">
+            <div class="carrossel-inner" id="carrosselInner">
+            <div class="frase">Pense <strong class="grande">GRANDE</strong></div>
+            <div class="frase">Seja <strong class="colaborativo">COLABORATIVO</strong></div>
+            <div class="frase"><strong class="nunca">NUNCA</strong> se acomode</div>
+            <div class="frase">Assuma <strong class="responsabilidade">RESPONSABILIDADE</strong></div>
+            </div>
+         </div>
+    </header>    
+    <main class="linha-e-logo">
+        <p class="texto horario" id="hora-atual">Hora Atual</p>
+        <img src="/images/magna-logo.png" alt="Ícone Magna" class="logo-magna" width="600">
+        <p class="texto linha" id="linha-producao"><strong>Injeção</strong></p>
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto"> <strong>Team Leader:</strong> Aproxime o cartão de identificação do leitor para <strong>INICIAR</strong> a produção.</p>
+                <img src="/images/scanner.png" alt="" width="150" class="scanner-cartao">
+            </section>
+        </div>
+    </main>
+
+    <div id="overlay" class="overlay"></div>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+        <div class="botoes-injetoras">
+            <button class="botoes-injetoras-botao" data-produto="j.I01-H1K1000">j.I<strong class="destaque-injetora">01</strong>-H1K1000</button>
+            <button class="botoes-injetoras-botao" data-produto="j.I02-H2K1150">j.I<strong class="destaque-injetora">02</strong>-H2K1150</button>
+            
+            <div class="div-injetoras-botao">
+
+                <p class="div-text-injetora" data-produto="j.I03-H2K1700">j.I<strong class="destaque-injetora">03</strong>-H2K1700</p>
+
+                <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-um">1</button>
+                        <button id="aumentar" class="contador-confirmar-scroll-dois">2</button>
+                    </div>
+                </section>
+
+            </div>
+
+            <button class="botoes-injetoras-botao" data-produto="j.I04-H1K500">j.I<strong class="destaque-injetora">04</strong>-H1K500</button>
+            <button class="botoes-injetoras-botao" data-produto="j.I05-H1K500">j.I<strong class="destaque-injetora">05</strong>-H1K500</button>
+            <button class="botoes-injetoras-botao" data-produto="j.I06-H1K500">j.I<strong class="destaque-injetora">06</strong>-H1K500</button>
+            <button class="botoes-injetoras-botao" data-produto="j.MT01">j.MT<strong class="destaque-injetora">01</strong></button>
+        </div>
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+            <div class="contador">
+                     <button class="selecionar-todas">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+            </div>
+        </div>
+    </aside>
+
+    <footer>
+        <p class="texto turno" id="turno-atual">Turno Atual</p>
+        <p class="texto data" id="data-atual">Data Atual</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <script type="module" src="/injecao-mjn/js/telaInicial.js"></script>
+    
+    <link rel="stylesheet" href="/toast/toastr-custom.css">
+
+</body>
+</html>

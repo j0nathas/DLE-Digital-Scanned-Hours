@@ -1,0 +1,797 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+:root {
+    --fonte: "Inter", sans-serif;
+}
+
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+#loadingOverlay.fade-out {
+    opacity: 0;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+}
+
+/* --- ESTILOS GERAIS --- */
+body {
+    all: unset;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: var(--fonte);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.informacaoPrincipal {
+    width: 98vw;
+    height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.linhaProducao {
+    position: absolute;
+    top: 12%;
+    font-size: 2rem;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: rgb(116, 116, 116);
+}
+
+.linhaProducao strong {
+    font-size: 4rem;
+    color: rgb(71, 71, 71);
+}
+
+.linha-setor {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    gap: 0;
+}
+
+.card-Operadores {
+    background-color: rgb(253, 233, 141);
+    border: 10px solid rgb(248, 203, 0);
+    width: 50%;
+    min-height: 35%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.25);
+}
+
+.text-qntOperadores-operacao {
+    margin: 0;
+}
+
+.Operadores {
+    all: unset;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    font-size: 10rem;
+    color: rgb(209, 171, 0);
+}
+
+.OperadoresNaLinha,
+.barra-quantidadeOperadores,
+.quantidadeOperadores {
+    font-weight: bold;
+    margin: 0;
+}
+
+
+
+.emProducao-li {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(248, 248, 248);
+    border-radius: 30px;
+    border: 5px solid rgb(243, 243, 243);
+    padding: 0 1rem;
+}
+
+.emProducao {
+    margin: 0.2rem;
+    font-size: 1.1rem;
+    color: rgb(102, 102, 102);
+}
+
+.bloco-emProducao {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.emProducaoProduzindo {
+    margin: 0;
+    margin-right: 0.5rem;
+    height: 100%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    align-content: center;
+    color: gray;
+}
+
+.emProducaoProduto {
+    font-size: 2rem;
+}
+
+.text-operadores {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.terminarProducao {
+    all: unset;
+    cursor: pointer;
+    position: absolute;
+    top: 0.8vh;
+    right: 2vw;
+    width: 4rem;
+    height: 4rem;
+}
+
+.logo-sem-nome {
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
+}
+
+.data-horario {
+    position: absolute;
+    bottom: 2vh;
+    left: 1vw;
+    margin: 0;
+}
+
+.data {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.turno {
+    font-weight: 600;
+    font-size: 2rem;
+    margin: 0;
+    color: rgb(24, 24, 24);
+}
+
+.horario {
+    position: absolute;
+    margin: 0;
+    top: 1vh;
+    font-size: 2.7rem;
+    color: rgb(77, 76, 76);
+    background-color: rgb(245, 245, 245);
+    border-radius: 30px;
+    padding: 16px;
+    box-shadow: 3px 3px 3px 5px rgb(228, 228, 228);
+}
+
+.guia {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45%;
+    height: auto;
+    bottom: 13%;
+}
+
+.guia-card {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 90%;
+    height: 180px;
+    background-color: rgb(245, 245, 245);
+    border-radius: 20px;
+    margin: 1.3rem 0 1.3rem 0;
+    font-size: 1rem;
+    box-shadow: 0px 0px 8px 5px rgb(235, 235, 235);
+}
+
+.guia-card-texto {
+    margin: 0 10px 0 5px;
+    width: 50%;
+    text-align: center;
+}
+
+/* **** BOTÃO OPERADOR AJUSTADO **** */
+#operador {
+    all: unset;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 1rem;
+    /* Espaçamento do card de cima */
+    text-transform: uppercase;
+}
+
+#operador:hover {
+    background-color: #e0e0e0;
+}
+
+.card-amarelo {
+    background-color: rgb(255, 233, 135);
+}
+
+.card-cinza {
+    border: 10px solid gray;
+    background-color: rgb(190, 190, 190);
+}
+
+.card-verde {
+    border: 10px solid rgb(2, 182, 2);
+    background-color: rgb(175, 255, 175);
+}
+
+.card-verde .Operadores {
+    color: green;
+}
+
+.card-vermelho {
+    border: 10px solid red;
+    background-color: rgb(255, 184, 184);
+}
+
+.card-vermelho .Operadores {
+    color: red;
+}
+
+.operacao-verde {
+    background-color: rgb(175, 255, 175);
+    border: 3px solid rgb(2, 182, 2);
+    color: green;
+}
+
+.operacao-vermelho {
+    background-color: rgb(255, 184, 184);
+    border: 3px solid red;
+    color: red;
+}
+
+.overlay-saida {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1003;
+}
+
+.card-saida {
+    position: absolute;
+    background-color: rgb(248, 248, 248);
+    border-radius: 20px;
+    z-index: 1004;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 800px;
+    width: 700px;
+
+}
+
+.card-saida-texto {
+    text-align: center;
+    width: 100%;
+    margin: 0.5rem 0 0 0;
+    font-size: 2.5rem;
+    font-weight: 500;
+}
+
+.card-saida-fechar {
+    all: unset;
+    position: absolute;
+    top: 1vh;
+    right: 1vw;
+}
+
+.card-saida-botoes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    gap: 20%;
+}
+
+.card-saida-mensagem {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card-saida-mensagem-texto {
+    margin: 0.5rem 0 0 0;
+    width: 70%;
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 200;
+}
+
+
+.card-saida-botoes-cancelar,
+.card-saida-botoes-sair {
+    all: unset;
+    width: 50%;
+    height: 12vh;
+    font-size: 1.8rem;
+    border-radius: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.card-saida-botoes-cancelar {
+    background-color: rgb(214, 214, 214);
+    border: 5px solid grey;
+    color: rgb(99, 99, 99);
+}
+
+.card-saida-botoes-cancelar:active {
+    background-color: rgb(182, 182, 182);
+}
+
+.card-saida-botoes-sair {
+    background-color: rgb(255, 175, 175);
+    border: 5px solid #ff4747;
+    color: #fa3d3d;
+}
+
+.card-saida-botoes-sair:active {
+    background-color: rgb(255, 154, 154);
+}
+
+.encerrar {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vw;
+    height: 60vh;
+    display: none;
+    background-color: rgb(255, 255, 255);
+    align-self: center;
+    justify-self: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    z-index: 1004;
+}
+
+.encerrar-sair,
+.encerrarProd-sair {
+    all: unset;
+    position: absolute;
+    top: 1%;
+    right: 1%;
+}
+
+.encerrar-iden {
+    width: 85%;
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.encerrar-txt-guia {
+    width: 75%;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.overlay-encerrar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.76);
+    z-index: 1005;
+}
+
+.encerrarProd {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 49vh;
+    display: none;
+    background-color: rgb(255, 255, 255);
+    align-self: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    z-index: 1006;
+    text-align: center;
+}
+
+.encerrarProd-botoes {
+    gap: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    margin-bottom: 20%;
+}
+
+.encerrarProd-textos {
+    margin-top: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.imagem-scanner {
+    height: 40%;
+}
+
+.encerrarProd-textos-p {
+    margin: 0.5rem 0 0.5rem 0;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.encerrarProd-textos-p:last-of-type {
+    width: 80%;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.encerrarProd-botoes-cancelar,
+.encerrarProd-botoes-encerrar {
+    all: unset;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+    height: 15vh;
+    font-weight: bold;
+    box-shadow: 0 0 15px 5px rgb(218, 218, 218);
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.encerrarProd-botoes-cancelar:hover,
+.encerrarProd-botoes-encerrar:hover {
+    transform: scale(1.01);
+}
+
+.encerrarProd-botoes-cancelar {
+    background-color: rgb(214, 214, 214);
+    border: 4px solid grey;
+    color: rgb(99, 99, 99);
+}
+
+.encerrarProd-botoes-encerrar {
+    background-color: rgb(252, 158, 158);
+    color: rgb(204, 0, 0);
+    border: solid 4px rgb(235, 0, 0);
+}
+
+
+/*##################     POP-UPS     ###################*/
+
+.overlay-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+}
+
+.popup-entrada {
+    position: absolute;
+    background-color: rgb(115, 255, 115);
+    width: 600px;
+    height: 700px;
+    border-radius: 20px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: solid rgb(0, 192, 0) 10px;
+    z-index: 1000;
+}
+
+.popup-entrada-nome {
+    margin: 0;
+    width: 80%;
+    text-align: center;
+    font-size: 3rem;
+    color: rgb(13, 110, 0);
+    font-weight: bolder;
+    text-transform: uppercase;
+}
+
+.popop-entrada-mensagem {
+    color: rgb(15, 128, 0);
+    margin: 0;
+    font-size: 2rem;
+}
+
+.popup-saida {
+    position: absolute;
+    background-color: rgb(255, 115, 115);
+    width: 600px;
+    height: 700px;
+    border-radius: 20px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: solid rgb(192, 0, 0) 10px;
+    z-index: 1000;
+}
+
+.popup-saida-nome {
+    margin: 0;
+    width: 80%;
+    text-align: center;
+    font-size: 3rem;
+    color: rgb(110, 0, 0);
+    font-weight: bolder;
+    text-transform: uppercase;
+}
+
+.popop-saida-mensagem {
+    color: rgb(128, 0, 0);
+    margin: 0;
+    font-size: 2rem;
+}
+
+
+/*######################################################*/
+
+
+@media (min-width:1200px) {
+    .horario {
+        top: 3%;
+        font-size: 1.5rem;
+    }
+
+    .turno {
+        font-size: 1.5rem;
+    }
+
+    .data {
+        font-size: 1.2rem;
+    }
+
+    .informacaoPrincipal {
+        gap: 0;
+    }
+
+    .linhaProducao {
+        font-size: 2rem;
+    }
+
+    .card-Operadores {
+        width: 40%;
+        height: 40%;
+    }
+
+    .logo-sem-nome {
+        width: 50px;
+    }
+
+    .sair-producao {
+        width: 42px;
+        right: 1%;
+    }
+
+    .terminarProducao {
+        display: flex;
+        justify-content: center;
+    }
+
+    .Operadores {
+        font-size: 7rem;
+    }
+
+    .text-operadores {
+        font-size: 1.2rem;
+    }
+
+    .guia {
+        width: 30%;
+        height: 120px;
+        bottom: 0%;
+    }
+
+    .guia-card {
+        width: 100%;
+        font-size: 0.6rem;
+    }
+
+    .scanner-cartao {
+        width: 50px;
+    }
+
+    .card-saida-botoes {
+        gap: 10%;
+    }
+
+    .card-saida-botoes-cancelar,
+    .card-saida-botoes-sair {
+        height: 200px;
+    }
+
+    .logo-sem-nome {
+        right: 1%;
+    }
+
+    .terminarProducao {
+        right: 0%;
+    }
+
+    .popup-entrada {
+        width: 450px;
+        height: 550px;
+    }
+
+    .popup-entrada-nome {
+        width: 80%;
+        font-size: 2.6rem;
+    }
+
+    .popop-entrada-mensagem {
+        font-size: 1.6rem;
+    }
+
+    .popup-saida {
+        width: 450px;
+        height: 550px;
+    }
+
+    .popup-saida-nome {
+        font-size: 2.6rem;
+    }
+
+    .popop-saida-mensagem {
+        font-size: 1.6rem;
+    }
+
+    .card-saida {
+        height: 600px;
+        width: 500px;
+    }
+
+    .card-saida-img {
+        width: 120px;
+    }
+
+    .card-saida-texto {
+        font-size: 2rem;
+    }
+
+    .card-saida-mensagem-texto {
+        font-size: 1.2rem;
+    }
+
+
+    .card-saida-botoes-cancelar,
+    .card-saida-botoes-sair {
+        font-size: 1.3rem;
+    }
+
+    .encerrar {
+        width: 35vw;
+        height: 90vh;
+    }
+
+    .encerrar-iden {
+        width: 85%;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .encerrar-txt-guia {
+        width: 75%;
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .encerrarProd {
+        width: 50vw;
+        height: 95vh;
+        justify-content: space-between;
+    }
+
+    .encerrarProd-botoes {
+        margin-bottom: 5%;
+    }
+
+    .encerrarProd-textos {
+        margin-top: 10%;
+    }
+
+    .imagem-scanner {
+        height: 40%;
+    }
+
+
+    .encerrarProd-botoes-cancelar,
+    .encerrarProd-botoes-encerrar {
+        height: 25vh;
+    }
+
+}

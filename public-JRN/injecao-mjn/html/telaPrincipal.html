@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head class="head-telaPrincipal"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/lista-operadores.css">
+    <link rel="stylesheet" href="/injecao-mjn/css/telaPrincipal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <title>Tela de Gestão - Linha</title>
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+
+    <div id="loadingOverlay">
+        <img src="/images/magna-logo.png" alt="">
+        <div class="spinner"></div>
+    </div>
+
+    <p class="horario" id="hora-atual"></p>
+    <button class="terminarProducao"><img src="/images/exit.svg" class="sair-producao" alt="" width="55"></button>
+    <main class="informacaoPrincipal">
+        <h1 class="setor" id="linha-producao">INJEÇÃO</h1>
+            <section class="cards">
+
+                <nav class="cards-injetoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">j.I<strong>01</strong>-H1K1000</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-j.I01-H1K1000" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-j.I01-H1K1000" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                <nav class="cards-injetoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">j.I<strong>02</strong>-H2K1150</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-j.I02-H2K1150" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-j.I02-H2K1150" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                <nav class="cards-injetoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">j.I<strong>03</strong>-H2K1700</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-j.I03-H2K1700" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-j.I03-H2K1700" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                 <nav class="cards-injetoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">j.I<strong>04</strong>-H1K500</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-j.I04-H1K500" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-j.I04-H1K500" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                <nav class="cards-injetoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">j.I<strong>05</strong>-H1K500</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-j.I05-H1K500" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-j.I05-H1K500" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                <nav class="cards-injetoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">j.I<strong>06</strong>-H1K500</p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-j.I06-H1K500" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-j.I06-H1K500" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                <nav class="cards-injetoras">
+                    <div class="linha-setor">
+                        <p class="linhaProducao">j.MT<strong>01</strong></p>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-j.MT01" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-j.MT01" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                  <button class="abrir-lista-operadores"><img src="/images/operadores.svg" width="80" alt=""></button>
+            </section>
+
+        <img src="/images/magna-logo.png" class="logo-sem-nome" width="175">
+
+        <div class="data-horario">
+            <p class="turno" id="turno-atual"></p>
+            <p class="data" id="data-atual"></p>
+        </div>
+
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto">Aproxime o cartão de identificação do leitor para: <br><br><strong style="color: rgb(0, 155, 0);">ENTRAR</strong> na produção <br> ou <br> <strong style="color: rgb(241, 0, 0);">SAIR</strong> do seu posto.</p>
+                <img src="/images/scanner.png" alt="" width="90" class="scanner-cartao">
+            </section>
+        </div>
+
+        <button id="operador" style="display: none;">operador</button>
+    </main>
+
+
+    <div class="overlay"></div>
+
+
+
+
+
+
+    <nav class="finalizacao-injetoras">
+        <div class="finalizacao-injetoras-header">
+            <section class="finalizacao-injetoras-header-textos">
+            <p class="finalizacao-injetoras-header-textos-text texto-Ola-encerramento" style="font-size: 2rem; font-weight: bold;">Olá, Rogério!</p>
+            <p class="finalizacao-injetoras-header-textos-text">Escolha as injetoras que serão <strong style="color: rgb(250, 0, 0);">finalizadas</strong>.</p>
+            </section>
+            <img src="/images/close.svg" class="finalizacao-injetoras-header-close" width="65" alt="">
+        </div>
+
+
+        <div class="finalizacao-injetoras-botoes">
+            <button class="finalizacao-injetoras-botoes-botao"data-finalizar="j.I01-H1K1000">j.I<strong class="destaque-injetora-encerrar">01</strong>-H1K1000</button>
+            <button class="finalizacao-injetoras-botoes-botao"data-finalizar="j.I02-H2K1150">j.I<strong class="destaque-injetora-encerrar">02</strong>-H2K1150</button>
+            <button class="finalizacao-injetoras-botoes-botao"data-finalizar="j.I03-H2K1700">j.I<strong class="destaque-injetora-encerrar">03</strong>-H2K1700</button>
+            <button class="finalizacao-injetoras-botoes-botao"data-finalizar="j.I04-H1K500">j.I<strong class="destaque-injetora-encerrar">04</strong>-H1K500</button>
+            <button class="finalizacao-injetoras-botoes-botao"data-finalizar="j.I05-H1K500">j.I<strong class="destaque-injetora-encerrar">05</strong>-H1K500</button>
+            <button class="finalizacao-injetoras-botoes-botao"data-finalizar="j.I06-H1K500">j.I<strong class="destaque-injetora-encerrar">06</strong>-H1K500</button>
+            <button class="finalizacao-injetoras-botoes-botao"data-finalizar="j.MT01">j.MT<strong class="destaque-injetora-encerrar">01</strong></button>
+        </div>
+
+
+        <div class="finalizacao-injetoras-confirmacao">
+            <button class="finalizacao-injetoras-confirmacao-select">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+            <button class="finalizacao-injetoras-confirmacao-finalizar">FINALIZAR</button>
+        </div>
+
+    </nav>
+
+
+    <div class="overlay-finalizacao"></div>
+
+        <div class="overlay-saida"></div>
+
+        <div id="overlay-teamleader" class="overlay-teamleader"></div>
+
+    <aside class="aside-operador">
+        <section class="bloco-boasvindas">
+                    <div class="boasvindas-aside">
+                        <h2 class="texto-boasvindas-aside" style="font-size: 2rem;">Bem-vindo, Leandro!</h2>
+                        <p class="texto-boasvindas-aside" style="font-size: 1.2rem;">Onde você irá trabalhar hoje?</p>
+                    </div>
+
+                    <button class="sair-operador"><img src="/images/close.svg" alt="" width="70"></button>
+
+                </section>
+
+                <section class="bloco-selecao">
+                <ul class="injetoras">
+                    <button class="botoes-injetoras-botao" data-injetora="j.I01-H1K1000">j.I<strong>01</strong>-H1K1000
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                        <button class="botoes-injetoras-botao" data-injetora="j.I02-H2K1150">j.I<strong>02</strong>-H2K1150
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                        <button class="botoes-injetoras-botao" data-injetora="j.I03-H2K1700">j.I<strong>03</strong>-H2K1700
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                        <button class="botoes-injetoras-botao" data-injetora="j.I04-H1K500">j.I<strong>04</strong>-H1K500
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                        <button class="botoes-injetoras-botao" data-injetora="j.I05-H1K500">j.I<strong>05</strong>-H1K500
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                        <button class="botoes-injetoras-botao" data-injetora="j.I06-H1K500">j.I<strong>06</strong>-H1K500
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                         
+
+
+                    
+                </ul>
+
+                <div class="corredor-guia">CORREDOR</div>
+
+                <section class="bloco-metalizadoras">
+                    <button class="botoes-injetoras-botao btn-met" data-injetora="j.MT01">j.MT<strong>01</strong>
+                            <div class="botao-injetora-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-injetora">0</p>
+                                <p class="text-qntOperadores-injetora">/</p>
+                                <p class="text-qntOperadores-injetora">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+                </section>
+
+                
+            </section>
+                    
+                        <button class="bloco-confirmar-botao">Entrar</button>
+                        <button class="bloco-sair-botao" id="btn-sair-posto">Sair</button>
+    </aside>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img class="fechar-asideteamleader" src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+        <div class="botoes-injetoras-tl">
+            <button class="botoes-injetoras-botao-tl" id="btn-IP01" data-produto="j.I01-H1K1000">j.I<strong class="destaque-injetora">01</strong>H1K1000</button>
+            <button class="botoes-injetoras-botao-tl" id="btn-IP02" data-produto="j.I02-H2K1150">j.I<strong class="destaque-injetora">02</strong>H2K1150</button>
+             <div class="div-injetoras-botao">
+
+                <p class="div-text-injetora" data-produto="j.I03-H2K1700">j.I<strong class="destaque-injetora">03</strong>-H2K1700</p>
+
+                <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-um">1</button>
+                        <button id="aumentar" class="contador-confirmar-scroll-dois">2</button>
+                    </div>
+                </section>
+
+            </div>
+            <button class="botoes-injetoras-botao-tl" id="btn-IP04" data-produto="j.I04-H1K500">j.I<strong class="destaque-injetora">04</strong>H1K500</button>
+            <button class="botoes-injetoras-botao-tl" id="btn-IP05" data-produto="j.I05-H1K500">j.I<strong class="destaque-injetora">05</strong>H1K500</button>
+            <button class="botoes-injetoras-botao-tl" id="btn-IP06" data-produto="j.I06-H1K500">j.I<strong class="destaque-injetora">06</strong>H1K500</button>
+            <button class="botoes-injetoras-botao-tl" id="btn-MT01" data-produto="j.MT01">j.MT<strong class="destaque-injetora">01</strong></button>
+         </div>
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+            <div class="contador">
+                    <button class="selecionar-todas">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+            </div>
+        </div>
+    </aside>
+
+
+    <nav class="encerrar">
+        <button class="encerrar-sair"><img src="/images/close.svg" alt="" width="70"></button>
+
+        <p class="encerrar-iden">Identifique-se, <br>Team Leader!</p>
+
+        <img src="/images/scanner.png" alt="" class="imagem-scanner">
+
+        <p class="encerrar-txt-guia">Aproxime o cartão de identificação do leitor para <strong>ENCERRAR</strong> a produção do produto atual.</p>
+
+    </nav>
+
+
+    <nav class="lista-operadores">
+
+        <button class="lista-operadores-sair"><img src="/images/close.svg" width="75" alt=""></button>
+
+        <div class="lista-operadores-linha" data-lista="j.I01-H1K1000">
+
+            <p class="lista-operadores-linha-nome">j.I01-H1K1000</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-linha" data-lista="j.I02-H2K1150">
+
+            <p class="lista-operadores-linha-nome">j.I02-H2K1150</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-linha" data-lista="j.I03-H2K1700">
+
+            <p class="lista-operadores-linha-nome">j.I03-H2K1700</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-linha" data-lista="j.I04-H1K500">
+
+            <p class="lista-operadores-linha-nome">j.I04-H1K500</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-linha" data-lista="j.I05-H1K500">
+
+            <p class="lista-operadores-linha-nome">j.I05-H1K500</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-linha" data-lista="j.I06-H1K500">
+
+            <p class="lista-operadores-linha-nome">j.I06-H1K500</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        
+        <div class="lista-operadores-linha" data-lista="j.MT01">
+
+            <p class="lista-operadores-linha-nome">j.MT01</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-guia">
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia"></div>
+                <p>Dentro do turno apontado</p>
+            </section>
+
+            <section class="lista-operadores-guia-status barras-guia">
+                <div class="status-pessoa-guia status-pessoa-amarelo"></div>
+                <p>Fora do turno e dentro do limite de HE</p>
+            </section>
+            
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia status-pessoa-vermelho"></div>
+                <p>Fora do turno apontado</p>
+            </section>
+        </div>
+
+
+    </nav>
+
+    <div class="overlay-encerrar"></div>
+
+    <div class="overlay-popup"></div>
+
+    <nav class="popup-entrada">
+        <p class="popup-entrada-nome">Leandro Almeida</p>
+        <p class="popop-entrada-mensagem"> <strong>Entrou</strong> no posto!</p>
+    </nav>
+
+    <nav class="popup-saida">
+        <p class="popup-saida-nome">Leandro Almeida</p>
+        <p class="popop-saida-mensagem"> <strong>Saiu</strong> do posto!</p>
+    </nav>
+
+
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script type="module" src="/injecao-mjn/js/telaPrincipal.js"></script> 
+
+<link rel="stylesheet" href="/toast/toastr-custom.css">
+ 
+</html>

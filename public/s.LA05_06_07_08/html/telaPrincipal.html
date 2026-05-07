@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head class="head-telaPrincipal"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/lista-operadores.css">
+    <link rel="stylesheet" href="/s.LA05_06_07_08/css/telaPrincipal.css">
+    <link rel="stylesheet" href="/s.LA05_06_07_08/css/asideTeamLeader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <title>Tela de Gestão - Linha</title>
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+<body>
+
+    <div id="loadingOverlay">
+        <img src="/images/magna-logo.png" alt="">
+        <div class="spinner"></div>
+    </div>
+     <p class="setor" id="linha-producao"><strong>Lanternas</strong></p>
+    <p class="horario" id="hora-atual"></p>
+     <button class="terminarProducao"><img src="/images/exit.svg" class="sair-producao" alt="" width="55"></button>
+    <main class="informacaoPrincipal">
+        
+        
+            <section class="cards">
+                <nav class="cards-uaps">
+                    <div class="linha-setor">
+                        <p class="linhaProducao"><strong>s.LA05gm</strong> & <strong>s.LA06gm</strong></p>
+                        <div class="bloco-emProducao">
+                        <p id="produto-s.LA05gm_s.LA06gm" class="emProducao"></p>
+                        </div>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.LA05gm_s.LA06gm" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.LA05gm_s.LA06gm" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                <nav class="cards-uaps">
+                    <div class="linha-setor">
+                        <p class="linhaProducao"><strong>s.LA07re</strong> & <strong>s.LA08re</strong></p>
+                        <div class="bloco-emProducao">
+                        <p id="produto-s.LA07re_s.LA08re" class="emProducao"></p>
+                        </div>
+                    </div>
+                    <div class="cards-Operadores">
+                        <li class="Operadores">
+                            <p id="real-s.LA07re_s.LA08re" class="OperadoresNaLinha">0</p>
+                            <p class="barra-quantidadeOperadores">/</p>
+                            <p id="esperado-s.LA07re_s.LA08re" class="quantidadeOperadores">0</p>
+                        </li>
+                        <p class="text-operadores">Operadores</p>
+                    </div>
+                </nav>
+
+                <button class="abrir-lista-operadores"><img src="/images/operadores.svg" width="80" alt=""></button>
+            </section>
+
+             
+
+        <img src="/images/magna-logo.png" class="logo-sem-nome" width="175">
+
+        <div class="data-horario">
+            <p class="turno" id="turno-atual"></p>
+            <p class="data" id="data-atual"></p>
+        </div>
+
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto">Aproxime o cartão de identificação do leitor para: <br><br><strong style="color: rgb(0, 155, 0);">ENTRAR</strong> na produção <br> ou <br> <strong style="color: rgb(241, 0, 0);">SAIR</strong> do seu posto.</p>
+                <img src="/images/scanner.png" alt="" width="90" class="scanner-cartao">
+            </section>
+        </div>
+
+        <button id="operador" style="display: none;">operador</button>
+    </main>
+
+
+     <div id="overlay" class="overlay"></div>
+
+     <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>  
+
+
+        <div class="overlay-lista"></div>
+
+
+        <div class="botoes-uaps-tl">
+            
+             <nav class="botoes-uaps-tl-nav">
+                 <button class="botoes-uaps-tl-botao" data-produto="s.LA05gm" id="s.LA05gm_s.LA06gm">Linha 03</button>
+
+                <section class="botoes-uaps-tl-guia">
+                <div class="botoes-uaps-tl-guia-selecionados">
+                    <p class="botoes-uaps-tl-guia-selecionado"></p>
+                </div>
+                <img class="botoes-uaps-tl-guia-editar" src="/images/edit.svg" width="35" alt="">
+                </section>
+
+                <div class="botoes-uaps-tl-divlista">
+                    <section class="botoes-uaps-tl-divlista-pesquisa">
+                        <input class="pesquisa-produtos" type="text" id="pesquisa-produtos" placeholder="Busque pelo nome ou código do produto...">
+                        <img src="/images/close.svg" class="botoes-uaps-tl-divlista-pesquisa-sair" width="65" alt="">
+                    </section>
+
+                        <section class="botoes-uaps-tl-produtos">
+                    </section>
+
+                    <section class="area-branco"></section>
+                </div>
+
+
+                 <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-diminuir">-</button>
+                        <span class="contador-confirmar-numero">1</span>
+                        <button id="aumentar" class="contador-confirmar-scroll-aumentar">+</button>
+                    </div>
+                </section>
+                
+            </nav>
+
+             <nav class="botoes-uaps-tl-nav">
+                 <button class="botoes-uaps-tl-botao" data-produto="s.LA07re" id="s.LA07re_s.LA08re">Linha 04</button>
+
+                <section class="botoes-uaps-tl-guia">
+                <div class="botoes-uaps-tl-guia-selecionados">
+                    <p class="botoes-uaps-tl-guia-selecionado"></p>
+                </div>
+                <img class="botoes-uaps-tl-guia-editar" src="/images/edit.svg" width="35" alt="">
+                </section>
+
+                <div class="botoes-uaps-tl-divlista">
+                    <section class="botoes-uaps-tl-divlista-pesquisa">
+                        <input class="pesquisa-produtos" type="text" id="pesquisa-produtos" placeholder="Busque pelo nome ou código do produto...">
+                        <img src="/images/close.svg" class="botoes-uaps-tl-divlista-pesquisa-sair" width="65" alt="">
+                    </section>
+
+                        <section class="botoes-uaps-tl-produtos">
+                    </section>
+
+                    <section class="area-branco"></section>
+                </div>
+
+
+                 <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-diminuir">-</button>
+                        <span class="contador-confirmar-numero">1</span>
+                        <button id="aumentar" class="contador-confirmar-scroll-aumentar">+</button>
+                    </div>
+                </section>
+                
+            </nav>
+
+            
+        </div>
+        
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+            <div class="contador">
+                
+                <section class="contador-confirmar-area">
+                    <button id="btn-confirmar" class="contador-confirmar-botao" style="display: none;">Confirmar</button>
+                </section>
+            </div>
+        </div>
+    </aside>
+
+
+
+    <nav class="finalizacao-uaps">
+        <div class="finalizacao-uaps-header">
+            <section class="finalizacao-uaps-header-textos">
+            <p class="finalizacao-uaps-header-textos-text texto-Ola-encerramento" style="font-size: 2rem; font-weight: bold;">Olá, Rogério!</p>
+            <p class="finalizacao-uaps-header-textos-text">Escolha as uaps que serão <strong style="color: rgb(250, 0, 0);">finalizadas</strong>.</p>
+            </section>
+            <img src="/images/close.svg" class="finalizacao-uaps-header-close" width="65" alt="">
+        </div>
+
+
+        <div class="finalizacao-uaps-botoes">
+            <button class="finalizacao-uaps-botoes-botao" data-finalizar="s.LA05gm_s.LA06gm"><p>Linha<strong class="destaque-uap-encerrar"> 03</strong></p></button>
+            <button class="finalizacao-uaps-botoes-botao" data-finalizar="s.LA07re_s.LA08re"><p>Linha<strong class="destaque-uap-encerrar"> 04</strong></p></button>
+        </div>
+
+
+        <div class="finalizacao-uaps-confirmacao">
+            <button class="finalizacao-uaps-confirmacao-select">SELECIONAR TODAS <img src="/images/selecionar-todos.svg" width="25" alt=""> </button>
+            <button class="finalizacao-uaps-confirmacao-finalizar">FINALIZAR</button>
+        </div>
+
+    </nav>
+
+
+    <div class="overlay-finalizacao"></div>
+
+        <div class="overlay-saida"></div>
+
+        <div id="overlay-teamleader" class="overlay-teamleader"></div>
+
+    <aside class="aside-operador">
+        <section class="bloco-boasvindas">
+                    <div class="boasvindas-aside">
+                        <h2 class="texto-boasvindas-aside" style="font-size: 2rem;">Bem-vindo, Leandro!</h2>
+                        <p class="texto-boasvindas-aside" style="font-size: 1.2rem;">Onde você irá trabalhar hoje?</p>
+                    </div>
+
+                    <button class="sair-operador"><img src="/images/close.svg" alt="" width="70"></button>
+
+                </section>
+
+                <section class="bloco-selecao">
+    
+                <ul class="uaps">
+                    <button class="botoes-uaps-botao" data-uap="s.LA05gm_s.LA06gm">Linha<strong>03</strong>
+                            <div class="botao-uap-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-uap">0</p>
+                                <p class="text-qntOperadores-uap">/</p>
+                                <p class="text-qntOperadores-uap">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                         <div class="corredor-guia-lateral"></div>
+
+                    <button class="botoes-uaps-botao" data-uap="s.LA07re_s.LA08re">Linha<strong>04</strong>
+                            <div class="botao-uap-info">
+                                <img src="/images/operador-real.svg" width="35" alt="">
+                                <p class="text-qntOperadores-uap">0</p>
+                                <p class="text-qntOperadores-uap">/</p>
+                                <p class="text-qntOperadores-uap">1</p>
+                                <img src="/images/operador-esperado.svg" width="35" alt="">
+                            </div>
+                        </button>
+
+                </ul>
+
+
+                <div class="corredor-guia">CORREDOR</div>
+
+            </section>
+                    
+                        <button class="bloco-confirmar-botao">Entrar</button>
+    </aside>
+
+
+    <nav class="encerrar">
+        <button class="encerrar-sair"><img src="/images/close.svg" alt="" width="70"></button>
+
+        <p class="encerrar-iden">Identifique-se, <br>Team Leader!</p>
+
+        <img src="/images/scanner.png" alt="" class="imagem-scanner">
+
+        <p class="encerrar-txt-guia">Aproxime o cartão de identificação do leitor para <strong>ENCERRAR</strong> a produção do produto atual.</p>
+
+    </nav>
+
+
+
+    <nav class="lista-operadores">
+
+        <button class="lista-operadores-sair"><img src="/images/close.svg" width="75" alt=""></button>
+
+        <div class="lista-operadores-linha" data-lista="s.LA05gm_s.LA06gm">
+
+            <p class="lista-operadores-linha-nome">Linha 03</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+         <div class="lista-operadores-linha" data-lista="s.LA07re_s.LA08re">
+
+            <p class="lista-operadores-linha-nome">Linha 04</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+        </div>
+
+        <div class="lista-operadores-guia">
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia"></div>
+                <p>Dentro do turno apontado</p>
+            </section>
+
+            <section class="lista-operadores-guia-status barras-guia">
+                <div class="status-pessoa-guia status-pessoa-amarelo"></div>
+                <p>Fora do turno e dentro do limite de HE</p>
+            </section>
+            
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia status-pessoa-vermelho"></div>
+                <p>Fora do turno apontado</p>
+            </section>
+        </div>
+
+
+    </nav>
+
+
+
+    <div class="overlay-encerrar"></div>
+
+    <div class="overlay-popup"></div>
+
+    <nav class="popup-entrada">
+        <p class="popup-entrada-nome">Leandro Almeida</p>
+        <p class="popop-entrada-mensagem"> <strong>Entrou</strong> no posto!</p>
+    </nav>
+
+    <nav class="popup-saida">
+        <p class="popup-saida-nome">Leandro Almeida</p>
+        <p class="popop-saida-mensagem"> <strong>Saiu</strong> do posto!</p>
+    </nav>
+
+
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script type="module" src="/s.LA05_06_07_08/js/telaPrincipal.js"></script> 
+
+<link rel="stylesheet" href="/toast/toastr-custom.css">
+ 
+</html>

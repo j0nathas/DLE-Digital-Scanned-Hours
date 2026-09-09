@@ -3,40 +3,35 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const cron = require('node-cron');
-const oracledb = require('oracledb'); // ← Oracle para rotas Debx
+const oracledb = require('oracledb');
 
 // ===============================================
 // ===        IMPORTAÇÃO DOS SERVIÇOS            ===
 // ===============================================
 const rhSyncService = require('./services/rhSyncService');
 const syncDleService = require('./services/syncDle');
-const { sql, getPoolPromiseAcessos } = require('./config/db');
+const { sql, getPoolPromiseAcessos, getPoolPromiseEGA } = require('./config/db');
 
 // ===============================================
 // ===        IMPORTAÇÃO DOS CONTROLLERS         ===
 // ===============================================
 const indicadorController = require('./controllers/indicadorController');
-const apontamentoController = require('./controllers/apontamentoController');
 const plantaController = require('./controllers/plantaController');
 const financeiroController = require('./controllers/financeiroController');
 const debxController = require('./controllers/debxController');
-
-console.log('--- [DIAGNÓSTICO DE CAMINHO] ---');
-console.log('Local do debxController:', require.resolve('./controllers/debxController'));
-console.log('---------------------------------');
-
 const rhController = require('./controllers/rhController');
 const usuarioController = require('./controllers/usuarioController');
+const gestaoController = require('./controllers/gestaoController');
 
 // ===============================================
 // ===        ROTAS MODULARES                    ===
 // ===============================================
-// SUBSTITUIÇÃO: producaoRoutes agora aponta para o roteador debx.js
 const debxRoutes = require('./routes/debx'); 
 const dleRoutes = require('./routes/dleRoutes');
 const rhRoutes = require('./routes/rh');
 const authRoutes = require('./routes/auth');
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const gestaoRoutes = require('./routes/gestaoRoutes');
 const { autenticado } = require('./middleware/authMiddleware');
 
 const app = express();
@@ -67,15 +62,20 @@ const check = (name, obj, func) => {
     return obj[func];
 };
 
-const getFabrica          = check('indicadorController',  indicadorController,  'getIndicadoresFabrica');
-const getFin              = check('financeiroController', financeiroController, 'getIndicadoresFinanceiro');
-const getValidarMLB       = check('indicadorController',  indicadorController,  'validarDadosMLB');
-const getValidarMJN       = check('indicadorController',  indicadorController,  'validarDadosMJN');
-const getValidarMMB       = check('indicadorController',  indicadorController,  'validarDadosMMB');
-const getOperadoresDetalhado = check('apontamentoController', apontamentoController, 'getOperadoresDetalhado');
+const getFabrica             = check('indicadorController',  indicadorController,  'getIndicadoresFabrica');
+const getFin                 = check('financeiroController', financeiroController, 'getIndicadoresFinanceiro');
+const getValidarMLB          = check('indicadorController',  indicadorController,  'validarDadosMLB');
+const getValidarMJN          = check('indicadorController',  indicadorController,  'validarDadosMJN');
+const getValidarMMB          = check('indicadorController',  indicadorController,  'validarDadosMMB');
+
+// Funções unificadas no GestaoController
+const getOperadoresDetalhado = check('gestaoController',      gestaoController,      'getOperadoresDetalhado');
+const getContagemEGA         = check('gestaoController',      gestaoController,      'getContagemEGA');
+const getContagemCards       = check('gestaoController',      gestaoController,      'getContagemCards');
+
 console.log('-------------------------------------------------------');
 
-// ─── DIAGNÓSTICO AD — REMOVER APÓS TESTAR ───
+// ─── DIAGNÓSTICO AD (LDAP) ───
 app.get('/api/debug/ad-test', async (req, res) => {
     const ldap = require('ldapjs');
     const resultados = [];
@@ -92,7 +92,6 @@ app.get('/api/debug/ad-test', async (req, res) => {
                     resultados.push({ label, status: 'BIND_FALHOU', userDN, detalhe: err.message });
                 } else {
                     resultados.push({ label, status: 'BIND_OK', userDN });
-                    // Tenta buscar usuário jonave10
                     client.search(baseDN, {
                         filter: '(sAMAccountName=jonave10)',
                         scope: 'sub',
@@ -112,37 +111,15 @@ app.get('/api/debug/ad-test', async (req, res) => {
         });
     };
 
-    await testar(
-        'OBR_service_account',
-        process.env.AD_URL,
-        process.env.AD_SA_OBR_USER,
-        process.env.AD_SA_OBR_PASS,
-        process.env.AD_OU_OBR
-    );
-
-    await testar(
-        'OBR_com_dominio',
-        process.env.AD_URL,
-        process.env.AD_SA_OBR_USER + '@' + process.env.AD_DOMAIN,
-        process.env.AD_SA_OBR_PASS,
-        process.env.AD_OU_OBR
-    );
-
-    await testar(
-        'MMB_service_account',
-        process.env.AD_URL,
-        process.env.AD_SA_MMB_USER,
-        process.env.AD_SA_MMB_PASS,
-        process.env.AD_OU_MMB
-    );
+    await testar('OBR_service_account', process.env.AD_URL, process.env.AD_SA_OBR_USER, process.env.AD_SA_OBR_PASS, process.env.AD_OU_OBR);
+    await testar('OBR_com_dominio', process.env.AD_URL, process.env.AD_SA_OBR_USER + '@' + process.env.AD_DOMAIN, process.env.AD_SA_OBR_PASS, process.env.AD_OU_OBR);
+    await testar('MMB_service_account', process.env.AD_URL, process.env.AD_SA_MMB_USER, process.env.AD_SA_MMB_PASS, process.env.AD_OU_MMB);
 
     res.json({ resultados, env: {
         AD_URL: process.env.AD_URL,
         AD_DOMAIN: process.env.AD_DOMAIN,
         AD_SA_OBR_USER: process.env.AD_SA_OBR_USER,
-        AD_OU_OBR: process.env.AD_OU_OBR,
-        AD_SA_MMB_USER: process.env.AD_SA_MMB_USER,
-        AD_OU_MMB: process.env.AD_OU_MMB,
+        AD_OU_OBR: process.env.AD_OU_OBR
     }});
 });
 
@@ -150,31 +127,32 @@ app.get('/api/debug/ad-test', async (req, res) => {
 // ===             ROTAS DA API                 ===
 // ===============================================
 
-// Autenticação (pública)
+// Autenticação e Usuários
 app.use('/api/auth', authRoutes);
-
-// Gestão de Usuários (protegida)
 app.use('/api/usuarios', autenticado, usuarioRoutes);
 
-// Routers modulares
+// Módulos principais
 app.use('/api/dle',      dleRoutes);
-// SUBSTITUIÇÃO: Módulo debxRoutes sendo usado para prefixo /api/producao
 app.use('/api/producao', debxRoutes); 
 app.use('/api/rh',       rhRoutes);
-app.use('/api/gestao',   require('./routes/gestaoRoutes'));
+app.use('/api/gestao',   gestaoRoutes);
 
-// Rotas diretas DLE
-app.get('/api/indicadores/fabrica',            getFabrica);
-app.get('/api/indicadores/operadores-detalhado', getOperadoresDetalhado);
-app.get('/api/financeiro/indicadores',         getFin);
-app.get('/api/validar/mlb',                    getValidarMLB);
-app.get('/api/validar/mjn',                    getValidarMJN);
-app.get('/api/validar/mmb',                    getValidarMMB);
+// Rotas diretas e Indicadores
+app.get('/api/indicadores/fabrica',              getFabrica);
+app.get('/api/indicadores/operadores-detalhado',   getOperadoresDetalhado);
+app.get('/api/financeiro/indicadores',           getFin);
+app.get('/api/validar/mlb',                      getValidarMLB);
+app.get('/api/validar/mjn',                      getValidarMJN);
+app.get('/api/validar/mmb',                      getValidarMMB);
 
-app.get('/api/planta/maquinas/:plantaSigla',   apontamentoController.getMaquinasLayout         || ((req, res) => res.send('Erro')));
-app.get('/api/planta/operadores/:plantaSigla', apontamentoController.getApontamentosAtivos     || ((req, res) => res.send('Erro')));
-app.get('/api/plantas/listar',                 plantaController.getAllPlantas                  || ((req, res) => res.send('Erro')));
-app.get('/api/apontamentos/dle/:plantaSigla',  apontamentoController.getApontamentosPorPeriodoDLE || ((req, res) => res.send('Erro')));
+// Rotas de Planta e Apontamentos unificadas no GestaoController
+app.get('/api/planta/maquinas/:plantaSigla',     gestaoController.getMaquinasLayout);
+app.get('/api/planta/operadores/:plantaSigla',   gestaoController.getContagemCards);
+app.get('/api/plantas/listar',                   plantaController.getAllPlantas);
+app.get('/api/apontamentos/dle/:plantaSigla',    gestaoController.getApontamentosPorPeriodoDLE);
+
+// Rota específica para contagem EGA
+app.get('/api/contagem-ega',                     getContagemEGA);
 
 // Sincronização manual DLE
 app.post('/api/dle/sync', async (req, res) => {
@@ -198,6 +176,7 @@ app.get('/relatorio-rf', (req, res) => {
     res.sendFile(path.join(debxStaticPath, 'html', 'relatorio_R_F.html'));
 });
 
+// Fallback para SPA (index.html)
 app.get(/.*/, (req, res) => {
     if (req.url.startsWith('/api')) return res.status(404).json({ error: 'Endpoint não encontrado' });
     res.sendFile(path.join(frontendPath, 'index.html'));
@@ -227,11 +206,20 @@ cron.schedule('0 * * * *', async () => {
     await executarSincronizacaoAutomatica();
 });
 
+// ===============================================
+// ===             STARTUP                      ===
+// ===============================================
 async function startup() {
     try {
         console.log('--------------------------------------------------');
         console.log('[STARTUP] Conectando aos bancos SQL Server...');
-        for (const p of ['MLB', 'MMB', 'MJN']) await getPoolPromiseAcessos(p);
+        for (const p of ['MLB', 'MMB', 'MJN']) {
+            await getPoolPromiseAcessos(p);
+        }
+        
+        console.log('[STARTUP] Conectando ao Banco EGA...');
+        await getPoolPromiseEGA();
+        
         console.log('[STARTUP] Conexões SQL Server OK.');
 
         console.log('[STARTUP] Testando conexão Oracle (Debx)...');
@@ -241,6 +229,7 @@ async function startup() {
 
         console.log('[STARTUP] Sincronizando dados dos últimos 7 dias...');
         await executarSincronizacaoAutomatica();
+        
         console.log('[STARTUP] Sistema pronto e atualizado.');
         console.log('--------------------------------------------------');
     } catch (e) {
@@ -248,9 +237,9 @@ async function startup() {
     }
 }
 
+// Chamar o startup ANTES de ouvir a porta
 startup();
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Backend DLE rodando na porta ${PORT}`);
-    console.log(`📊 Rotas Oracle (Debx) disponíveis em /api/producao/* e /api/debx/*`);
 });

@@ -1,5 +1,5 @@
 import { apontamentoTeamLeader, verificarStatusDaLinha } from '/js/funcoes.js';
-import { IpMonitor } from '/js/leituraCartoTemp.js';
+import { IpMonitor } from '/js/leituraCartao.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 

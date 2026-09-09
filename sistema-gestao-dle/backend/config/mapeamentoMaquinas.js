@@ -117,9 +117,9 @@ const MAPA_MAQUINAS = {
         "S.SC21VW","S.SC22VW"
     ], "MLB", "MONTAGEM SMALL"),
 
-    ...criarMapa([
-        "2001","TERCEIRIZACAO","TERCEIRIZAÇÃO"
-    ], "MLB", "TERCEIRIZAÇÃO"),
+    //...criarMapa([
+    //    "2001","TERCEIRIZACAO","TERCEIRIZAÇÃO"
+    //], "MLB", "TERCEIRIZAÇÃO"),
 
     // =========================================================
     // MJN (JARINU)

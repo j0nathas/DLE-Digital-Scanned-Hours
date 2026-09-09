@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const sendPasswordResetEmail = async (userEmail, token) => {
     // Garanta que o link aponta para o IP correto do seu servidor
-    const resetLink = `http://10.109.132.135:3000/gestao/reset-password?token=${token}`;
+    const resetLink = `http://10.109.132.160:3000/gestao/reset-password?token=${token}`;
 
     const mailOptions = {
         from: `"Sistema de Gestão" <${process.env.EMAIL_USER}>`,

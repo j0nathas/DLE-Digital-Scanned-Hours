@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://10.109.132.135:3000'; // Use o IP do seu servidor
+const API_BASE_URL = 'http://10.109.132.160:3000'; // Use o IP do seu servidor
 
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname; 

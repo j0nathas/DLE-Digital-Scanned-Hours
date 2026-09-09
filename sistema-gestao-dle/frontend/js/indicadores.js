@@ -1,6 +1,6 @@
 function iniciarIndicadores() {
     if (!document.getElementById('chart-barras')) return;
-    const API_BASE_URL = 'http://10.109.132.135:3001/api';
+    const API_BASE_URL = 'http://10.109.132.160:3001/api';
     const fpConfig = { dateFormat: "Y-m-d", altInput: true, altFormat: "d/M/y", theme: "dark", locale: "pt" };
     const startDatePicker = flatpickr("#start-date", fpConfig);
     const endDatePicker = flatpickr("#end-date", fpConfig);

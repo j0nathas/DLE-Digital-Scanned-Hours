@@ -1,7 +1,4 @@
-/* =================================================================== */
-/* ==                  1. CONFIGURAÇÃO E RESET GLOBAL                 == */
-/* =================================================================== */
-/* Define as variáveis de cores (tema) e a fonte padrão para todo o projeto. */
+
 :root {
   --bg-dark: #0f172a;
   --bg-medium: #1e293b;
@@ -13,14 +10,14 @@
   --accent-yellow: #facc15;
   --accent-green: #22c55e;
   --accent-red: #ef4444;
-  --accent-info: #0ea5e9; /* Azul claro para Scanned Hours */
+  --accent-info: #0ea5e9; 
   --border-color: #4b5563;
   --border-color-box: #94a3b8;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-/* Reseta margens/preenchimentos e define o box-sizing e a fonte globalmente. */
+
 * {
   margin: 0;
   padding: 0;
@@ -28,28 +25,25 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Garante que a página ocupe toda a altura e esconde barras de rolagem desnecessárias. */
+
 html, body {
   height: 100%;
   overflow: hidden;
 }
 
-/* Define o fundo e a cor de texto padrão para a aplicação. */
+
 body {
   background-color: var(--bg-medium);
   color: var(--text-primary);
 }
 
-/* =================================================================== */
-/* ==                 2. ESTRUTURA E LAYOUT PRINCIPAL                 == */
-/* =================================================================== */
-/* Container principal que organiza a sidebar e o conteúdo lado a lado. */
+
 .container {
   display: flex;
   height: 100vh;
 }
 
-/* Barra lateral de navegação. */
+
 .sidebar {
   width: 220px;
   background-color: var(--bg-dark);
@@ -59,7 +53,7 @@ body {
   border-right: 1px solid var(--border-color-box);
 }
 
-/* Área do logotipo ou título na sidebar. */
+
 .sidebar .logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -67,7 +61,7 @@ body {
   color: var(--text-primary);
 }
 
-/* Área de navegação principal na sidebar. */
+
 .sidebar nav {
   flex-grow: 1;
   padding: 0 0.8rem;
@@ -93,7 +87,7 @@ body {
   text-decoration: none;
 }
 
-/* Efeito visual ao passar o mouse sobre um item de menu. */
+
 .sidebar nav li:hover {
   background-color: var(--bg-light);
 }
@@ -102,14 +96,14 @@ body {
   color: var(--text-primary);
 }
 
-/* Estilo para o item de menu atualmente ativo. */
+
 .sidebar nav li.active a, .sidebar nav a.active {
   background-color: var(--accent-blue);
   color: white;
   font-weight: bold;
 }
 
-/* Informação de versão no rodapé da sidebar. */
+
 .sidebar .version {
   padding: 1rem;
   font-size: 0.75rem;
@@ -118,7 +112,7 @@ body {
   border-top: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Container para o conteúdo principal, à direita da sidebar. */
+
 .main-content {
   flex-grow: 1;
   display: flex;
@@ -126,7 +120,7 @@ body {
   overflow: hidden;
 }
 
-/* Cabeçalho do conteúdo principal. */
+
 .main-content header {
   display: flex;
   justify-content: space-between;
@@ -149,7 +143,7 @@ body {
   padding: 0 1rem;
 }
 
-/* Adiciona uma barra vertical separadora, exceto no último item */
+
 .header-info .info-item:not(:last-child)::after {
   content: '';
   position: absolute;
@@ -166,7 +160,7 @@ body {
   font-weight: 600;
 }
 
-/* Ícone de perfil do usuário no cabeçalho. */
+
 .user-profile {
   width: 36px;
   height: 36px;
@@ -179,7 +173,7 @@ body {
   cursor: pointer;
 }
 
-/* Área principal do dashboard, com rolagem interna para o conteúdo. */
+
 .dashboard {
   flex-grow: 1;
   padding: 1.5rem;
@@ -189,9 +183,6 @@ body {
   overflow-y: auto;
 }
 
-/* =================================================================== */
-/* ==                3. COMPONENTES DE FILTRO E INPUTS                == */
-/* =================================================================== */
 .filter-bar {
   width: 100%;
   padding: 0.8rem 1rem;
@@ -296,9 +287,6 @@ input[type="date"].flatpickr-input {
 .flatpickr-day.today { border-color: var(--accent-yellow); }
 .flatpickr-months .flatpickr-prev-month:hover svg, .flatpickr-months .flatpickr-next-month:hover svg { fill: var(--accent-blue); }
 
-/* =================================================================== */
-/* ==                    4. DASHBOARD DE GESTÃO                       == */
-/* =================================================================== */
 .machine-group {
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -381,25 +369,25 @@ input[type="date"].flatpickr-input {
 .group-title.card-excess .sector-total { color: white; }
 .op-count-box.card-ok .texto, .op-count-box.card-attention .texto { color: #4b5563; }
 .op-count-box.card-excess .texto { color: #d1d5db; }
+.group-title.card-info, .op-count-box.card-info { background-color: var(--accent-info); color: var(--bg-dark); }
+.group-title.card-info .sector-total { color: var(--bg-dark); }
+.op-count-box.card-info .texto { color: #4b5563; }
+.group-title.card-neutro, .op-count-box.card-neutro { background-color: var(--bg-light); color: var(--text-primary); }
+.group-title.card-neutro .sector-total { color: var(--text-secondary); }
+.op-count-box.card-neutro .texto { color: var(--text-secondary); }
 
-/* =================================================================== */
-/* ==               [NOVO] ESTILO FINAL DO MODAL POPUP                == */
-/* =================================================================== */
-
-/* --- Fundo Escurecido (Overlay) --- */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+  background-color: rgba(0, 0, 0, 0.7); 
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  
-  /* Escondido por padrão */
+ 
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0s 0.3s;
@@ -411,7 +399,7 @@ input[type="date"].flatpickr-input {
   transition-delay: 0s;
 }
 
-/* --- Caixa de Conteúdo do Modal --- */
+
 .modal-content {
   background-color: var(--bg-medium);
   border: 1px solid var(--border-color);
@@ -420,11 +408,11 @@ input[type="date"].flatpickr-input {
   width: auto;
   min-width: 500px;
   max-width: 700px;
-  max-height: 80vh; /* Ocupa no máximo 80% da altura da tela */
+  max-height: 80vh; 
   display: flex;
   flex-direction: column;
   
-  /* Animação de entrada */
+ 
   transform: scale(0.95);
   transition: transform 0.3s ease;
 }
@@ -432,7 +420,7 @@ input[type="date"].flatpickr-input {
     transform: scale(1);
 }
 
-/* --- Cabeçalho do Modal --- */
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -456,10 +444,10 @@ input[type="date"].flatpickr-input {
   color: var(--text-primary);
 }
 
-/* --- Corpo do Modal (com a tabela) --- */
+
 .modal-body {
   padding: 1.5rem;
-  overflow-y: auto; /* Adiciona rolagem se o conteúdo for grande */
+  overflow-y: auto; 
   font-size: 0.9rem;
 }
 .modal-body table {
@@ -479,9 +467,7 @@ input[type="date"].flatpickr-input {
     border-bottom: none;
 }
 
-/* =================================================================== */
-/* ==                6. OUTROS COMPONENTES E LAYOUTS                  == */
-/* =================================================================== */
+
 .charts-grid-final { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 55% 1fr; gap: 1.5rem; flex-grow: 1; min-height: 0; }
 .chart-container { background-color: var(--bg-light); padding: 1.5rem; border-radius: 0.5rem; display: flex; flex-direction: column; }
 #chart-barras { grid-column: span 2; }
@@ -519,7 +505,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
 .color-box.yellow { background-color: var(--accent-yellow); }
 .color-box.gray { background-color: var(--bg-light); border: 1px solid var(--border-color-box); }
 
-/* Estilos para os indicadores de status no modal */
+
 .status-indicator {
     display: inline-block;
     width: 12px;
@@ -533,7 +519,6 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
 .status-red { background-color: #ef4444; }
 .status-gray { background-color: #9ca3af; }
 
-/* Estilos para a legenda no topo do modal */
 .modal-legend {
     display: flex;
     justify-content: center;
@@ -569,9 +554,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     max-width: 600px;
 }
 
-/* =================================================================== */
-/* ==                     7. ANIMAÇÕES E LOADERS                      == */
-/* =================================================================== */
+
 .loading-spinner { display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary); font-size: 1.2rem; font-weight: 600; min-width: 100px; justify-content: center; }
 .loading-spinner.hidden { display: none; }
 .pocket-watch { width: 38px; height: 38px; transform-origin: top center; }
@@ -585,11 +568,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
 .custom-loader.yellow { border-top-color: var(--accent-yellow); }
 @keyframes custom-loader-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* =================================================================== */
-/* ==                   8. ESTILOS ESPECÍFICOS: CÁLCULO DLE          == */
-/* =================================================================== */
 
-/* Container de Filtros do DLE - Card principal para inputs */
 .dle-filter-card {
   background-color: var(--bg-dark);
   border-radius: 12px;
@@ -601,7 +580,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   gap: 1rem;
 }
 
-/* Título e ícone do cabeçalho de filtros */
+
 .dle-filter-header {
   font-size: 1.1rem;
   font-weight: 600;
@@ -612,14 +591,14 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   gap: 0.5rem;
 }
 
-/* Linha que agrupa os inputs e o botão */
+
 .dle-inputs-row {
   display: flex;
   gap: 1.5rem;
   align-items: flex-end;
 }
 
-/* Grupo individual de input (Label + Campo) */
+
 .dle-input-group {
   display: flex;
   flex-direction: column;
@@ -635,14 +614,14 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   font-weight: 600;
 }
 
-/* Cards de KPI (Resumo) - Grid responsivo */
+
 .dle-kpi-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
-/* Card individual de KPI */
+
 .dle-kpi-card {
   background-color: var(--bg-dark);
   border-radius: 12px;
@@ -663,7 +642,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   box-shadow: var(--shadow-md);
 }
 
-/* Borda superior colorida para distinguir categorias */
+
 .dle-kpi-card::after {
   content: '';
   position: absolute;
@@ -676,7 +655,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
 .dle-kpi-card.fabrica::after { background-color: var(--accent-info); }
 .dle-kpi-card.global::after { background-color: var(--accent-green); }
 
-/* Título dentro do KPI Card */
+
 .dle-kpi-title {
   font-size: 0.85rem;
   color: var(--text-secondary);
@@ -686,7 +665,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   font-weight: 600;
 }
 
-/* Valor numérico dentro do KPI Card */
+
 .dle-kpi-value {
   font-size: 2.2rem;
   font-weight: 700;
@@ -694,22 +673,20 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   line-height: 1.1;
 }
 
-/* Layout da área de detalhes (Gráfico e Tabela lado a lado) */
+
 .dle-details-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 50% para cada */
+  grid-template-columns: 1fr 1fr; 
   gap: 1.5rem;
   min-height: 400px;
 }
 
-/* Responsividade: Empilha em telas menores */
 @media (max-width: 1100px) {
   .dle-details-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* Cards gerais de conteúdo do DLE */
 .dle-card {
   background-color: var(--bg-dark);
   border: 1px solid var(--border-color);
@@ -739,7 +716,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   padding: 0;
 }
 
-/* Tabela Específica do DLE */
+
 .table-dle {
   width: 100%;
   border-collapse: collapse;
@@ -774,7 +751,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   background-color: rgba(255,255,255,0.02);
 }
 
-/* Classes utilitárias para alinhamento e texto */
+
 .table-dle .text-end {
   text-align: right;
 }
@@ -783,15 +760,12 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
   font-weight: 700;
 }
 
-/* Cores de texto condicionais para DLE/Status */
+
 .text-success { color: var(--accent-green) !important; }
 .text-warning { color: var(--accent-yellow) !important; }
 .text-danger { color: var(--accent-red) !important; }
 .text-info { color: var(--accent-info) !important; }
 
-/* =================================================================== */
-/* ==                 9. ESTILOS ESPECÍFICOS: DASHBOARD RH          == */
-/* =================================================================== */
 
 .rh-dashboard-container {
     display: flex;
@@ -806,10 +780,10 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     width: 100%;
 }
 
-/* Garante que cada box tenha o mesmo tamanho na linha */
+
 .rh-box {
     flex: 1;
-    background-color: var(--bg-dark); /* Usando as variáveis que você já definiu */
+    background-color: var(--bg-dark); 
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 1rem;
@@ -828,14 +802,14 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Altura para os containers do ECharts (obrigatório para o gráfico aparecer) */
+
 .rh-chart-container {
     flex-grow: 1;
     width: 100%;
     min-height: 250px;
 }
 
-/* Estilo das tabelas dentro do RH */
+
 .rh-table-container {
     padding: 0;
     overflow: hidden;
@@ -872,19 +846,18 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     background-color: rgba(255,255,255,0.02);
 }
 
-/* Responsividade para telas menores */
+
 @media (max-width: 1200px) {
     .rh-row {
         flex-direction: column;
     }
 }
 
-/* Ajuste do botão de voltar que está no HTML */
+
 .hidden {
     display: none !important;
 }
 
-/* Estilos para o Toggle de Visão no Header */
 .view-toggle-container {
     display: flex;
     background: #1e293b;
@@ -919,7 +892,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     color: #f8fafc;
 }
 
-/* Estilos para a Hierarquia de Operadores */
+
 .hierarchy-container {
     margin-top: 20px;
     animation: fadeIn 0.3s ease;
@@ -971,7 +944,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
 .node-title { color: #f8fafc; font-weight: 500; }
 .node-info { margin-left: auto; display: flex; gap: 15px; align-items: center; }
 
-/* Badge de Horas */
+
 .badge-hours {
     padding: 4px 10px;
     border-radius: 20px;
@@ -982,7 +955,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
 .badge-warning { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid #eab308; }
 .badge-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
 
-/* Detalhes do Operador (Logs) */
+
 .operator-details {
     background: #0f172a;
     padding: 15px 40px;
@@ -1017,7 +990,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
-/* Dashboard Refugo & Faturamento SPA Scope */
+
 .rf-container-spa {
     padding: 20px;
     background-color: #0f172a;
@@ -1045,7 +1018,7 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     border-radius: 8px;
 }
 
-/* Estilo para a sidebar de filtros interna */
+
 .sidebar-rf {
     position: fixed;
     right: -380px;
@@ -1082,3 +1055,4 @@ footer { padding: 0.6rem 1.5rem; background-color: var(--bg-dark); display: flex
     background: #4f46e5;
     color: white;
 }
+

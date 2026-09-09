@@ -1,19 +1,168 @@
-<!-- CÓDIGO FINAL PARA: frontend/gestao-content.html -->
-<header>
-    <h2></h2>
-    <div class="user-profile"></div>
-</header>
+<!-- ============================================================
+     ESTRUTURA DASHBOARD GESTÃO - VERSÃO COM MODAL RESPONSIVO
+     ============================================================ -->
+<div class="gestao-container">
+    <header class="gestao-header">
+        <div class="header-info">
+            <h2>Gestão de Postos de Trabalho</h2>
+            <div class="subtitle-box">
+                <span id="last-update" class="timestamp">Sincronizando...</span>
+                <span class="formula-ref">Comparação: <strong>EGA (Real)</strong> x <strong>DLE (Totem)</strong></span>
+            </div>
+        </div>
+        <div class="header-actions"><div class="planta-badge">PLANT</div></div>
+    </header>
 
-<div class="dashboard" id="dashboard-container">
-    <p class="loading-message">Carregando layout das máquinas...</p>
-    <div id="global-tooltip" class="tooltip" style="display: none;"></div>
+    <div id="dashboard-container" class="dashboard">
+        <div class="loading-wrapper">
+            <div class="spinner"></div>
+            <p>Carregando layout e sincronizando...</p>
+        </div>
+    </div>
+
+    <!-- LEGENDA FIXA NO RODAPÉ -->
+    <footer class="gestao-footer-fixed">
+        <ul class="legend">
+            <li class="leg-correto"><span class="color-box bg-ok"></span> <span class="leg-text">EGA igual ao DLE</span></li>
+            <li class="leg-atencao"><span class="color-box bg-attention"></span> <span class="leg-text">EGA menor que DLE</span></li>
+            <li class="leg-excesso"><span class="color-box bg-info"></span> <span class="leg-text">EGA maior que DLE</span></li>
+            <li class="leg-falta"><span class="color-box bg-error"></span> <span class="leg-text">Falta DLE ou EGA</span></li>
+            <li class="leg-inativo"><span class="color-box bg-neutro"></span> <span class="leg-text">Linha sem expediente</span></li>
+        </ul>
+    </footer>
 </div>
 
-<footer>
-    <ul class="legend">
-        <li><span class="color-box red"></span> Operador a Mais</li>
-        <li><span class="color-box green"></span> Qtd. Correta</li>
-        <li><span class="color-box yellow"></span> Apontamento Ativo</li>
-        <li><span class="color-box gray"></span> Máquina Não Iniciada</li>
-    </ul>
-</footer>
+<!-- MODAL DE DETALHES RESPONSIVO -->
+<div id="operator-modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Detalhes da Máquina</h3>
+            <span id="modal-close-btn" class="close-modal">&times;</span>
+        </div>
+        
+        <div class="modal-tabs">
+            <button class="tab-btn active" data-tab="tab-dle">Operadores (DLE)</button>
+            <button class="tab-btn" data-tab="tab-ega">Hardware (EGA)</button>
+        </div>
+
+        <div id="modal-body-wrapper" class="modal-body">
+            <!-- Conteúdo DLE -->
+            <div id="tab-dle" class="tab-content active">
+                <div id="dle-table-container" class="table-responsive"></div>
+            </div>
+            <!-- Conteúdo EGA -->
+            <div id="tab-ega" class="tab-content">
+                <div id="ega-table-container" class="table-responsive"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Layout Base */
+    .gestao-container { height: 100vh; overflow-y: auto; overflow-x: auto; padding: 20px 20px 100px 20px; color: #e0e0e0; background: #121519; font-family: sans-serif; }
+    .gestao-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+    .header-info h2 { margin: 0; font-size: 1.4rem; color: #fff; }
+    .timestamp { font-size: 0.8rem; color: #8b949e; }
+    .formula-ref { font-size: 0.7rem; color: #58a6ff; }
+    .planta-badge { background: #388bfd33; color: #58a6ff; border: 1px solid #388bfd66; padding: 4px 12px; border-radius: 15px; font-weight: bold; font-size: 0.75rem; }
+
+    /* Dashboard */
+    .dashboard { display: flex; flex-direction: column; gap: 15px; min-width: 1450px; }
+    .machine-group { display: flex; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid #30363d; gap: 15px; }
+    .group-title { width: 125px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 2px solid #007bff; padding-right: 10px; gap: 8px; }
+    .sector-name { font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #fff; text-align: center; }
+    .numero-total { font-size: 0.9rem; font-weight: 800; color: #fff; }
+
+    /* Cards */
+    .card-grid { display: flex; flex-wrap: wrap; gap: 12px; flex-grow: 1; }
+    .card { background: #1c2128; border: 2px solid #30363d; border-radius: 10px; padding: 10px; width: 170px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .card h3 { font-size: 0.7rem; height: 32px; color: #8b949e; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; line-height: 1.2; }
+    .op-count-box { padding: 10px; border-radius: 6px; background: #00000066; }
+    .numero { font-size: 1.2rem; font-weight: 900; }
+    .z-menor { font-size: 0.65em; opacity: 0.5; font-weight: 400; vertical-align: middle; margin-left: 4px; }
+    .texto { font-size: 0.6rem; color: #ffffff; opacity: 0.5; display: block; margin-top: 5px; text-transform: uppercase; font-weight: bold; }
+
+    /* Cores Dinâmicas */
+    .card.card-ok { border-color: #22c55e !important; }
+    .card.card-ok .op-count-box { background-color: #22c55e !important; }
+    .card.card-ok .numero, .card.card-ok .texto { color: #000 !important; }
+    .card.card-attention { border-color: #facc15 !important; }
+    .card.card-attention .op-count-box { background-color: #facc15 !important; }
+    .card.card-attention .numero, .card.card-attention .texto { color: #000 !important; }
+    .card.card-info { border-color: #0ea5e9 !important; }
+    .card.card-info .op-count-box { background-color: #0ea5e9 !important; }
+    .card.card-info .numero, .card.card-info .texto { color: #fff !important; }
+    .card.card-error { border-color: #ef4444 !important; }
+    .card.card-error .op-count-box { background-color: #ef4444 !important; }
+    .card.card-error .numero, .card.card-error .texto { color: #fff !important; }
+    .card.card-neutral { opacity: 0.5; border-color: #334155 !important; }
+    .card.card-neutral .op-count-box { background-color: #334155 !important; }
+
+    /* MODAL RESPONSIVO (VERTICAL E HORIZONTAL) */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+    .modal-overlay.visible { display: flex; }
+    
+    .modal-content { 
+        background: #161b22; 
+        border-radius: 12px; 
+        padding: 25px; 
+        border: 1px solid #444; 
+        display: flex; 
+        flex-direction: column;
+        /* Ajuste de Tamanho Fluído */
+        min-width: 500px;
+        max-width: 95vw; 
+        max-height: 85vh; 
+        width: fit-content; /* Cresce horizontalmente com as colunas */
+    }
+
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-shrink: 0; }
+    .close-modal { cursor: pointer; font-size: 28px; color: #8b949e; line-height: 1; }
+    .close-modal:hover { color: #fff; }
+
+    .modal-tabs { display: flex; border-bottom: 1px solid #30363d; margin-bottom: 15px; flex-shrink: 0; }
+    .tab-btn { background: none; border: none; color: #8b949e; padding: 10px 20px; cursor: pointer; font-weight: bold; border-bottom: 2px solid transparent; }
+    .tab-btn.active { color: #58a6ff; border-bottom-color: #58a6ff; }
+
+    /* Área de Scroll do Modal */
+    .modal-body { 
+        overflow: auto; /* Scroll em ambas direções se necessário */
+        flex-grow: 1; 
+    }
+
+    .table-responsive { 
+        width: 100%; 
+    }
+
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        white-space: nowrap; /* Impede que colunas futuras quebrem linha, forçando o scroll horizontal */
+    }
+
+    th { text-align: left; color: #8b949e; font-size: 0.75rem; padding: 12px 15px; border-bottom: 1px solid #333; }
+    td { padding: 12px 15px; border-bottom: 1px solid #222; font-size: 0.85rem; }
+
+    .badge-turno { padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: white; }
+    .turno-ok { background: #238636; }
+    .turno-err { background: #da3633; }
+    .saida-anterior { font-size: 0.7rem; color: #8b949e; display: block; margin-top: 4px; }
+
+    .ega-detail-box { text-align: center; padding: 40px; background: #0d1117; border-radius: 10px; min-width: 400px; }
+    .ega-detail-box h2 { font-size: 4rem; color: #58a6ff; margin: 10px 0 0 0; }
+
+    /* Legenda Rodapé */
+    .gestao-footer-fixed { position: fixed; bottom: 0; left: 0; width: 100%; background: #161b22; border-top: 2px solid #30363d; padding: 12px 0; z-index: 1000; }
+    .legend { display: flex; justify-content: center; gap: 30px; list-style: none; padding: 0; margin: 0; }
+    .legend li { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #c9d1d9; }
+    .color-box { width: 16px; height: 16px; border-radius: 4px; }
+    .bg-ok { background: #22c55e; }
+    .bg-attention { background: #facc15; }
+    .bg-info { background: #0ea5e9; }
+    .bg-error { background: #ef4444; }
+    .bg-neutro { background: #334155; }
+
+    .spinner { border: 4px solid #333; border-top: 4px solid #007bff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+</style>

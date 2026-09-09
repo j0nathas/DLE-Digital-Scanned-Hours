@@ -52,7 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
             clockContainer.id        = 'clock-container';
             clockContainer.className = 'header-info';
             const userProfile = headerElement.querySelector('.user-profile');
-            if (userProfile) headerElement.insertBefore(clockContainer, userProfile);
+            
+            // CORREÇÃO: Usa userProfile.parentNode para garantir que o insertBefore funcione
+            // independente da profundidade do elemento dentro do header.
+            if (userProfile && userProfile.parentNode) {
+                userProfile.parentNode.insertBefore(clockContainer, userProfile);
+            } else {
+                headerElement.appendChild(clockContainer);
+            }
         }
 
         // Atualiza Perfil do Usuário com Abreviação (MPT)

@@ -2,7 +2,7 @@ function iniciarSelecaoPlanta() {
     const container = document.getElementById('plant-selection-container');
     if (!container) return;
 
-    const API_PLANTAS_URL = 'http://10.109.132.135:3001/api/plantas/listar';
+    const API_PLANTAS_URL = 'http://10.109.132.160:3001/api/plantas/listar';
 
     const plantLocations = {
         'MLB': 'São Bernardo do Campo',

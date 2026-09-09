@@ -535,51 +535,6 @@ const apontamentoController = {
         }
     },
 
-    getUltimoApontamentoPorIp_TEMP: async (req, res) => {
-        try {
-            const { ip } = req.params;
-            const pool = await poolPromiseAcessos;
-
-            const query = `
-            WITH RankedLogs AS (
-                SELECT TOP 1 
-                    ID_Log_Original AS id,
-                    Nome_Colaborador AS nome,
-                    Matricula as RE,
-                    Cargo AS cargo,
-                    IP_Dispositivo AS ipDispositivo
-                FROM
-                    dbo.vw_log_acessos_temp
-                WHERE
-                     IP_Dispositivo = @ip 
-                ORDER BY ID_Log_Original DESC
-            )
-            SELECT
-                id,
-                nome,
-                RE,
-                cargo,
-                ipDispositivo
-            FROM
-                RankedLogs;
-        `;
-
-            const result = await pool.request()
-                .input('ip', sql.NVarChar, ip)
-                .query(query);
-
-            if (result.recordset.length === 0) {
-                return res.status(404).json({ message: `Nenhum registro qualificado encontrado para o IP ${ip}.` });
-            }
-
-            res.status(200).json(result.recordset[0]);
-
-        } catch (err) {
-            console.error(`Erro ao buscar último registro para o IP ${req.params.ip}:`, err);
-            res.status(500).json({ error: 'Erro interno do servidor.' });
-        }
-    },
-
     getPessoasComUltimoStatusEntrada: async (req, res) => {
         try {
             const pool = await poolPromiseAcessos;
@@ -828,16 +783,16 @@ const apontamentoController = {
 
             const query = `
                 SELECT 
-                    Operacao AS Maquina,
-                    SUM(CASE 
-                        WHEN Status = 'Entrada' THEN 1
-                        WHEN Status = 'Saida' THEN -1
-                        ELSE 0
-                    END) AS Qntd_Real
-                FROM 
-                    dbo.Apontamento_Operador
-                GROUP BY 
-                    Operacao;
+    Operacao AS Maquina,
+    SUM(CASE 
+        WHEN Status = 'Entrada' THEN 1
+        WHEN Status = 'Saida' THEN -1
+        ELSE 0
+    END) AS Qntd_Real
+FROM 
+    dbo.Apontamento_Operador
+GROUP BY 
+    Operacao;
             `;
 
             const result = await pool.request().query(query);
@@ -937,7 +892,7 @@ const apontamentoController = {
             const machinePlaceholders = machineIds.map((_, index) => `@machine${index}`).join(',');
             const plantaBanco = planta === 'MJN'
                 ? '[SERVIDOR_RH_JARINU].[mjn_dle].[dbo].[Users]'
-                : 'dbo.Users';
+                : 'acesso.dbo.Users';
 
             const request = pool.request();
             machineIds.forEach((id, index) => {
@@ -947,46 +902,60 @@ const apontamentoController = {
             request.input('planta', sql.VarChar, planta);
 
             const result = await request.query(`
-            WITH RankedApontamentos AS (
-                SELECT
-                    ID, Pessoa, Linha, Status, Turno AS TurnoApontado,
-                    CAST(Data AS DATETIME) + CAST(Hora AS DATETIME) AS DataHora,
-                    ROW_NUMBER() OVER (PARTITION BY Pessoa ORDER BY ID DESC) AS rn,
-                    PlantaSigla AS Planta
-                FROM [acessos].[dbo].[vw_Apontamentos_Com_Planta]
-            ),
-            OperadoresAtivosNaMaquina AS (
-                SELECT ID, Pessoa, TurnoApontado, DataHora AS DataHoraEntrada
-                FROM RankedApontamentos
-                WHERE rn = 1 
-                  AND Status = 'Entrada'
-                  AND Linha IN (${machinePlaceholders})
-                  AND Planta = @planta 
-            )
-            SELECT 
-                oa.Pessoa,
-                oa.TurnoApontado,
-                oa.DataHoraEntrada,
-                u.Cracha,
-                u.TurnoCadastro,
-                (
-                    SELECT TOP 1 CAST(saida.Data AS DATETIME) + CAST(saida.Hora AS DATETIME)
-                    FROM [acessos].[dbo].[Apontamento_Operador] saida
-                    WHERE saida.Pessoa = oa.Pessoa 
-                      AND saida.Status = 'Saida'
-                      AND saida.ID < oa.ID
-                    ORDER BY saida.ID DESC
-                ) AS DataHoraSaida
-            FROM OperadoresAtivosNaMaquina oa
-            LEFT JOIN (
+                WITH RankedApontamentos AS (
+                    SELECT
+                        ID,
+                        RE,
+                        Pessoa,
+                        Linha,
+                        Status,
+                        Turno AS TurnoApontado,
+                        CAST(Data AS DATETIME) + CAST(Hora AS DATETIME) AS DataHora,
+                        ROW_NUMBER() OVER (PARTITION BY RE ORDER BY ID DESC) AS rn,
+                        PlantaSigla AS Planta
+                    FROM [acessos].[dbo].[vw_Apontamentos_Com_Planta]
+                ),
+                OperadoresAtivosNaMaquina AS (
+                    SELECT 
+                        ID,
+                        RE,
+                        Pessoa,
+                        TurnoApontado,
+                        DataHora AS DataHoraEntrada
+                    FROM RankedApontamentos
+                    WHERE rn = 1 
+                    AND Status = 'Entrada'
+                    AND Linha = (${machinePlaceholders})
+                    AND Planta = @planta
+                )
                 SELECT 
-                    name, 
-                    registration AS Cracha, 
-                    comments AS TurnoCadastro,
-                    ROW_NUMBER() OVER(PARTITION BY name ORDER BY id DESC) as rn_user
-                FROM ${plantaBanco}
-            ) u ON oa.Pessoa = u.name COLLATE Latin1_General_CI_AI AND u.rn_user = 1
-            ORDER BY oa.Pessoa;
+                    oa.RE,
+                    oa.Pessoa,
+                    oa.TurnoApontado,
+                    oa.DataHoraEntrada,
+                    u.Cracha,
+                    u.TurnoCadastro,
+                    (
+                        SELECT TOP 1 
+                            CAST(saida.Data AS DATETIME) + CAST(saida.Hora AS DATETIME)
+                        FROM [acessos].[dbo].[Apontamento_Operador] saida
+                        WHERE saida.RE = oa.RE
+                        AND saida.Status = 'Saida'
+                        AND saida.ID < oa.ID
+                        ORDER BY saida.ID DESC
+                    ) AS DataHoraSaida
+                FROM OperadoresAtivosNaMaquina oa
+                LEFT JOIN (
+                    SELECT 
+                        registration AS Cracha,
+                        comments AS TurnoCadastro,
+                        ROW_NUMBER() OVER(PARTITION BY registration ORDER BY id DESC) as rn_user
+                    FROM ${plantaBanco}
+                ) u 
+                    ON LTRIM(RTRIM(CAST(oa.RE AS VARCHAR))) = LTRIM(RTRIM(u.Cracha))
+                AND u.rn_user = 1
+
+                ORDER BY oa.Pessoa;
         `);
 
             res.json(result.recordset);

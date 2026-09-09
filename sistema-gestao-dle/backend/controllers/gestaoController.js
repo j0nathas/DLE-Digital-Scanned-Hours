@@ -1,199 +1,177 @@
-const { sql, getPoolPromiseAcessos } = require('../config/db');
+const { sql, getPoolPromiseAcessos, getPoolPromiseCadastros, getPoolPromiseEGA } = require('../config/db');
+const { getInfoMaquina } = require('../config/mapeamentoMaquinas');
 
-const MAPA_LINHAS_AGRUPADAS = {
-    // MLB - Montagem Lanterna
-    'S.LA01ST': 's.LA01st_s.LA02st',
-    'S.LA02ST': 's.LA01st_s.LA02st',
-    'S.LA03GM': 's.LA03gm_s.LA04gm',
-    'S.LA04GM': 's.LA03gm_s.LA04gm',
-    'S.LA05GM': 's.LA05gm_s.LA06gm',
-    'S.LA06GM': 's.LA05gm_s.LA06gm',
-    'S.LA07RE': 's.LA07re_s.LA08re',
-    'S.LA08RE': 's.LA07re_s.LA08re',
-    // MJN - Farol / Lanterna
-    'FA01':   'J.FA01_J.FA02',
-    'FA02':   'J.FA01_J.FA02',
-    'J.FA01': 'J.FA01_J.FA02',
-    'J.FA02': 'J.FA01_J.FA02',
-    'FA03':   'J.FA03_J.FA04',
-    'FA04':   'J.FA03_J.FA04',
-    'J.FA03': 'J.FA03_J.FA04',
-    'J.FA04': 'J.FA03_J.FA04',
-    'LA01':   'J.LA01_J.LA02',
-    'LA02':   'J.LA01_J.LA02',
-    'J.LA01': 'J.LA01_J.LA02',
-    'J.LA02': 'J.LA01_J.LA02',
-    'LA03':   'J.LA03_J.LA04',
-    'LA04':   'J.LA03_J.LA04',
-    'SC04':   'J.SC04_J.SC05',
-    'SC05':   'J.SC04_J.SC05',
+const EGA_CONFIG = {
+    tabelaMovimentacao: '[PCPMOV].[dbo].[MOVIMENTACAO]',
+    tabelaOperador: '[PCPMOV].[dbo].[OPERADOR]',
+    tabelaMaquinas: '[PCPMOV].[dbo].[MAQUINAS]'
 };
 
-function resolverLinhasNoBanco(decodedMachineId) {
-    if (decodedMachineId.includes('_')) {
-        const partes = decodedMachineId.split('_');
-        return [decodedMachineId, ...partes];
-    }
-    return [decodedMachineId];
-}
-
-// ============================================================
-// 1. Contagem dos Cards (Atual / Meta)
-// ============================================================
+// --- GESTÃO: CONTAGEM DE CARDS (DLE) ---
 exports.getContagemCards = async (req, res) => {
     const { plantaSigla } = req.params;
     const { date } = req.query;
-    let pool;
     try {
-        pool = await getPoolPromiseAcessos(plantaSigla);
-        const isMMB = plantaSigla.toUpperCase() === 'MMB';
-        const plantaFilter = isMMB ? "" : "AND Planta = @PlantaSigla";
-
-        const query = `
-            DECLARE @DataAtual DATE = ISNULL(@InputDate, CAST(GETDATE() AS DATE));
-
-            WITH UltimoEventoPorPessoaLinha AS (
-                SELECT
-                    Pessoa, Linha, Status,
-                    ROW_NUMBER() OVER (PARTITION BY Pessoa, Linha ORDER BY ID DESC) AS rn
-                FROM [dbo].[Apontamento_Operador]
-                WHERE CAST(Data AS DATE) = @DataAtual
-                ${plantaFilter}
-            ),
-            OperadoresAtivos AS (
-                SELECT Linha, COUNT(*) AS Atual
-                FROM UltimoEventoPorPessoaLinha
-                WHERE rn = 1 AND Status = 'Entrada'
-                GROUP BY Linha
-            ),
-            MetasAtuais AS (
-                SELECT Linha, Qntd_Esperada
-                FROM (
-                    SELECT Linha, Qntd_Esperada, status_turno,
-                           ROW_NUMBER() OVER(PARTITION BY Linha ORDER BY Data DESC, ID DESC) as rn
-                    FROM [dbo].[Apontamento_TL]
-                    WHERE [Data] <= @DataAtual
-                ) AS HistoricoMetas
-                WHERE rn = 1 AND status_turno = 'Produzindo'
-            ),
-            AllActiveLines AS (
-                SELECT Linha FROM OperadoresAtivos
-                UNION
-                SELECT Linha FROM MetasAtuais
-            )
-            SELECT
-                aal.Linha,
-                ISNULL(oa.Atual, 0) AS Atual,
-                ISNULL(ma.Qntd_Esperada, 0) AS Meta
-            FROM AllActiveLines aal
-            LEFT JOIN OperadoresAtivos oa ON aal.Linha = oa.Linha
-            LEFT JOIN MetasAtuais ma      ON aal.Linha = ma.Linha;
-        `;
-
+        const pool = await getPoolPromiseAcessos(plantaSigla);
         const result = await pool.request()
-            .input('PlantaSigla', sql.VarChar, plantaSigla.toUpperCase())
-            .input('InputDate',   sql.Date,    date || null)
-            .query(query);
+            .input('PS', sql.VarChar, plantaSigla.toUpperCase())
+            .input('ID', sql.Date, date || null)
+            .query(`
+                DECLARE @DF DATE = ISNULL(@ID, CAST(GETDATE() AS DATE));
+                WITH UltimoStatus AS (
+                    SELECT 
+                        LTRIM(RTRIM(COALESCE(NULLIF(Linha, ''), Operacao))) as MaquinaID,
+                        Status,
+                        ROW_NUMBER() OVER(PARTITION BY Pessoa ORDER BY Data DESC, Hora DESC, ID DESC) as rn
+                    FROM [dbo].[Apontamento_Operador]
+                    WHERE CAST(Data AS DATE) = @DF
+                ),
+                ContagemReal AS (
+                    SELECT MaquinaID, COUNT(*) as Total FROM UltimoStatus 
+                    WHERE rn = 1 AND Status = 'Entrada' GROUP BY MaquinaID
+                ),
+                Metas AS (
+                    SELECT LTRIM(RTRIM(Linha)) as LinhaMeta, Qntd_Esperada FROM (
+                        SELECT Linha, Qntd_Esperada, status_turno, ROW_NUMBER() OVER(PARTITION BY Linha ORDER BY Data DESC, ID DESC) as rn
+                        FROM [dbo].[Apontamento_TL] WHERE CAST(Data AS DATE) <= @DF AND (Planta = @PS OR Planta IS NULL OR Planta = '')
+                    ) AS H WHERE rn = 1 AND status_turno = 'Produzindo'
+                )
+                SELECT ISNULL(c.MaquinaID, m.LinhaMeta) as Linha, ISNULL(c.Total, 0) as Atual, ISNULL(m.Qntd_Esperada, 0) as Meta 
+                FROM ContagemReal c FULL OUTER JOIN Metas m ON c.MaquinaID = m.LinhaMeta 
+                WHERE (ISNULL(c.MaquinaID, m.LinhaMeta) LIKE 's.%');
+            `);
 
-        const dadosUnificados = {};
+        const unificados = {};
         result.recordset.forEach(item => {
-            const linhaUpper  = (item.Linha || '').toUpperCase();
-            const chaveMapeada = MAPA_LINHAS_AGRUPADAS[linhaUpper];
-            const chave = chaveMapeada
-                ? chaveMapeada.replace(/_/g, ' & ')
-                : item.Linha.replace(/_/g, ' & ');
+            let nome = item.Linha.trim();
+            if (['S.LA01ST', 'S.LA02ST'].includes(nome.toUpperCase())) nome = 's.LA01st_s.LA02st';
+            else if (['S.LA03GM', 'S.LA04GM'].includes(nome.toUpperCase())) nome = 's.LA03gm_s.LA04gm';
+            else if (['S.LA05GM', 'S.LA06GM'].includes(nome.toUpperCase())) nome = 's.LA05gm_s.LA06gm';
+            else if (['S.LA07RE', 'S.LA08RE'].includes(nome.toUpperCase())) nome = 's.LA07re_s.LA08re';
 
-            if (!dadosUnificados[chave]) {
-                dadosUnificados[chave] = { atual: 0, meta: 0 };
-            }
-            dadosUnificados[chave].atual += item.Atual;
-            if (item.Meta > 0) {
-                dadosUnificados[chave].meta = item.Meta;
-            }
+            if (!unificados[nome]) unificados[nome] = { atual: 0, meta: 0 };
+            unificados[nome].atual += item.Atual;
+            if (item.Meta > 0) unificados[nome].meta = item.Meta;
         });
 
-        res.json(dadosUnificados);
-    } catch (err) {
-        console.error('[GESTAO] Erro ao buscar contagens:', err);
-        res.status(500).json({ error: 'Erro ao buscar contagens.' });
-    }
+        const final = {};
+        for (const k in unificados) final[k.replace(/_/g, ' & ')] = unificados[k];
+        res.json(final);
+    } catch (e) { res.status(500).json({ error: e.message }); }
 };
 
-// ============================================================
-// 2. Detalhes do Modal — operadores logados em uma máquina
-// ============================================================
-exports.getOperadoresNaMaquina = async (req, res) => {
+
+// --- GESTÃO: DETALHES DO MODAL ---
+exports.getOperadoresPorMaquina = async (req, res) => {
     const { plantaSigla, machineId } = req.params;
-    let pool;
     try {
-        pool = await getPoolPromiseAcessos(plantaSigla);
-        const isMMB    = plantaSigla.toUpperCase() === 'MMB';
-        const userDb   = isMMB ? 'mcb_dle' : 'controlid';
+        const poolAcessos = await getPoolPromiseAcessos(plantaSigla);
+        const poolEGA = await getPoolPromiseEGA();
+        const decoded = decodeURIComponent(machineId).trim();
+        
+        // Criamos uma lista de IDs para buscar (Ex: [s.LA01st_s.LA02st, s.LA01st, s.LA02st])
+        let searchIds = [decoded, decoded.replace(/ & /g, '_')];
+        searchIds = searchIds.concat(decoded.split(/[&_]/).map(s => s.trim()));
+        const uniqueIds = [...new Set(searchIds)];
 
-        const decodedId     = decodeURIComponent(machineId).trim();
-        const linhasNoBanco = resolverLinhasNoBanco(decodedId);
+        const requestAcessos = poolAcessos.request();
+        const placeholders = uniqueIds.map((id, i) => { 
+            requestAcessos.input(`m${i}`, sql.VarChar, id); 
+            return `@m${i}`; 
+        }).join(',');
 
-        const request = pool.request();
-        linhasNoBanco.forEach((id, i) => {
-            request.input(`m${i}`, sql.VarChar, id);
-        });
+        let userDb = plantaSigla.toUpperCase() === 'MMB' ? 'mcb_dle' : 'acesso';
 
-        const whereConditions = linhasNoBanco
-            .map((_, i) => `Linha COLLATE Latin1_General_CI_AI = @m${i}`)
-            .join(' OR ');
-
-        const query = `
-            DECLARE @DataAtual DATE = CAST(GETDATE() AS DATE);
-
-            WITH TodosApontamentos AS (
-                SELECT
-                    Pessoa, Linha, Status, Turno,
-                    CAST(Data AS DATETIME) + CAST(Hora AS DATETIME) AS DataHora,
-                    ID
-                FROM [dbo].[Apontamento_Operador]
-                WHERE CAST(Data AS DATE) = @DataAtual
-                  AND (${whereConditions})
-            ),
-            UltimoEventoPorPessoaLinha AS (
-                SELECT
-                    Pessoa, Linha, Status, Turno, DataHora,
-                    ROW_NUMBER() OVER (PARTITION BY Pessoa, Linha ORDER BY ID DESC) AS rn
-                FROM TodosApontamentos
-            ),
-            OperadoresAtivos AS (
-                SELECT Pessoa, Linha, Turno AS TurnoApontado, DataHora AS DataHoraEntrada
-                FROM UltimoEventoPorPessoaLinha
-                WHERE rn = 1 AND Status = 'Entrada'
-            ),
-            UltimaSaidaPorPessoa AS (
-                SELECT Pessoa, Linha, DataHora AS DataHoraSaida,
-                       ROW_NUMBER() OVER (PARTITION BY Pessoa, Linha ORDER BY ID DESC) AS rn_saida
-                FROM TodosApontamentos
-                WHERE Status = 'Saida'
+        const queryDLE = `
+            DECLARE @Hoje DATE = CAST(GETDATE() AS DATE);
+            WITH UltimoStatus AS (
+                SELECT Pessoa, Linha, Operacao, Status, Turno, 
+                CAST(Data AS DATETIME) + CAST(Hora AS DATETIME) AS DataHora,
+                ROW_NUMBER() OVER (PARTITION BY Pessoa ORDER BY Data DESC, Hora DESC, ID DESC) AS rn
+                FROM [dbo].[Apontamento_Operador] WHERE CAST(Data AS DATE) = @Hoje
             )
-            SELECT
-                oa.Pessoa,
-                oa.TurnoApontado,
-                oa.DataHoraEntrada,
-                us.DataHoraSaida,
-                u.registration AS Cracha,
-                u.comments     AS TurnoCadastro
-            FROM OperadoresAtivos oa
-            LEFT JOIN UltimaSaidaPorPessoa us
-                ON oa.Pessoa = us.Pessoa AND oa.Linha = us.Linha AND us.rn_saida = 1
-            LEFT JOIN (
-                SELECT name, registration, comments,
-                       ROW_NUMBER() OVER (PARTITION BY name ORDER BY id DESC) AS rn_user
-                FROM ${userDb}.dbo.Users
-            ) u ON oa.Pessoa = u.name COLLATE Latin1_General_CI_AI AND u.rn_user = 1
-            ORDER BY oa.Pessoa;
+            SELECT DISTINCT oa.Pessoa, oa.DataHora AS DataHoraEntrada, oa.Turno as TurnoApontado, u.RE, u.TurnoCadastro,
+            (SELECT TOP 1 CAST(Data AS DATETIME) + CAST(Hora AS DATETIME) FROM [dbo].[Apontamento_Operador] WHERE Pessoa = oa.Pessoa AND Status = 'Saida' AND ID < (SELECT MAX(ID) FROM [dbo].[Apontamento_Operador] WHERE Pessoa = oa.Pessoa) ORDER BY ID DESC) AS UltimaSaida
+            FROM UltimoStatus oa
+            LEFT JOIN (SELECT name, registration as RE, comments as TurnoCadastro, ROW_NUMBER() OVER(PARTITION BY name ORDER BY id DESC) as rn_u FROM ${userDb}.dbo.Users) u ON oa.Pessoa = u.name COLLATE Latin1_General_CI_AI AND u.rn_u = 1
+            WHERE oa.rn = 1 AND oa.Status = 'Entrada' 
+              AND (LTRIM(RTRIM(oa.Linha)) IN (${placeholders}) OR LTRIM(RTRIM(oa.Operacao)) IN (${placeholders}))
         `;
 
-        const result = await request.query(query);
-        res.json(result.recordset);
+        const [resDLE, resEGA] = await Promise.all([
+            requestAcessos.query(queryDLE),
+            poolEGA.request().query(`SELECT LTRIM(RTRIM(o.NOME)) as Pessoa, m.DATA_HORA as DataHoraEntrada FROM [PCPMOV].[dbo].[MOVIMENTACAO_OPERADOR] m INNER JOIN [PCPMOV].[dbo].[OPERADORES] o ON m.OPERADOR = o.OPERADOR INNER JOIN [PCPMOV].[dbo].[MAQUINAS] maq ON m.MAQUINA = maq.MAQUINA WHERE maq.NOME_DA_MAQUINA IN (${uniqueIds.map(id => `'${id}'`).join(',')}) AND m.DATA_FIM IS NULL`).catch(() => ({ recordset: [] }))
+        ]);
+        res.json({ dle: resDLE.recordset, ega: resEGA.recordset });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+};
 
-    } catch (err) {
-        console.error('[GESTAO] Erro ao buscar detalhes:', err);
-        res.status(500).json({ error: 'Erro ao buscar detalhes.', detalhe: err.message });
-    }
+
+// --- OUTRAS FUNÇÕES ---
+exports.getMaquinasLayout = async (req, res) => {
+    const { plantaSigla } = req.params;
+    try {
+        const pool = await getPoolPromiseCadastros(plantaSigla);
+        const result = await pool.request().input('P', sql.VarChar, plantaSigla.toUpperCase()).query(`
+            SELECT s.descricao AS Setor, lm.descricao AS NomeMaquina FROM dbo.Linha_Maquinas AS lm
+            INNER JOIN dbo.Setor AS s ON lm.id_setor = s.id INNER JOIN dbo.Planta AS p ON lm.id_planta = p.id
+            WHERE p.descricao = @P AND lm.descricao <> 'MONTAGEM MANUAL' ORDER BY s.id, lm.descricao;
+        `);
+        const layout = result.recordset.reduce((acc, m) => { if (!acc[m.Setor]) acc[m.Setor] = []; acc[m.Setor].push(m.NomeMaquina); return acc; }, {});
+        const final = {};
+        for (const setor in layout) {
+            const maqs = layout[setor];
+            if (/LANTERNA|FAROL/i.test(setor)) {
+                const ag = []; let i = 0;
+                while (i < maqs.length) {
+                    let m1 = maqs[i], m2 = maqs[i+1], match = m1.match(/(\d+)/), ok = false;
+                    if (match && m2) {
+                        let n = parseInt(match[1]);
+                        if (n % 2 !== 0) {
+                            let n2 = (n+1).toString().padStart(match[1].length, '0');
+                            if (m2 === m1.replace(match[1], n2)) { ag.push(`${m1}_${m2}`); i+=2; ok=true; }
+                        }
+                    }
+                    if (!ok) { ag.push(m1); i++; }
+                }
+                final[setor] = ag;
+            } else final[setor] = maqs;
+        }
+        res.json(final);
+    } catch (err) { res.status(500).json({ error: err.message }); }
+};
+
+exports.getContagemEGA = async (req, res) => {
+    try {
+        const pool = await getPoolPromiseEGA();
+        const result = await pool.request().query(`SELECT d.NOME_DA_MAQUINA as Linha, u.PESSOAS as Contagem FROM (SELECT MAQUINA, PESSOAS, ROW_NUMBER() OVER(PARTITION BY MAQUINA ORDER BY RECID DESC) as rn FROM ${EGA_CONFIG.tabelaMovimentacao} WHERE CAST(DATAI AS DATE) = CAST(GETDATE() AS DATE)) u INNER JOIN ${EGA_CONFIG.tabelaMaquinas} d ON d.MAQUINA = u.MAQUINA WHERE u.rn = 1;`);
+        const d = {}; result.recordset.forEach(r => { if(r.Linha) d[r.Linha.trim().toLowerCase()] = r.Contagem; });
+        res.json(d);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+};
+
+exports.getCadastroOperadores = async (req, res) => {
+    try {
+        const pool = await getPoolPromiseEGA();
+        const result = await pool.request().query(`SELECT LTRIM(RTRIM(DESCRICAO)) as Linha, PESSOAS as Valor FROM ${EGA_CONFIG.tabelaOperador} WHERE DESCRICAO IS NOT NULL AND DESCRICAO <> 'SEM OPERADOR'`);
+        const d = {}; result.recordset.forEach(r => { if(r.Linha) d[r.Linha.trim().toLowerCase()] = Number(r.Valor) || 0; });
+        res.json(d);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+};
+
+exports.getOperadoresDetalhado = async (req, res) => { res.json([]); };
+exports.getApontamentosOperadorDia = async (req, res) => { res.json([]); };
+exports.getPessoasComUltimoStatusEntrada = async (req, res) => { res.json([]); };
+exports.getApontamentosPorPeriodoDLE = async (req, res) => { res.json([]); };
+
+module.exports = {
+    getMaquinasLayout: exports.getMaquinasLayout,
+    getContagemCards: exports.getContagemCards,
+    getContagemEGA: exports.getContagemEGA,
+    getCadastroOperadores: exports.getCadastroOperadores,
+    getOperadoresPorMaquina: exports.getOperadoresPorMaquina,
+    getOperadoresDetalhado: exports.getOperadoresDetalhado,
+    getApontamentosOperadorDia: exports.getApontamentosOperadorDia,
+    getPessoasComUltimoStatusEntrada: exports.getPessoasComUltimoStatusEntrada,
+    getApontamentosPorPeriodoDLE: exports.getApontamentosPorPeriodoDLE
 };

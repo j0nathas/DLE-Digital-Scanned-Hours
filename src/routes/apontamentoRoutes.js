@@ -15,7 +15,6 @@ router.get('/getProdutosPorLinha', apontamentoController.getProdutosPorLinha);
 router.get('/getProdutos', apontamentoController.getProdutos);
 
 router.get('/ultimoapontamento-ip/:ip', apontamentoController.getUltimoApontamentoPorIp);
-router.get('/ultimoapontamento-ip_TEMP/:ip', apontamentoController.getUltimoApontamentoPorIp_TEMP);
 router.get('/status/:linha', apontamentoController.getLinhaStatus);
 
 

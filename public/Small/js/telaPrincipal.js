@@ -1,6 +1,6 @@
 import { apontamentoOperador, apontamentoTeamLeader, registrarSaidaAutomaticaParaLinha } from '/js/funcoes.js';
 import { agendarOperadores, carregarOperadores } from '/js/statusOp.js';
-import { IpMonitor } from '/js/leituraCartoTemp.js';
+import { IpMonitor } from '/js/leituraCartao.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 

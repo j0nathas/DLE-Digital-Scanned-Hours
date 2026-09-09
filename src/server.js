@@ -16,7 +16,6 @@ const PORT = process.env.PORT || 3000;
 
 // INICIALIZAÇÃO DE MÓDULOS E BANCO DE DADOS
 require('./config/db');
-require('./tasks/syncLogs');
 
 // IMPORTAÇÕES DE ROTAS
 const produtosRoutes = require('./routes/produtosRoutes');

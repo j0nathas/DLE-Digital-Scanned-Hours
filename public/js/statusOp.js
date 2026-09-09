@@ -33,7 +33,6 @@ function horaParaHorasMinutos(horaStr) {
 export async function carregarOperadores(maquinas) {
     try {
         for (const maquina of maquinas) {
-            console.log(maquina)
             const planta = (maquina.toUpperCase()).startsWith("J.") ? 'MJN' : 'MLB';
             const response = await fetch(`/api/apontamentos/operadores/${planta}/${maquina}`);
             if (!response.ok) throw new Error('Erro ao carregar operadores da máquina ' + maquina);
@@ -72,9 +71,10 @@ export async function carregarOperadores(maquinas) {
 
                 
 
-                const turnoCadastro = (item.TurnoCadastro?.trim()).slice(0, 1) + 'T';
-                const turnoApontado = (item.TurnoApontado?.trim()).slice(0, 1) + 'T';
+                const turnoCadastro = item.TurnoCadastro?.trim()?.slice(0, 1) + 'T';
+                const turnoApontado = item.TurnoApontado?.trim()?.slice(0, 1) + 'T';
 
+           
                 // -----------------------------------------------------------
                 // 2. DEFINIÇÃO DOS LIMITES DO TURNO
                 // -----------------------------------------------------------

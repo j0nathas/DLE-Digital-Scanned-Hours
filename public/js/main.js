@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://10.109.132.135:3000';
+const API_BASE_URL = 'http://10.109.132.160:3000';
 
 async function carregarUsuarios() {
     try {

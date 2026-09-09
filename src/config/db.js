@@ -1,9 +1,6 @@
 const sql = require('mssql');
-// A linha 'require('dotenv').config()' não é necessária aqui, pois será carregada no server.js
 
-// Função auxiliar para criar uma configuração específica
 const createConfig = (prefix) => {
-    // Se o prefixo for 'DB', usa as variáveis padrão. Senão, usa as prefixadas.
     const user = process.env[`${prefix}_USER`] || process.env.DB_USER;
     const password = process.env[`${prefix}_PASSWORD`] || process.env.DB_PASSWORD;
     const server = process.env[`${prefix}_SERVER`] || process.env.DB_SERVER;

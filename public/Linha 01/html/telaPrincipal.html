@@ -1,43 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head class="head-telaPrincipal"> 
+
+<head class="head-telaPrincipal">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/lista-operadores.css">
     <link rel="stylesheet" href="/Linha 01/css/telaPrincipal.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <link rel="stylesheet" href="/Linha 01/css/asideTeamLeader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <title>Tela de Gestão - Linha</title>
-    <link rel="icon" href="/public/images/logo-dle-preto-png.png">
+    <link rel="icon" href="/images/logo-dle-branco-png.png">
 </head>
+
 <body>
 
     <div id="loadingOverlay">
         <img src="/images/magna-logo.png" alt="">
         <div class="spinner"></div>
     </div>
-
+    <p class="setor" id="linha-producao"><strong>Lanternas</strong></p>
     <p class="horario" id="hora-atual"></p>
     <button class="terminarProducao"><img src="/images/exit.svg" class="sair-producao" alt="" width="55"></button>
     <main class="informacaoPrincipal">
-        <div class="linha-setor">
-            <p class="linhaProducao"><strong>s.LA01st</strong> <br> & <br><strong>s.LA02st</strong></p>
-        </div>
-        <li class="emProducao-li">
-            <p class="emProducaoProduzindo">Produzindo:</p>
-            <div class="bloco-emProducao">
-            <p class="emProducaoProduto"></p>
-            </div>
-        </li>
 
-        <div class="card-Operadores">
-            <li class="Operadores">
-                <p id="real-s.LA01st_s.LA02st" class="OperadoresNaLinha">0</p>
-                <p class="barra-quantidadeOperadores">/</p>
-                <p id="esperado-s.LA01st_s.LA02st" class="quantidadeOperadores">0</p>
-            </li>
-            <p class="text-operadores">Operadores</p>
-        </div>
 
-        <img src="/images/magna-logo.png" class="logo-sem-nome" width="200">
+        <section class="cards">
+            <nav class="cards-uaps">
+                <div class="linha-setor">
+                    <p class="linhaProducao"><strong>s.LA01st</strong> & <strong>s.LA02st</strong></p>
+                    <div class="bloco-emProducao">
+                        <p id="produto-s.LA01st_s.LA02st" class="emProducao"></p>
+                    </div>
+                </div>
+                <div class="cards-Operadores">
+                    <li class="Operadores">
+                        <p id="real-s.LA01st_s.LA02st" class="OperadoresNaLinha">0</p>
+                        <p class="barra-quantidadeOperadores">/</p>
+                        <p id="esperado-s.LA01st_s.LA02st" class="quantidadeOperadores">0</p>
+                    </li>
+                    <p class="text-operadores">Operadores</p>
+                </div>
+            </nav>
+
+            <button class="abrir-lista-operadores"><img src="/images/operadores.svg" width="80" alt=""></button>
+        </section>
+
+
+
+        <img src="/images/magna-logo.png" class="logo-sem-nome" width="175">
 
         <div class="data-horario">
             <p class="turno" id="turno-atual"></p>
@@ -46,42 +56,51 @@
 
         <div class="guia">
             <section class="guia-card">
-                <p class="guia-card-texto">Aproxime o cartão de identificação do leitor para: <br><br><strong style="color: rgb(0, 155, 0);">ENTRAR</strong> na produção <br> ou <br> <strong style="color: rgb(241, 0, 0);">SAIR</strong> do seu posto.</p>
-                <img src="/images/scanner.png" alt="" width="100" class="scanner-cartao">
+                <p class="guia-card-texto">Aproxime o cartão de identificação do leitor para: <br><br><strong
+                        style="color: rgb(0, 155, 0);">ENTRAR</strong> na produção <br> ou <br> <strong
+                        style="color: rgb(241, 0, 0);">SAIR</strong> do seu posto.</p>
+                <img src="/images/scanner.png" alt="" width="90" class="scanner-cartao">
             </section>
-            <button class="btn-principal" id="btn-entrar-linha" style="display: none;">Produzir <img class="scanner-img" src="/images/entrar-producao.svg" width="25" alt=""> </button>
         </div>
 
-        <button id="operador" style="display: none;">operador</button>
     </main>
 
-    <div class="overlay"></div>
 
-    <nav class="card-saida">
+    <div id="overlay" class="overlay"></div>
 
-        <button class="card-saida-fechar"><img src="/images/close.svg" alt="" width="70" class="card-saida-imagem"></button>
-
-        <div class="card-saida-mensagem">
-            <img src="/images/sair-operacao.svg" alt="" class="card-saida-img" width="200" style="padding-right: 1.2rem ;" >
-            <p class="card-saida-texto">Deseja realmente deixar o posto?</p>
-            <p class="card-saida-mensagem-texto">Confirme sua saída do posto de trabalho ou cancele em caso de clique indevido.</p>
+    <nav class="finalizacao-uaps">
+        <div class="finalizacao-uaps-header">
+            <section class="finalizacao-uaps-header-textos">
+                <p class="finalizacao-uaps-header-textos-text texto-Ola-encerramento"
+                    style="font-size: 2rem; font-weight: bold;">Olá, Rogério!</p>
+                <p class="finalizacao-uaps-header-textos-text">Escolha as linhas que serão <strong
+                        style="color: rgb(250, 0, 0);">finalizadas</strong>.</p>
+            </section>
+            <img src="/images/close.svg" class="finalizacao-uaps-header-close" width="65" alt="">
         </div>
 
-        
-        <section class="card-saida-botoes">
-            <button class="card-saida-botoes-cancelar">Cancelar</button>
-            <button class="card-saida-botoes-sair">Sair</button>
-        </section>
+
+        <div class="finalizacao-uaps-botoes">
+            <button class="finalizacao-uaps-botoes-botao" data-finalizar="s.LA01st_s.LA02st">
+                <p>Linha<strong class="destaque-uap-encerrar"> 01</strong></p>
+            </button>
+        </div>
+
+
+        <div class="finalizacao-uaps-confirmacao">
+            <button class="finalizacao-uaps-confirmacao-select">SELECIONAR TODAS <img src="/images/selecionar-todos.svg"
+                    width="25" alt=""> </button>
+            <button class="finalizacao-uaps-confirmacao-finalizar">FINALIZAR</button>
+        </div>
 
     </nav>
 
-        <div class="overlay-saida"></div>
 
-    <aside class="aside-operador">
-    </aside>
+    <div class="overlay-finalizacao"></div>
 
+    <div class="overlay-saida"></div>
 
-
+    <div id="overlay-teamleader" class="overlay-teamleader"></div>
 
     <nav class="encerrar">
         <button class="encerrar-sair"><img src="/images/close.svg" alt="" width="70"></button>
@@ -90,33 +109,50 @@
 
         <img src="/images/scanner.png" alt="" class="imagem-scanner">
 
-        <p class="encerrar-txt-guia">Aproxime o cartão de identificação do leitor para <strong style="color: rgb(189, 0, 0);">ENCERRAR</strong> a produção do produto atual.</p>
+        <p class="encerrar-txt-guia">Aproxime o cartão de identificação do leitor para <strong>ENCERRAR</strong> a
+            produção do produto atual.</p>
+
+    </nav>
+
+
+
+    <nav class="lista-operadores">
+
+        <button class="lista-operadores-sair"><img src="/images/close.svg" width="75" alt=""></button>
+
+        <div class="lista-operadores-linha" data-lista="s.LA01st_s.LA02st">
+
+            <p class="lista-operadores-linha-nome">Linha 01</p>
+
+            <ul class="lista-operadores-linha-container">
+
+            </ul>
+
+        </div>
+
+        <div class="lista-operadores-guia">
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia"></div>
+                <p>Dentro do turno apontado</p>
+            </section>
+
+            <section class="lista-operadores-guia-status barras-guia">
+                <div class="status-pessoa-guia status-pessoa-amarelo"></div>
+                <p>Fora do turno e dentro do limite de HE</p>
+            </section>
+
+            <section class="lista-operadores-guia-status">
+                <div class="status-pessoa-guia status-pessoa-vermelho"></div>
+                <p>Fora do turno apontado</p>
+            </section>
+        </div>
+
 
     </nav>
 
 
 
     <div class="overlay-encerrar"></div>
-
-
-
-     <nav class="encerrarProd">
-        <button class="encerrarProd-sair"><img src="/images/close.svg" alt="" width="70"></button>
-
-        <div class="encerrarProd-textos">
-            <img src="/images/sair-producao.svg" alt="" width="120">
-            <p class="encerrarProd-textos-p">Encerrar produção atual?</p>
-            <p class="encerrarProd-textos-p">Selecione FINALIZAR caso deseje finalizar a produção do produto atual ou CANCELAR para voltar para a tela principal.</p>
-        </div>
-
-        <div class="encerrarProd-botoes">
-            <button class="encerrarProd-botoes-cancelar">Cancelar</button>
-            <button class="encerrarProd-botoes-encerrar">Finalizar</button> 
-        </div>
-
-
-    </nav>
-
 
     <div class="overlay-popup"></div>
 
@@ -133,12 +169,13 @@
 
 
 </body>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script type="module" src="/Linha 01/js/telaPrincipal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    <link rel="stylesheet" href="/toast/toastr-custom.css">
+<script type="module" src="/Linha 01/js/telaPrincipal.js"></script>
+
+<link rel="stylesheet" href="/toast/toastr-custom.css">
+
 </html>

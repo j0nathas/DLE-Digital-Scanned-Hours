@@ -39,13 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const produto = localStorage.getItem('produtoProduzir');
     const asideOperador = document.querySelector('.aside-operador');
     // --- SELETORES GLOBAIS DENTRO DO ESCOPO ---
-    const OperadoresEsperadosEl = document.querySelectorAll('.quantidadeOperadores');
-    const produtoEmProducaoEl = document.querySelector('.emProducaoProduto');
     const dataAtualEl = document.getElementById('data-atual');
     const horaAtualEl = document.getElementById('hora-atual');
     const turnoAtualEl = document.getElementById('turno-atual');
-    const operadoresNaLinhaEl = document.querySelector('.OperadoresNaLinha');
-    const cardMetalizadoras = document.querySelectorAll('.card-Operadores');
 
     // --- ELEMENTOS DO MODAL DINÂMICO ---
     const overlay = document.querySelector('.overlay');
@@ -59,22 +55,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Elementos do Modal
     const numeroEl = document.getElementById('numero');
-    const diminuirBtn = document.getElementById('diminuir');
-    const aumentarBtn = document.getElementById('aumentar');
     const asideTeamleader = document.getElementById('aside-teamleader');
     // --- ESTADO DA APLICAÇÃO ---
     let quantidadeOperadores = 1;
 
     // --- DADOS DA SESSÃO E ESTADO ---
-    let ultimoAcessoMODVerificado = null;
     let pollingInterval;
     let modalAberto = false;
     let nomeOperadorCartao = "";
     let REOperadorCartao = null;
     let produtoSelecionado = null;
 
-    const maquinas = ['s.LA01st_s.LA02st', 's.LA03gm_s.LA04gm'];
-    const maquinasApontamento = ['s.LA01st', 's.LA02st', 's.LA03gm', 's.LA04gm'];
+    const maquinas = ['s.LA01st_s.LA02st'];
+    const maquinasApontamento = ['s.LA01st', 's.LA02st'];
 
     async function atualizarEsperadoEColorirLinhas() {
         const API_URL = '/api/apontamentos/getesperados';
@@ -339,9 +332,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     REOperadorCartao,
                     nomeOperadorCartao.toUpperCase(),
                     'MOD',
-                    linha,
+                    maquinas[0],
                     esperadoProduto.esperado,
-                    linha,
+                    maquinas[0],
                     'Entrada',
                     esperadoProduto.prod_LE,
                     esperadoProduto.prod_LD,
@@ -426,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const API_BASE_URL = '/api';
-    const IP_ALVO_MONITORADO = '10.109.140.48'; //227
+    const IP_ALVO_MONITORADO = '10.109.133.242'; //227
 
     const monitor = new IpMonitor(IP_ALVO_MONITORADO, API_BASE_URL, ["TL", "MOD"], 1000);
     monitor.startMonitoring();
@@ -503,7 +496,60 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                 } else {
-                    abrirModalOperador(nome);
+                    const API_URL = '/api/apontamentos/getesperados';
+
+                    try {
+                        const response = await fetch(API_URL);
+                        const dados = await response.json();
+
+                        if (!response.ok) {
+                            botaoConfirmarOperacao.disabled = false;
+                            console.warn(`Falha ao buscar dados. Status: ${response.status}`);
+                            return;
+                        }
+
+                        if (!linha) {
+                            botaoConfirmarOperacao.disabled = false;
+                            alert('Erro: Operação inválida.');
+                            return;
+                        }
+
+                        botaoConfirmarOperacao.textContent = 'Processando...';
+
+                        const esperadoProduto = dados[`esperado${linha}`];
+
+                        const resposta = await apontamentoOperador(
+                            turnoAtualEl.textContent,
+                            REOperadorCartao,
+                            nomeOperadorCartao.toUpperCase(),
+                            'MOD',
+                            linha,
+                            esperadoProduto.esperado,
+                            linha,
+                            'Entrada',
+                            esperadoProduto.prod_LE,
+                            esperadoProduto.prod_LD,
+                            esperadoProduto.prod_Unico
+                        );
+
+                        if (resposta.sucesso) {
+                            document.querySelector('.popup-entrada').style.display = 'flex';
+                            document.querySelector('.overlay-popup').style.display = 'block';
+                            document.querySelector('.popup-entrada-nome').textContent = nomeOperadorCartao;
+                            setTimeout(DesaparecerPopUp, 3000);
+                            await carregarContagemOperadores();
+                            fecharModalOperador();
+                            botaoConfirmarOperacao.textContent = 'Confirmar';
+                            botaoConfirmarOperacao.disabled = false;
+                        } else {
+                            botaoConfirmarOperacao.textContent = 'Confirmar';
+                            botaoConfirmarOperacao.disabled = false;
+                            alert(`Erro: ${resposta.mensagem}`);
+                        }
+
+                    } catch (error) {
+                        console.error('Erro na entrada de linha:', error);
+                    }
                     nomeOperadorCartao = nome;
                     REOperadorCartao = RE;
                 }

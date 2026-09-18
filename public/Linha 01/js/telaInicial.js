@@ -1,23 +1,29 @@
-import { apontamentoOperador, apontamentoTeamLeader, verificarStatusDaLinha } from '/js/funcoes.js';
+import { apontamentoTeamLeader, verificarStatusDaLinha } from '/js/funcoes.js';
 import { IpMonitor } from '/js/leituraCartao.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const linhaAtual = 's.LA01st_s.LA02st';
+    const maquinas = ['s.LA01st', 's.LA02st'];
 
-    verificarStatusDaLinha(linhaAtual).then(status => {
-        if (status === 'Produzindo') {
-            console.log(`A linha ${linhaAtual} já está produzindo! Redirecionando...`);
-            window.location.href = '/Linha 01/html/telaPrincipal.html';
-        } else {
-            console.log(`A linha ${linhaAtual} já está produzindo! Redirecionando...`);
-        }
-    });
+    const maquinasLinha = ['s.LA01st_s.LA02st'];
+
+
+    for (const linha of maquinasLinha) {
+        verificarStatusDaLinha(linha).then(status => {
+            if (status === 'Produzindo') {
+                console.log(`A linha ${linha} já está produzindo! Redirecionando...`);
+                window.location.assign('/Linha 01/html/telaPrincipal.html');
+            } else {
+                console.log(`A linha ${linha} já está produzindo! Redirecionando...`);
+            }
+        });
+    }
+
 
     toastr.options = {
         "closeButton": true,
         "progressBar": true,
-        "positionClass": "toast-top-right",
+        "positionClass": "toast-top-righft",
         "timeOut": "7000",
         "extendedTimeOut": "1000",
         "showMethod": "fadeIn",
@@ -26,288 +32,25 @@ document.addEventListener('DOMContentLoaded', () => {
         "hideDuration": "500",
         "toastClass": "toast fadeIn fadeOut"
     };
+
     // --- ELEMENTOS DO DOM ---
     const dataAtualEl = document.getElementById('data-atual');
     const horaAtualEl = document.getElementById('hora-atual');
     const turnoAtualEl = document.getElementById('turno-atual');
-    const linhaProducaoEl = document.getElementById('linha-producao');
-    let ladosLinha = ['s.LA01st', 's.LA02st'];
+    const nomeUsuarioModalEl = document.getElementById('nome-usuario-modal');
 
     // Elementos do Modal
     const numeroEl = document.getElementById('numero');
-    const botoesProduto = document.querySelectorAll(".botoes-produtos-botao");
-    const containerContador = document.getElementById('container-contador');
-    const sairBtn = document.getElementById('btn-sair-modal');
     const asideTeamleader = document.getElementById('aside-teamleader');
-    const overlay = document.getElementById('overlay');
-    const nomeUsuarioModalEl = document.getElementById('nome-usuario-modal');
-
-    let primeiroSelecionadoBtn = null; // Mantenha esta variável se for usada em outro lugar
-    let nomeTLIdentificado = "";
-    let RETLIdentificado = null;
-
-
-    // Elementos onde os produtos serão renderizados e selecionados
-
-
-    const maquinas = ['s.LA01st', 's.LA02st'];
-    let produtosPorLinhaMap = new Map();
-
-    const containerMaquina = document.getElementById('aside-teamleader');
-    if (!containerMaquina) {
-        console.error("Elemento '#aside-teamleader' não encontrado. Verifique o HTML.");
-        // Saia ou lide com o erro
-    }
-
-    const listaProdutosDiv = containerMaquina ? containerMaquina.querySelector('.botoes-produtos') : null;
-    const produtosSelecionadosSection = containerMaquina ? containerMaquina.querySelector('.produtos-selecionados') : null;
-    const contadorContainer = containerMaquina ? containerMaquina.querySelector('#container-contador') : null;
-    const btnConfirmar = containerMaquina ? containerMaquina.querySelector('#btn-confirmar') : null;
-
-    let produtoAbertoParaLados = null;
-    // Variável para rastrear o parágrafo do produto que teve o border-radius alterado
-    let paragrafoProdutoAnteriormenteSelecionado = null;
-
-
-    async function carregarProdutosPorMaquina() {
-        if (!listaProdutosDiv || !produtosSelecionadosSection || !contadorContainer || !btnConfirmar) {
-            console.error("Um ou mais elementos essenciais não foram encontrados. Verifique o HTML e os seletores.");
-            return;
-        }
-
-        try {
-            const respostaProdutosLinha = await fetch('/api/apontamentos/getProdutosPorLinha');
-            if (!respostaProdutosLinha.ok) {
-                throw new Error(`HTTP error! status: ${respostaProdutosLinha.status}`);
-            }
-            const produtosLinhaData = await respostaProdutosLinha.json();
-            produtosLinhaData.forEach(item => {
-                if (item.produtos && Array.isArray(item.produtos)) {
-                    item.produtos.forEach(({ codigo, descricao }) => {
-                        produtosPorLinhaMap.set(codigo, descricao);
-                    });
-                }
-            });
-
-            const resposta = await fetch('/api/apontamentos/getProdutos');
-            if (!resposta.ok) {
-                throw new Error(`HTTP error! status: ${resposta.status}`);
-            }
-            const dados = await resposta.json();
-
-            let todosProdutosDaLinha = [];
-            dados.forEach(item => {
-                if (maquinas.includes(item.maquina) && item.produtos && Array.isArray(item.produtos)) {
-                    todosProdutosDaLinha.push(...item.produtos);
-                }
-            });
-
-            listaProdutosDiv.innerHTML = '';
-
-            todosProdutosDaLinha.forEach(produto => {
-                const { produto: nome, cod_le, cod_ld, cod_unico } = produto;
-
-                const divProduto = document.createElement('div');
-                divProduto.className = 'botoes-produtos-lista';
-                divProduto.dataset.codLe = cod_le || '';
-                divProduto.dataset.codLd = cod_ld || '';
-                divProduto.dataset.codUnico = cod_unico || '';
-
-                const nomeProduto = document.createElement('p');
-                nomeProduto.textContent = nome;
-                nomeProduto.className = "nome-produto-selecao";
-                nomeProduto.style.borderRadius = '10px';
-                divProduto.appendChild(nomeProduto);
-
-                divProduto.addEventListener('click', (e) => {
-                    if (paragrafoProdutoAnteriormenteSelecionado) {
-                        paragrafoProdutoAnteriormenteSelecionado.style.borderRadius = '10px';
-                    }
-
-                    document.querySelectorAll('.botoes-produtos-lista').forEach(btn => {
-                        const paragrafo = btn.querySelector('.nome-produto-selecao')
-                        paragrafo.classList.remove('selecionado');
-                    });
-                    document.querySelectorAll('.lista-lados').forEach(el => el.remove());
-
-                    nomeProduto.classList.add('selecionado');
-
-                    const temAmbosLados = cod_le && cod_ld;
-                    if (temAmbosLados) {
-                        nomeProduto.style.borderRadius = '10px 10px 0px 0px';
-                    } else {
-                        nomeProduto.style.borderRadius = '10px';
-                    }
-                    paragrafoProdutoAnteriormenteSelecionado = nomeProduto;
-
-
-                    contadorContainer.style.display = 'none';
-                    btnConfirmar.style.display = 'none';
-                    produtosSelecionadosSection.innerHTML = '';
-
-                    if (temAmbosLados) {
-                        const divLados = document.createElement('div');
-                        divLados.className = 'lista-lados';
-
-                        const botaoLE = document.createElement('button');
-                        botaoLE.textContent = 'LE';
-                        botaoLE.className = 'botao-lado';
-                        botaoLE.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            produtosSelecionadosSection.innerHTML = '';
-                            const desc = produtosPorLinhaMap.get(cod_le) || nome;
-                            adicionarProdutoSelecionado(desc, cod_le, 'LE');
-                            containerMaquina.dataset.tipoSelecao = 'LE';
-                            divLados.remove();
-                            contadorContainer.style.display = 'flex';
-                            btnConfirmar.style.display = 'block';
-                            if (paragrafoProdutoAnteriormenteSelecionado) {
-                                paragrafoProdutoAnteriormenteSelecionado.style.borderRadius = '10px';
-                            }
-                        });
-
-                        const botaoLD = document.createElement('button');
-                        botaoLD.textContent = 'LD';
-                        botaoLD.className = 'botao-lado';
-                        botaoLD.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            produtosSelecionadosSection.innerHTML = '';
-                            const desc = produtosPorLinhaMap.get(cod_ld) || nome;
-                            adicionarProdutoSelecionado(desc, cod_ld, 'LD');
-                            containerMaquina.dataset.tipoSelecao = 'LD';
-                            divLados.remove();
-                            contadorContainer.style.display = 'flex';
-                            btnConfirmar.style.display = 'block';
-                            if (paragrafoProdutoAnteriormenteSelecionado) {
-                                paragrafoProdutoAnteriormenteSelecionado.style.borderRadius = '10px';
-                            }
-                        });
-
-                        const botaoAmbos = document.createElement('button');
-                        botaoAmbos.textContent = 'AMBOS';
-                        botaoAmbos.className = 'botao-lado';
-                        botaoAmbos.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            produtosSelecionadosSection.innerHTML = '';
-                            const descLE = produtosPorLinhaMap.get(cod_le) || nome;
-                            const descLD = produtosPorLinhaMap.get(cod_ld) || nome;
-
-                            adicionarProdutoSelecionado(descLE, cod_le, 'LE');
-                            adicionarProdutoSelecionado(descLD, cod_ld, 'LD');
-                            containerMaquina.dataset.tipoSelecao = 'AMBOS';
-                            divLados.remove();
-                            contadorContainer.style.display = 'flex';
-                            btnConfirmar.style.display = 'block';
-                            if (paragrafoProdutoAnteriormenteSelecionado) {
-                                paragrafoProdutoAnteriormenteSelecionado.style.borderRadius = '10px';
-                            }
-                        });
-
-                        divLados.appendChild(botaoLE);
-                        divLados.appendChild(botaoLD);
-                        divLados.appendChild(botaoAmbos);
-                        divProduto.appendChild(divLados);
-                        produtoAbertoParaLados = divProduto;
-
-                    } else {
-                        const codigo = cod_le || cod_ld || cod_unico;
-                        const descricao = produtosPorLinhaMap.get(codigo) || nome;
-                        adicionarProdutoSelecionado(descricao, codigo, 'UNICO');
-                        containerMaquina.dataset.tipoSelecao = 'UNICO';
-                        contadorContainer.style.display = 'flex';
-                        btnConfirmar.style.display = 'block';
-                        nomeProduto.style.borderRadius = '10px';
-                    }
-                });
-
-                listaProdutosDiv.appendChild(divProduto);
-            });
-
-            const inputPesquisa = document.querySelectorAll('.pesquisa-produtos');
-            inputPesquisa.forEach(input => {
-                input.addEventListener('input', () => {
-                    const textoDigitado = input.value.toUpperCase();
-                    const botoesProdutos = document.querySelectorAll('.botoes-produtos-lista');
-
-                    botoesProdutos.forEach(botao => {
-                        const texto = botao.querySelector('.nome-produto-selecao').textContent.toUpperCase();
-                        const cod_LE = (botao.getAttribute('data-cod-le') || '').toUpperCase();
-                        const cod_LD = (botao.getAttribute('data-cod-ld') || '').toUpperCase();
-                        const cod_Unico = (botao.getAttribute('data-cod-unico') || '').toUpperCase();
-
-                        if (produtoAbertoParaLados && produtoAbertoParaLados !== botao) {
-                            produtoAbertoParaLados.querySelectorAll('.lista-lados').forEach(el => el.remove());
-                            if (produtoAbertoParaLados.querySelector('.nome-produto-selecao')) {
-                                produtoAbertoParaLados.querySelector('.nome-produto-selecao').style.borderRadius = '10px';
-                            }
-                            produtoAbertoParaLados = null;
-                            paragrafoProdutoAnteriormenteSelecionado = null;
-                        }
-
-                        botao.style.display = texto.includes(textoDigitado) || cod_LE.includes(textoDigitado) || cod_LD.includes(textoDigitado) || cod_Unico.includes(textoDigitado)
-                            ? 'block'
-                            : 'none';
-                    });
-                });
-            });
-
-        } catch (err) {
-            console.error('[API ERRO] carregarProdutosPorMaquina:', err);
-            if (typeof toastr !== 'undefined') {
-                toastr.error('Erro ao carregar produtos. Verifique o console.');
-            } else {
-                alert('Erro ao carregar produtos. Verifique o console.');
-            }
-        }
-    }
-
-    function adicionarProdutoSelecionado(nome, codigo, tipo) {
-        if (!produtosSelecionadosSection) return;
-
-        const pProduto = document.createElement('p');
-        pProduto.className = 'produto-selecionado-paragrafo';
-        pProduto.textContent = `${nome}`;
-        pProduto.dataset.codigo = codigo;
-        pProduto.dataset.tipo = tipo;
-
-        produtosSelecionadosSection.appendChild(pProduto);
-    }
-
-
-    // --- Lógica de Contador de Operadores (mantido) ---
-    const diminuirBtn = document.getElementById('diminuir');
-    const aumentarBtn = document.getElementById('aumentar');
-    const numeroSpan = document.getElementById('numero');
-    let contadorOperadores = 1;
-
-    if (diminuirBtn && aumentarBtn && numeroSpan) {
-        diminuirBtn.addEventListener('click', () => {
-            if (contadorOperadores > 1) {
-                contadorOperadores--;
-                numeroSpan.textContent = contadorOperadores;
-            }
-        });
-
-        aumentarBtn.addEventListener('click', () => {
-            contadorOperadores++;
-            numeroSpan.textContent = contadorOperadores;
-        });
-    } else {
-        console.warn("Botões de contador de operadores não encontrados. Verifique IDs 'diminuir', 'aumentar', 'numero'.");
-    }
-
-    carregarProdutosPorMaquina();
-
-
-
     // --- ESTADO DA APLICAÇÃO ---
     let quantidadeOperadores = 1;
     let produtoSelecionado = null;
+    let nomeTLIdentificado = null;
+    let RETLIdentificado = null;
 
     const carrosselInner = document.getElementById('carrosselInner');
     const totalFrases = carrosselInner.children.length;
     let indice = 0;
-    const btnProdutos = document.querySelectorAll('.nome-produto-selecao');
 
     function mostrarProximaFrase() {
         indice = (indice + 1) % totalFrases;
@@ -330,93 +73,564 @@ document.addEventListener('DOMContentLoaded', () => {
         resetarModal();
     }
 
-    //abrirModal('Jonathas');
-
-
     function resetarModal() {
         produtoSelecionado = null;
         quantidadeOperadores = 1;
         numeroEl.textContent = '1';
-        botoesProduto.forEach(b => b.classList.remove('botao-produtos-selecionado'));
-        containerContador.style.display = 'none';
+        botoesProduto.forEach(b => b.classList.remove('botao-uaps-selecionado'));
         btnConfirmar.style.display = 'none';
-        btnProdutos.forEach(btn => {
-            btn.classList.remove('selecionado');
-        })
     }
 
     const API_BASE_URL = '/api';
-    const IP_ALVO_MONITORADO = '10.109.133.245';
+    const IP_ALVO_MONITORADO = '10.109.133.242';
 
     const monitorTL = new IpMonitor(IP_ALVO_MONITORADO, API_BASE_URL, ["TL"], 1000);
     monitorTL.startMonitoring();
 
-    document.addEventListener('newAccessDetected', async (event) => {
+    document.addEventListener('newAccessDetected', (event) => {
         const { nome, RE, cargo } = event.detail;
 
         if (cargo.toUpperCase() === "TL") {
-            nomeTLIdentificado = nome;
-            RETLIdentificado = RE;
-            abrirModalTL(nome);
+            if (typeof abrirModalTL === 'function') {
+                abrirModalTL(nome);
+                nomeTLIdentificado = nome;
+                RETLIdentificado = RE;
+                console.log(`Modal de TL aberto para ${nome}!`);
+            } else {
+                console.warn('Função abrirModalTL não definida ou não acessível.');
+            }
         } else {
             console.log(`Novo acesso detectado de cargo ${cargo} (${nome}), mas nenhuma ação específica configurada.`);
         }
     });
 
-    diminuirBtn.addEventListener('click', () => {
-        if (quantidadeOperadores > 1) {
-            quantidadeOperadores--;
-            numeroEl.textContent = quantidadeOperadores;
+    const inputPesquisa = document.querySelectorAll('.pesquisa-produtos');
+
+    function reiniciarInput() {
+        inputPesquisa.forEach(input => {
+            input.value = "";
+
+            const botoesProdutos = document.querySelectorAll('.botoes-uaps-tl-produtos-lista');
+            const textoDigitado = input.value.toUpperCase();
+
+            botoesProdutos.forEach(botao => {
+                const texto = botao.textContent.toUpperCase();
+                const cod_LE = (botao.getAttribute('data-cod-le') || '').toUpperCase();
+                const cod_LD = (botao.getAttribute('data-cod-ld') || '').toUpperCase();
+                const cod_Unico = (botao.getAttribute('data-cod-unico') || '').toUpperCase();
+
+                botao.style.display = texto.includes(textoDigitado) || cod_LE.includes(textoDigitado) || cod_LD.includes(textoDigitado) || cod_Unico.includes(textoDigitado)
+                    ? 'block'
+                    : 'none';
+            });
+        })
+
+
+    }
+
+    let produtosPorLinhaMap = new Map();
+
+    async function carregarProdutosPorMaquina() {
+        try {
+
+
+            const respostaProdutosLinha = await fetch('/api/apontamentos/getProdutosPorLinha');
+            if (!respostaProdutosLinha.ok) {
+                throw new Error(`HTTP error! status: ${respostaProdutosLinha.status}`);
+            }
+            const produtosLinhaData = await respostaProdutosLinha.json();
+
+            produtosLinhaData.forEach(item => {
+                if (item.produtos && Array.isArray(item.produtos)) {
+                    item.produtos.forEach(({ codigo, descricao }) => {
+                        produtosPorLinhaMap.set(codigo, descricao);
+                    });
+                }
+            });
+
+            const resposta = await fetch('/api/apontamentos/getProdutos');
+            if (!resposta.ok) {
+                throw new Error(`HTTP error! status: ${resposta.status}`);
+            }
+            const dados = await resposta.json();
+            const maquinasFiltradas = dados.filter(item => maquinas.includes(item.maquina));
+
+            maquinasFiltradas.forEach(({ maquina, produtos }) => {
+                const containerMaquina = document.querySelector(`[data-produto="${maquina}"]`)?.closest('.botoes-uaps-tl-nav');
+                if (!containerMaquina) return;
+
+                const listaProdutos = containerMaquina.querySelector('.botoes-uaps-tl-produtos');
+                if (!listaProdutos) return;
+
+                listaProdutos.innerHTML = '';
+
+                produtos.forEach(produto => {
+                    const { produto: nome, cod_le, cod_ld, cod_unico } = produto;
+
+                    const divProduto = document.createElement('div');
+                    divProduto.className = 'botoes-uaps-tl-produtos-lista';
+                    divProduto.dataset.codLe = cod_le || '';
+                    divProduto.dataset.codLd = cod_ld || '';
+                    divProduto.dataset.codUnico = cod_unico || '';
+
+                    const nomeProduto = document.createElement('p');
+                    nomeProduto.textContent = nome;
+                    nomeProduto.className = "nome-produto-selecao";
+                    divProduto.appendChild(nomeProduto);
+
+                    divProduto.addEventListener('click', () => {
+                        document.querySelectorAll('.lista-lados').forEach(el => el.remove());
+
+                        document.querySelectorAll('.botoes-uaps-tl-produtos-lista').forEach(btn => {
+                            const paragrafo = btn.querySelector('.nome-produto-selecao')
+                            paragrafo.classList.remove('selecionado');
+                        });
+
+                        nomeProduto.classList.add('selecionado');
+
+                        const temAmbosLados = cod_le && cod_ld;
+
+                        delete containerMaquina.dataset.tipoSelecao;
+                        const guiaSelecionadoSecundario = containerMaquina.querySelector('.botoes-uaps-tl-guia-selecionado-segundo');
+                        if (guiaSelecionadoSecundario) guiaSelecionadoSecundario.remove();
+
+
+                        if (temAmbosLados) {
+                            const divLados = document.createElement('div');
+                            divLados.className = 'lista-lados';
+
+                            const botaoLE = document.createElement('button');
+                            botaoLE.textContent = 'LE';
+                            botaoLE.className = 'botao-lado';
+                            botaoLE.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const desc = produtosPorLinhaMap.get(cod_le) || nome;
+                                selecionarProduto(desc, cod_le, containerMaquina);
+                                containerMaquina.dataset.tipoSelecao = 'LE';
+                                divLados.remove();
+                                nomeProduto.classList.remove('selecionado');
+                                reiniciarInput();
+                            });
+
+                            const botaoLD = document.createElement('button');
+                            botaoLD.textContent = 'LD';
+                            botaoLD.className = 'botao-lado';
+                            botaoLD.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const desc = produtosPorLinhaMap.get(cod_ld) || nome;
+                                selecionarProduto(desc, cod_ld, containerMaquina);
+                                containerMaquina.dataset.tipoSelecao = 'LD';
+                                divLados.remove();
+                                nomeProduto.classList.remove('selecionado');
+                                reiniciarInput();
+                            });
+
+                            const botaoAmbos = document.createElement('button');
+                            botaoAmbos.textContent = 'AMBOS';
+                            botaoAmbos.className = 'botao-lado';
+                            botaoAmbos.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const descLE = produtosPorLinhaMap.get(cod_le) || nome;
+                                const descLD = produtosPorLinhaMap.get(cod_ld) || nome;
+
+                                selecionarProduto(descLE, cod_le, containerMaquina);
+
+                                const containerSelecionados = containerMaquina.querySelector('.botoes-uaps-tl-guia-selecionados');
+                                if (containerSelecionados) {
+                                    const paragrafoLD = document.createElement('p');
+                                    paragrafoLD.className = 'botoes-uaps-tl-guia-selecionado-segundo';
+                                    paragrafoLD.textContent = descLD;
+                                    paragrafoLD.dataset.codigo = cod_ld;
+                                    containerSelecionados.appendChild(paragrafoLD);
+                                }
+                                containerMaquina.dataset.tipoSelecao = 'AMBOS';
+                                divLados.remove();
+                                nomeProduto.classList.remove('selecionado');
+                                reiniciarInput();
+                            });
+
+                            divLados.appendChild(botaoLE);
+                            divLados.appendChild(botaoLD);
+                            divLados.appendChild(botaoAmbos);
+                            divProduto.appendChild(divLados);
+
+                        } else {
+                            const codigo = cod_le || cod_ld || cod_unico;
+                            const descricao = produtosPorLinhaMap.get(codigo) || nome;
+                            selecionarProduto(descricao, codigo, containerMaquina);
+                            containerMaquina.dataset.tipoSelecao = 'UNICO';
+                            nomeProduto.classList.remove('selecionado');
+                            reiniciarInput();
+                        }
+                    });
+
+                    listaProdutos.appendChild(divProduto);
+                });
+            });
+
+            const btnProdutos = document.querySelectorAll('.nome-produto-selecao');
+
+
+            saidaListaProdutos.forEach(x => {
+                x.addEventListener('click', () => {
+                    const div = x.closest('.botoes-uaps-tl-divlista');
+                    div.style.display = 'none';
+                    overlayLista.style.display = 'none';
+                    const containerPai = x.closest('.botoes-uaps-tl-nav');
+                    const guiaProduto = containerPai.querySelector('.botoes-uaps-tl-guia');
+                    const botaoLinha = containerPai.querySelector('.botoes-uaps-tl-botao');
+                    const listaLados = containerPai.querySelector('.lista-lados');
+                    inputPesquisa.forEach(input => {
+                        input.addEventListener('input', () => { input.value = ""; })
+                    })
+                    if (listaLados) listaLados.remove();
+                    guiaProduto.style.display = 'none';
+                    botaoLinha.style.borderRadius = '10px';
+                    btnProdutos.forEach(produto => {
+                        produto.classList.remove('selecionado');
+                    })
+
+                    botaoLinha.classList.remove('botao-uaps-tl-selecionado');
+                    const algumSelecionado = Array.from(TodosBotoesProdutosIniciar).some(botao => botao.classList.contains('botao-uaps-tl-selecionado'));
+                    btnConfirmarProd.style.display = algumSelecionado ? 'block' : 'none';
+                });
+            });
+
+            const inputPesquisa = document.querySelectorAll('.pesquisa-produtos');
+
+            inputPesquisa.forEach(input => {
+                input.addEventListener('input', () => {
+                    const textoDigitado = input.value.toUpperCase();
+
+                    const botoesProdutos = document.querySelectorAll('.botoes-uaps-tl-produtos-lista');
+
+                    botoesProdutos.forEach(botao => {
+                        const texto = botao.textContent.toUpperCase();
+                        const cod_LE = (botao.getAttribute('data-cod-le') || '').toUpperCase();
+                        const cod_LD = (botao.getAttribute('data-cod-ld') || '').toUpperCase();
+                        const cod_Unico = (botao.getAttribute('data-cod-unico') || '').toUpperCase();
+
+                        botao.style.display = texto.includes(textoDigitado) || cod_LE.includes(textoDigitado) || cod_LD.includes(textoDigitado) || cod_Unico.includes(textoDigitado)
+                            ? 'block'
+                            : 'none';
+                    });
+                });
+            });
+
+        } catch (err) {
+            console.error('[API ERRO] carregarProdutosPorMaquina:', err);
+            toastr.error('Erro ao carregar produtos. Verifique o console.');
         }
+    }
+
+
+
+    function selecionarProduto(nome, codigo, container) {
+        const guiaSelecionado = container.querySelector('.botoes-uaps-tl-guia-selecionado');
+        const listaProdutosDiv = container.querySelector('.botoes-uaps-tl-divlista');
+        const guiaProduto = container.querySelector('.botoes-uaps-tl-guia');
+        const editarProduto = container.querySelector('.botoes-uaps-tl-guia-editar');
+        const contador = container.querySelector('.contador-confirmar-operadores');
+
+        if (guiaSelecionado) {
+            guiaSelecionado.classList.remove('produto-unico');
+            if (container.dataset.tipoSelecao === 'UNICO') {
+                guiaSelecionado.classList.add('produto-unico');
+            }
+        }
+
+        if (guiaSelecionado) guiaSelecionado.textContent = nome;
+        if (guiaSelecionado) guiaSelecionado.dataset.codigo = codigo;
+
+        if (listaProdutosDiv) listaProdutosDiv.style.display = 'none';
+        if (guiaProduto) {
+            guiaProduto.style.color = 'var(--cor-verde-escuro)';
+            guiaProduto.style.boxShadow = 'none';
+        }
+        if (editarProduto) editarProduto.style.display = 'block';
+        if (contador) contador.style.display = 'flex';
+
+        if (typeof overlayLista !== 'undefined' && overlayLista) {
+            overlayLista.style.display = 'none';
+        }
+
+        console.log(`Produto selecionado: ${nome}, Código: ${codigo}, Tipo: ${container.dataset.tipoSelecao || 'N/A'}`);
+    }
+
+    carregarProdutosPorMaquina();
+
+
+
+
+    const botoesPares = document.querySelectorAll('.botao-pares');
+    let validacaoProdutosPares = false;
+
+    botoesPares.forEach(btnPar => {
+        btnPar.addEventListener('click', () => {
+
+            if (btnPar.classList.contains('botao-pares-selecionado')) {
+                btnPar.classList.remove('botao-pares-selecionado');
+                validacaoProdutosPares = false;
+
+            } else {
+                btnPar.classList.add('botao-pares-selecionado');
+                validacaoProdutosPares = true;
+            }
+        });
+
     });
 
-    aumentarBtn.addEventListener('click', () => {
-        quantidadeOperadores++;
-        numeroEl.textContent = quantidadeOperadores;
-    });
 
-    botoesProduto.forEach((botao) => {
-        botao.addEventListener('click', () => {
-            botoesProduto.forEach((b) => b.classList.remove('botao-produtos-selecionado'));
-            botao.classList.add('botao-produtos-selecionado');
-            produtoSelecionado = botao.dataset.produto;
-            containerContador.style.display = 'block';
+    const saidaListaProdutos = document.querySelectorAll('.botoes-uaps-tl-divlista-pesquisa-sair');
+    const overlayLista = document.querySelector('.overlay-lista');
+    const TodosBotoesProdutosIniciar = document.querySelectorAll('.botoes-uaps-tl-botao');
+    const btnConfirmarProd = document.querySelector('.contador-confirmar-botao');
+
+    saidaListaProdutos.forEach(x => {
+        x.addEventListener('click', () => {
+            const div = x.closest('.botoes-uaps-tl-divlista');
+            div.style.display = 'none';
+            overlayLista.style.display = 'none';
+            const containerPai = x.closest('.botoes-uaps-tl-nav');
+            const guiaProduto = containerPai.querySelector('.botoes-uaps-tl-guia');
+            const botaoLinha = containerPai.querySelector('.botoes-uaps-tl-botao');
+            guiaProduto.style.display = 'none';
+            botaoLinha.style.borderRadius = '10px';
+            botaoLinha.classList.remove('botao-uaps-tl-selecionado');
+            const algumSelecionado = Array.from(TodosBotoesProdutosIniciar).some(botao => botao.classList.contains('botao-uaps-tl-selecionado'));
+            btnConfirmarProd.style.display = algumSelecionado ? 'block' : 'none';
         });
     });
 
-    sairBtn.addEventListener('click', fecharModal);
+    const btnConfirmar = document.getElementById('btn-confirmar');
+    const sairBtn = document.getElementById('btn-sair-modal');
 
+
+    function abrirModalTeamLeader(nomeUsuario) {
+        nomeUsuarioModalEl.textContent = `Bem-vindo, ${nomeUsuario}!`;
+        overlay.style.display = 'block';
+        asideTeamleader.style.display = 'flex';
+    }
+
+    function fecharModal() {
+        overlay.style.display = 'none';
+        asideTeamleader.style.display = 'none';
+        resetarModal();
+    }
+
+    function resetarModal() {
+        produtoSelecionado = null;
+        quantidadeOperadores = 1;
+        botoesProduto.forEach(botao => {
+            const containerPai = botao.closest('.botoes-uaps-tl-nav');
+            const contador = containerPai.querySelector('.contador-confirmar-operadores');
+            const guiaProduto = containerPai.querySelector('.botoes-uaps-tl-guia');
+            const listaProduto = containerPai.querySelector('.botoes-uaps-tl-divlista');
+            const editarProduto = containerPai.querySelector('.botoes-uaps-tl-guia-editar');
+            botao.classList.remove('botao-uaps-tl-selecionado');
+            contador.style.display = 'none';
+            guiaProduto.style.display = 'none';
+            listaProduto.style.display = 'none';
+            botao.style.borderRadius = '10px 10px 10px 10px';
+            containerPai.querySelector('.botoes-uaps-tl-guia-selecionado').textContent = "---";
+            guiaProduto.style.color = 'black';
+            editarProduto.style.display = 'none';
+            guiaProduto.style.boxShadow = '0px 5px 10px 1px rgb(231, 231, 231)';
+        });
+        btnConfirmar.style.display = 'none';
+
+    }
+
+    // --- LÓGICA DE VERIFICAÇÃO (CHAMADA PELA AÇÃO DO USUÁRIO) ---
+    document.querySelectorAll('.contador-confirmar-scroll-diminuir').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            // Encontra o container pai do contador
+            const container = btn.closest('.contador-confirmar-operadores');
+            const numeroEl = container.querySelector('.contador-confirmar-numero');
+
+            let quantidade = parseInt(numeroEl.textContent, 10) || 1;
+            if (quantidade > 1) {
+                quantidade--;
+                numeroEl.textContent = quantidade;
+            }
+        });
+    });
+
+    document.querySelectorAll('.contador-confirmar-scroll-aumentar').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.contador-confirmar-operadores');
+            const numeroEl = container.querySelector('.contador-confirmar-numero');
+
+            let quantidade = parseInt(numeroEl.textContent, 10) || 1;
+            quantidade++;
+            numeroEl.textContent = quantidade;
+        });
+    });
+
+    function verificarProdutoSelecionado() {
+        if (produtoSelecionado !== null) {
+            btnConfirmar.style.display = 'block';
+        }
+        else {
+            btnConfirmar.style.display = 'none';
+        }
+    }
+
+    const botoesProduto = document.querySelectorAll('.botoes-uaps-tl-botao');
+
+    botoesProduto.forEach((botao) => {
+
+        const containerPai = botao.closest('.botoes-uaps-tl-nav');
+        const contador = containerPai.querySelector('.contador-confirmar-operadores');
+        const guiaProduto = containerPai.querySelector('.botoes-uaps-tl-guia');
+        const listaProduto = containerPai.querySelector('.botoes-uaps-tl-divlista');
+        const editarProduto = containerPai.querySelector('.botoes-uaps-tl-guia-editar');
+
+        botao.addEventListener('click', () => {
+            if (botao.classList.contains('botao-uaps-tl-selecionado')) {
+                botao.classList.remove('botao-uaps-tl-selecionado');
+                contador.style.display = 'none';
+                guiaProduto.style.display = 'none';
+                listaProduto.style.display = 'none';
+                botao.style.borderRadius = '10px 10px 10px 10px';
+                containerPai.querySelector('.botoes-uaps-tl-guia-selecionado').textContent = "---";
+                guiaProduto.style.color = 'black';
+                editarProduto.style.display = 'none';
+                guiaProduto.style.boxShadow = '0px 5px 10px 1px rgb(231, 231, 231)';
+                const paragrafoSegundoLado = containerPai.querySelector('.botoes-uaps-tl-guia-selecionado-segundo');
+                if (paragrafoSegundoLado) paragrafoSegundoLado.remove();
+            }
+            else {
+                botao.classList.add('botao-uaps-tl-selecionado');
+                botao.style.borderRadius = '10px 10px 0px 0px';
+                guiaProduto.style.display = 'inline-flex';
+                listaProduto.style.display = 'flex';
+                overlayLista.style.display = 'block';
+
+            }
+            const algumSelecionado = Array.from(botoesProduto).some(botao =>
+                botao.classList.contains('botao-uaps-tl-selecionado')
+            );
+
+            if (algumSelecionado) {
+                produtoSelecionado = botao.dataset.produto;
+            }
+            else {
+                produtoSelecionado = null;
+            }
+
+            verificarProdutoSelecionado();
+        });
+
+        editarProduto.addEventListener('click', () => {
+            containerPai.querySelector('.botoes-uaps-tl-guia-selecionado').textContent = "---";
+            const paragrafoSegundoLado = containerPai.querySelector('.botoes-uaps-tl-guia-selecionado-segundo');
+            if (paragrafoSegundoLado) paragrafoSegundoLado.remove();
+            guiaProduto.style.color = 'black';
+            editarProduto.style.display = 'none';
+            guiaProduto.style.display = 'inline-flex';
+            listaProduto.style.display = 'flex';
+            overlayLista.style.display = 'block';
+            contador.style.display = 'none';
+
+            guiaProduto.style.boxShadow = '0px 5px 10px 1px rgb(231, 231, 231)';
+        })
+    });
+
+
+
+    sairBtn.addEventListener('click', fecharModal);
+    overlay.addEventListener('click', fecharModal);
+
+    let forExecutado = false;
 
     btnConfirmar.addEventListener('click', async () => {
-        const elLE = document.querySelector('[data-tipo="LE"]');
-        const elLD = document.querySelector('[data-tipo="LD"]');
-        const elUnico = document.querySelector('[data-tipo="UNICO"]');
-
-        const prodLE = elLE ? elLE.textContent.trim() : null;
-        const prodLD = elLD ? elLD.textContent.trim() : null;
-        const prodUnico = elUnico ? elUnico.textContent.trim() : null;
-
-        const response = await apontamentoTeamLeader(
-            turnoAtualEl.textContent,
-            RETLIdentificado,
-            nomeTLIdentificado.toUpperCase(),
-            "TL",
-            's.LA01st_s.LA02st',
-            quantidadeOperadores,
-            "Produzindo",
-            prodLE,
-            prodLD,
-            prodUnico
-        );
-        if (response.sucesso) {
-            toastr.success('Apontamento realizado com sucesso!');
-            window.location.href = '/Linha 01/html/telaPrincipal.html';
-
-        } else {
-            toastr.error(`Erro: ${response.mensagem}`);
+        const selecionados = document.querySelectorAll('.botao-uaps-tl-selecionado');
+        if (selecionados.length === 0) {
+            toastr.error('Selecione pelo menos uma máquina.');
+            return;
         }
 
+        const turno = turnoAtualEl.textContent;
+        let algumApontamentoFeito = false;
+
+        for (const botao of selecionados) {
+            const container = botao.closest('.botoes-uaps-tl-nav');
+            const nomeMaquina = botao.id;
+            const produtoSelecionadoEl = container.querySelector('.botoes-uaps-tl-guia-selecionado');
+            const produtoSelecionadoElSegundo = container.querySelector('.botoes-uaps-tl-guia-selecionado-segundo');
+
+            const produtoPrincipalTexto = produtoSelecionadoEl?.textContent.trim() || null;
+
+            if (!produtoPrincipalTexto || produtoPrincipalTexto === '---') {
+                toastr.error(`${nomeMaquina} sem produto selecionado!`);
+                return;
+            }
+
+            const tipoSelecao = container.dataset.tipoSelecao;
+
+            let produtoUnico = null;
+            let produtoLE = null;
+            let produtoLD = null;
+
+            switch (tipoSelecao) {
+                case 'LE':
+                    produtoLE = produtoPrincipalTexto;
+                    break;
+                case 'LD':
+                    produtoLD = produtoPrincipalTexto;
+                    break;
+                case 'AMBOS':
+                    produtoLE = produtoPrincipalTexto;
+                    produtoLD = produtoSelecionadoElSegundo?.textContent.trim() || null;
+                    if (!produtoLD) {
+                        toastr.error(`Erro: Segundo produto não encontrado para ${nomeMaquina} (Ambos os Lados).`);
+                        return;
+                    }
+                    break;
+                case 'UNICO':
+                    produtoUnico = produtoPrincipalTexto;
+                    break;
+                default:
+                    toastr.error(`Tipo de seleção indefinido para ${nomeMaquina}. Por favor, selecione novamente o produto.`);
+                    return;
+            }
+
+            const contadorEl = container.querySelector('.contador-confirmar-numero');
+            const quantidadeEsperada = contadorEl ? parseInt(contadorEl.textContent.trim(), 10) : 0;
+
+            const respostaApontamento = await apontamentoTeamLeader(
+                turno,
+                RETLIdentificado,
+                nomeTLIdentificado,
+                'TL',
+                nomeMaquina,
+                quantidadeEsperada,
+                "Produzindo",
+                produtoLE,
+                produtoLD,
+                produtoUnico
+            );
+
+            if (!respostaApontamento.sucesso) {
+                toastr.error(`Erro no apontamento de ${nomeMaquina}: ${respostaApontamento.mensagem}`);
+                return;
+            }
+
+            console.log(`Apontamento para ${nomeMaquina} realizado.`);
+            algumApontamentoFeito = true;
+        }
+
+        if (algumApontamentoFeito) {
+            toastr.success('Apontamentos realizados com sucesso!');
+            setTimeout(() => {
+                window.location.assign('/Linha 01/html/telaPrincipal.html');
+            }, 1000);
+        }
     });
+
+
+
 
     // --- INICIALIZAÇÃO DO RELÓGIO E DATA ---
     function exibirHorarioAtual() {

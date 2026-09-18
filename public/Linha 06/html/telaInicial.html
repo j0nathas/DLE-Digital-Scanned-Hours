@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Inicial - Apontamento</title>
+    <link rel="stylesheet" href="/Linha 06/css/telaInicial.css">
+    <link rel="stylesheet" href="/Linha 06/css/asideTeamLeader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="icon" href="/images/DLE-logo.png">
+</head>
+
+<body>
+    <header>
+        <div class="carrossel-container">
+            <div class="carrossel-inner" id="carrosselInner">
+                <div class="frase">Pense <strong class="grande">GRANDE</strong></div>
+                <div class="frase">Seja <strong class="colaborativo">COLABORATIVO</strong></div>
+                <div class="frase"><strong class="nunca">NUNCA</strong> se acomode</div>
+                <div class="frase">Assuma <strong class="responsabilidade">RESPONSABILIDADE</strong></div>
+            </div>
+        </div>
+    </header>
+    <main class="linha-e-logo">
+        <p class="texto horario" id="hora-atual">Hora Atual</p>
+        <img src="/images/magna-logo.png" alt="Ícone Magna" class="logo-magna" width="600">
+        <p class="texto linha" id="linha-producao"><strong>s.LA010st</strong></p>
+        <div class="guia">
+            <section class="guia-card">
+                <p class="guia-card-texto"> <strong>Team Leader:</strong> Aproxime o cartão de identificação do leitor
+                    para <strong>INICIAR</strong> a produção.</p>
+                <img src="/images/scanner.png" alt="" width="150" class="scanner-cartao">
+            </section>
+            <button class="btn-principal" id="btn-entrar-linha" style="display: none;">Produzir <img class="scanner-img"
+                    src="/images/entrar-producao.svg" width="25" alt=""> </button>
+        </div>
+    </main>
+
+    <div id="overlay" class="overlay"></div>
+
+    <aside id="aside-teamleader" class="aside-teamleader">
+        <section class="cabecalho-teamleader">
+            <div class="titulo-teamleader">
+                <h2 class="titulo-teamleader-texto" id="nome-usuario-modal">Bem-vindo!</h2>
+                <p class="titulo-teamleader-texto">Quais máquinas irão operar hoje?</p>
+            </div>
+            <button class="sair-teamleader" id="btn-sair-modal">
+                <img src="/images/close.svg" alt="Fechar" width="50">
+            </button>
+        </section>
+
+
+        <div class="overlay-lista"></div>
+
+
+        <div class="botoes-uaps-tl">
+
+            <nav class="botoes-uaps-tl-nav">
+                <button class="botoes-uaps-tl-botao" data-produto="s.LA010st" id="s.LA010st">Linha 06</button>
+
+                <section class="botoes-uaps-tl-guia">
+                    <div class="botoes-uaps-tl-guia-selecionados">
+                        <p class="botoes-uaps-tl-guia-selecionado"></p>
+                    </div>
+                    <img class="botoes-uaps-tl-guia-editar" src="/images/edit.svg" width="35" alt="">
+                </section>
+
+                <div class="botoes-uaps-tl-divlista">
+                    <section class="botoes-uaps-tl-divlista-pesquisa">
+                        <input class="pesquisa-produtos" type="text" id="pesquisa-produtos"
+                            placeholder="Busque pelo nome ou código do produto...">
+                        <img src="/images/close.svg" class="botoes-uaps-tl-divlista-pesquisa-sair" width="65" alt="">
+                    </section>
+
+                    <section class="botoes-uaps-tl-produtos">
+                    </section>
+
+                    <section class="area-branco"></section>
+                </div>
+
+
+                <section class="contador-confirmar-operadores">
+                    <p class="contador-confirmar-operadores-text">Quantidade de operadores:</p>
+                    <div class="contador-confirmar-operadores-ad-sub">
+                        <button class="contador-confirmar-scroll-diminuir">-</button>
+                        <span class="contador-confirmar-numero">1</span>
+                        <button id="aumentar" class="contador-confirmar-scroll-aumentar">+</button>
+                    </div>
+                </section>
+
+            </nav>
+
+
+
+
+        </div>
+
+        <!-- ID CORRETO AQUI -->
+        <div id="container-contador" class="container-contador">
+            <div class="contador">
+
+                <section class="contador-confirmar-area">
+                    <button id="btn-confirmar" class="contador-confirmar-botao"
+                        style="display: none;">Confirmar</button>
+                </section>
+            </div>
+        </div>
+    </aside>
+
+
+    <footer>
+        <p class="texto turno" id="turno-atual">Turno Atual</p>
+        <p class="texto data" id="data-atual">Data Atual</p>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script type="module" src="/Linha 06/js/telaInicial.js"></script>
+
+    <link rel="stylesheet" href="/toast/toastr-custom.css">
+
+</body>
+
+</html>

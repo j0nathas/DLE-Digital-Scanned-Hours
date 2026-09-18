@@ -892,7 +892,7 @@ GROUP BY
             const machinePlaceholders = machineIds.map((_, index) => `@machine${index}`).join(',');
             const plantaBanco = planta === 'MJN'
                 ? '[SERVIDOR_RH_JARINU].[mjn_dle].[dbo].[Users]'
-                : 'acesso.dbo.Users';
+                : 'controlid.dbo.Users';
 
             const request = pool.request();
             machineIds.forEach((id, index) => {
@@ -925,7 +925,7 @@ GROUP BY
                     FROM RankedApontamentos
                     WHERE rn = 1 
                     AND Status = 'Entrada'
-                    AND Linha = (${machinePlaceholders})
+                    AND Linha IN (${machinePlaceholders})
                     AND Planta = @planta
                 )
                 SELECT 

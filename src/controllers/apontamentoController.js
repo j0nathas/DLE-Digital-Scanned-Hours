@@ -892,7 +892,7 @@ GROUP BY
             const machinePlaceholders = machineIds.map((_, index) => `@machine${index}`).join(',');
             const plantaBanco = planta === 'MJN'
                 ? '[SERVIDOR_RH_JARINU].[mjn_dle].[dbo].[Users]'
-                : 'controlid.dbo.Users';
+                : 'acesso.dbo.Users';
 
             const request = pool.request();
             machineIds.forEach((id, index) => {

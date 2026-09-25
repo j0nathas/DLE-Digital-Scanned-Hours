@@ -1,0 +1,523 @@
+/* ==========================================================================
+   1. Variáveis e Estilos Base
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --fonte: "Inter", sans-serif;
+    --cor-principal: #333;
+    --cor-verde: #2ecc71;
+    --cor-verde-escuro: #27ae60;
+    --cor-borda: #dee2e6;
+    --cor-fundo-modal: #f8f9fa;
+    --cor-fundo-botao: #ffffff;
+    --cor-verde-btn: rgb(95, 235, 95);
+}
+
+html,
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: var(--fonte);
+    overflow: hidden;
+    /* Evita barras de rolagem indesejadas */
+    background-color: #ffffff;
+}
+
+/* ==========================================================================
+   2. Layout da Tela Principal
+   ========================================================================== */
+.linha-e-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.texto {
+    margin: 0;
+}
+
+.horario {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: rgb(77, 76, 76);
+    background-color: rgb(245, 245, 245);
+    border-radius: 30px;
+    padding: 16px;
+    box-shadow: 3px 3px 3px 5px rgb(228, 228, 228);
+}
+
+.linha {
+    font-size: 3rem;
+    margin-top: 1rem;
+}
+
+.turno {
+    font-size: 1.8rem;
+    color: #717272;
+    margin-top: 10px;
+}
+
+.teste-aside-teamleader {
+    margin-top: 1rem;
+    padding: 10px 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+header {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 10%;
+    align-self: center;
+    justify-self: center;
+}
+
+.carrossel-container {
+    width: 800px;
+    height: 60px;
+    overflow: hidden;
+    position: relative;
+}
+
+.carrossel-inner {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: transform 0.6s ease-in-out;
+}
+
+.frase {
+    font-size: 3em;
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+    text-shadow: 0px 0px 10px rgb(240, 240, 240);
+}
+
+.grande {
+    color: #e1cd00;
+}
+
+.colaborativo {
+    color: #84bd00;
+}
+
+.nunca {
+    color: #49c5b1;
+}
+
+.responsabilidade {
+    color: #cf4520;
+}
+
+footer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.data {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+.guia {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: auto;
+    bottom: 10%;
+}
+
+.guia-card {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 90%;
+    height: 300px;
+    background-color: rgb(245, 245, 245);
+    border-radius: 20px;
+    margin: 1.3rem 0 1.3rem 0;
+    font-size: 1.4rem;
+    box-shadow: 0px 0px 8px 5px rgb(235, 235, 235);
+}
+
+.guia-card-texto {
+    margin: 0 10px 0 5px;
+    width: 50%;
+}
+
+.btn-principal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 6vh;
+    width: 70%;
+    background-color: var(--cor-verde-btn);
+    border: var(--cor-verde-btn) solid 5px;
+    color: rgb(247, 247, 247);
+    border-radius: 20px;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    box-shadow: 0 0 10px 5px rgb(223, 223, 223);
+}
+
+
+/* ==========================================================================
+   3. Overlay e Modal
+   ========================================================================== */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none;
+    /* Controlado via JS */
+}
+
+.aside-teamleader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: auto;
+    max-width: 800px;
+    background-color: var(--cor-fundo-modal);
+    border-radius: 20px;
+    z-index: 1000;
+    display: none;
+    /* Controlado via JS */
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    /* Evita que o modal seja maior que a tela */
+}
+
+/* --- Cabeçalho do Modal --- */
+.cabecalho-teamleader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 1px solid var(--cor-borda);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.titulo-teamleader-texto:first-child {
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+.titulo-teamleader-texto:last-child {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.sair-teamleader {
+    all: unset;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* --- Corpo do Modal (Seleção de Produto) --- */
+.botoes-injetoras {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, auto);
+    overflow-x: hidden;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 50px 0 50px 0;
+}
+
+.botoes-injetoras-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.destaque-injetora {
+    color: rgb(0, 143, 0);
+    font-weight: bold;
+}
+
+.botoes-injetoras-botao {
+    all: unset;
+    box-sizing: border-box;
+    width: 220px;
+    height: 180px;
+    background-color: var(--cor-fundo-botao);
+    border-radius: 10px 10px 10px 10px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 200;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.botoes-injetoras-botao:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.botao-injetoras-selecionado {
+    border-color: var(--cor-verde);
+    color: var(--cor-verde-escuro);
+    background-color: #eafaf1;
+}
+
+/* --- Rodapé do Modal (Contador e Confirmação) --- */
+.container-contador {
+    width: 100%;
+    padding: 20px 30px;
+    background-color: var(--cor-fundo-botao);
+    border-top: 1px solid var(--cor-borda);
+    border-radius: 0 0 20px 20px;
+    box-sizing: border-box;
+    display: block;
+    /* Controlado via JS */
+}
+
+.text-contador-confimar {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.contador {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.selecionar-todas {
+    all: unset;
+    box-sizing: border-box;
+    width: 200px;
+    height: 105px;
+    background-color: var(--cor-fundo-botao);
+    border-radius: 10px 10px 10px 10px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+    width: max-content;
+}
+
+.contador-confirmar-operadores {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+    z-index: 100;
+    background-color: white;
+    padding: 10px 0 10px 0;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: 0px 10px 12px 0px rgba(0, 0, 0, 0.1);
+}
+
+.contador-confirmar-operadores-text {
+    padding: 0;
+    margin: 0;
+    font-size: 0.8rem;
+    color: gray;
+}
+
+.contador-confirmar-operadores-ad-sub {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+}
+
+
+.contador-confirmar-botao {
+    all: unset;
+    display: none;
+    padding: 40px 40px;
+    border-radius: 10px;
+    background-color: var(--cor-verde);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.contador-confirmar-botao:hover {
+    background-color: var(--cor-verde-escuro);
+}
+
+@media (min-width:1200px) {
+    .horario {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: rgb(77, 76, 76);
+        background-color: rgb(245, 245, 245);
+        border-radius: 30px;
+        padding: 16px;
+        box-shadow: 3px 3px 3px 5px rgb(228, 228, 228);
+    }
+
+    .guia {
+        bottom: 2%;
+    }
+
+    .guia-card {
+        width: 55%;
+        height: 150px;
+        background-color: rgb(245, 245, 245);
+        border-radius: 20px;
+        margin: 1.3rem 0 1.3rem 0;
+        font-size: 1rem;
+        box-shadow: 0px 0px 8px 5px rgb(235, 235, 235);
+    }
+
+    .logo-magna {
+        width: 300px;
+    }
+
+    .linha {
+        font-size: 2rem;
+        margin-top: 1rem;
+    }
+
+    .scanner-cartao {
+        width: 100px;
+    }
+
+    .data {
+        font-size: 1.2rem;
+        font-weight: 300;
+    }
+
+    .turno {
+        font-size: 1.3rem;
+    }
+
+    .linha {
+        margin-bottom: 4rem;
+    }
+
+    .carrossel-container {
+        width: 800px;
+        height: 60px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .carrossel-inner {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .frase {
+        font-size: 2em;
+        text-align: center;
+        height: 60px;
+        line-height: 60px;
+        text-shadow: 0px 0px 10px rgb(240, 240, 240);
+    }
+
+    .cabecalho-teamleader {
+        padding: 15px 30px;
+        width: 100%;
+    }
+
+    .titulo-teamleader-texto:first-child {
+        font-size: 1.8rem;
+    }
+
+    .titulo-teamleader-texto:last-child {
+        font-size: 1.1rem;
+    }
+
+    .botoes-injetoras {
+        gap: 50px;
+        height: 30vh;
+        padding: 40px 30px;
+    }
+
+    .botoes-injetoras-botao {
+        width: 220px;
+        height: 150px;
+        font-size: 1.1rem;
+    }
+
+    .contador-confirmar-operadores {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .contador-confirmar-scroll {
+        width: 6rem;
+        height: 6rem;
+        font-size: 2.5rem;
+    }
+
+    .contador-confirmar-numero {
+        font-size: 3rem;
+    }
+
+    .contador-confirmar-botao {
+        padding: 30px 30px;
+        font-size: 1rem;
+    }
+
+
+}

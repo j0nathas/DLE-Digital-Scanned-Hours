@@ -3,14 +3,14 @@ import { IpMonitor } from '/js/leituraCartao.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const maquinas = ['s.I25h3k1000', 's.I23h3k1000',
-        's.I27h2k1000', 's.I30h2k1700', 's.I31h2k1000', 's.I33h2k1000'];
+    const maquinas = ['s.I16h1k200', 's.I02h1k200', 's.I10h1k220',
+        's.I17h1k220', 's.I20h1k320', 's.I13h1k320', 's.I28h1k320'];
 
     for (const linha of maquinas) {
         verificarStatusDaLinha(linha).then(status => {
             if (status === 'Produzindo') {
                 console.log(`A linha ${linha} já está produzindo! Redirecionando...`);
-                window.location.href = '/Injecao/html/telaPrincipal.html';
+                window.location.href = '/Injecao_3/html/telaPrincipal.html';
             } else {
                 console.log(`A linha ${linha} já está produzindo! Redirecionando...`);
             }
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        window.location.href = '/Injecao/html/telaPrincipal.html';
+        window.location.href = '/Injecao_3/html/telaPrincipal.html';
     });
 
 

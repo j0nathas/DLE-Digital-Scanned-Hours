@@ -9,6 +9,13 @@ const SERVIDORES_POR_PLANTA = {
     // adicione outras plantas aqui
 };
 
+const MACHINE_GROUP_MAP = {
+    's.la01st & s.la02st': ['s.LA01st', 's.LA02st'],
+    's.la03gm & s.la04gm': ['s.LA03gm', 's.LA04gm'],
+    's.la05gm & s.la06gm': ['s.LA05gm', 's.LA06gm'],
+    's.la07re & s.la08re': ['s.LA07re', 's.LA08re'],
+};
+
 const validarLinhaEProduto = async (linha, prod_LE, prod_LD, prod_Unico) => {
     try {
         const pool = await poolPromiseAcessos;
@@ -878,27 +885,35 @@ GROUP BY
         try {
             pool = await poolPromiseControlId;
 
-            const decodedMachineId = decodeURIComponent(machineId).trim();
-            const normalizedMachineId = decodedMachineId.toLowerCase();
+            const identificadoresSolicitados = decodeURIComponent(machineId)
+                .split(',')
+                .map((id) => id.trim())
+                .filter(Boolean);
 
-            const machineGroupMap = {
-                's.la01st & s.la02st': ['s.LA01st', 's.LA02st'],
-                's.la03gm & s.la04gm': ['s.LA03gm', 's.LA04gm'],
-                's.la05gm & s.la06gm': ['s.LA05gm', 's.LA06gm'],
-                's.la07re & s.la08re': ['s.LA07re', 's.LA08re']
-            };
+            if (identificadoresSolicitados.length === 0) {
+                return res.status(400).json({ error: 'Nenhuma máquina informada' });
+            }
 
-            const machineIds = machineGroupMap[normalizedMachineId] || [decodedMachineId];
-            const machinePlaceholders = machineIds.map((_, index) => `@machine${index}`).join(',');
+            const linhasPorIdentificador = new Map();
+            const identificadorPorLinha = new Map();
+
+            for (const identificador of identificadoresSolicitados) {
+                const linhas = MACHINE_GROUP_MAP[identificador.toLowerCase()] || [identificador];
+                linhasPorIdentificador.set(identificador, linhas);
+                linhas.forEach((linha) => identificadorPorLinha.set(linha.toUpperCase(), identificador));
+            }
+
+            const todasAsLinhas = [...identificadorPorLinha.keys()];
+            const machinePlaceholders = todasAsLinhas.map((_, index) => `@machine${index}`).join(',');
+
             const plantaBanco = planta === 'MJN'
                 ? '[SERVIDOR_RH_JARINU].[mjn_dle].[dbo].[Users]'
-                : 'acesso.dbo.Users';
+                : 'controlid.dbo.Users';
 
             const request = pool.request();
-            machineIds.forEach((id, index) => {
-                request.input(`machine${index}`, sql.VarChar, id);
+            todasAsLinhas.forEach((linha, index) => {
+                request.input(`machine${index}`, sql.VarChar, linha);
             });
-
             request.input('planta', sql.VarChar, planta);
 
             const result = await request.query(`
@@ -920,6 +935,7 @@ GROUP BY
                         ID,
                         RE,
                         Pessoa,
+                        Linha,
                         TurnoApontado,
                         DataHora AS DataHoraEntrada
                     FROM RankedApontamentos
@@ -931,6 +947,7 @@ GROUP BY
                 SELECT 
                     oa.RE,
                     oa.Pessoa,
+                    oa.Linha,
                     oa.TurnoApontado,
                     oa.DataHoraEntrada,
                     u.Cracha,
@@ -954,18 +971,28 @@ GROUP BY
                 ) u 
                     ON LTRIM(RTRIM(CAST(oa.RE AS VARCHAR))) = LTRIM(RTRIM(u.Cracha))
                 AND u.rn_user = 1
-
                 ORDER BY oa.Pessoa;
-        `);
+            `);
 
-            res.json(result.recordset);
+            const resultadoAgrupado = {};
+            identificadoresSolicitados.forEach((identificador) => {
+                resultadoAgrupado[identificador] = [];
+            });
+
+            result.recordset.forEach((row) => {
+                const identificador = identificadorPorLinha.get((row.Linha || '').toUpperCase());
+                if (identificador) {
+                    resultadoAgrupado[identificador].push(row);
+                }
+            });
+
+            res.json(resultadoAgrupado);
 
         } catch (err) {
-            console.error(`[CONTROLLER ERROR] Erro ao buscar operadores para a máquina ${machineId}:`);
+            console.error(`[CONTROLLER ERROR] Erro ao buscar operadores para a(s) máquina(s) ${machineId}:`);
             console.error('Mensagem:', err.message);
             console.error('Stack:', err.stack);
-            console.error('Objeto completo:', JSON.stringify(err, null, 2));
-            res.status(500).json({ error: err.message }); // ← retorna o erro real para o frontend também
+            res.status(500).json({ error: err.message });
         }
     },
     /*******************************************************/

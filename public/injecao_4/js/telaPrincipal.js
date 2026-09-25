@@ -79,8 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let RETLIdentificado = null;
 
 
-    const maquinas = ['s.I25h3k1000', 's.I23h3k1000',
-        's.I27h2k1000', 's.I30h2k1700', 's.I31h2k1000', 's.I33h2k1000'];
+    const maquinas = ['s.I14h1k160', 's.I15h1k140', 's.I18h1k220', 's.I19h1k220', 's.I06h1k150', 's.I07h1k150', 's.I01h1k160'];
 
 
 

@@ -1,6 +1,6 @@
 import { apontamentoTeamLeader, verificarStatusDaLinha } from '/js/funcoes.js';
 import { IpMonitor } from '/js/leituraCartao.js';
-import { apontamentoConfirmarBtn, maquinas } from '/injecao_small/js/asideTeamLeader.js';
+import { apontamentoConfirmarBtn, maquinas } from '/injecao_5/js/asideTeamLeader.js';
 
 
 
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         verificarStatusDaLinha(linha).then(status => {
             if (status === 'Produzindo') {
                 console.log(`A linha ${linha} já está produzindo! Redirecionando...`);
-                window.location.href = '/injecao_small/html/telaPrincipal.html';
+                window.location.href = '/injecao_5/html/telaPrincipal.html';
             } else {
                 console.log(`A linha ${linha} já está produzindo! Redirecionando...`);
             }
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             null
         );
 
-        window.location.href = '/injecao_small/html/telaPrincipal.html';
+        window.location.href = '/injecao_5/html/telaPrincipal.html';
     });
 
 

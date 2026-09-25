@@ -793,7 +793,7 @@ li {
     box-sizing: border-box;
     text-align: center;
     width: 100%;
-    height: 5.31%;
+    height: 14%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -813,7 +813,7 @@ li {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 11.62%;
+    height: 28%;
     gap: 11.62%;
 }
 

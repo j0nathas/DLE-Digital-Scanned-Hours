@@ -1,9 +1,8 @@
 import { apontamentoTeamLeader, verificarStatusDaLinha } from '/js/funcoes.js';
 /* import { btnConfirmar } from '/injecao_small/js/telaInicial.js'; */
 
-export const maquinas = ['s.I01h1k160', 's.I02h1k200', 's.I03h1k100', 's.I03h1k100_s.I09h1k86', 's.I04h1k120', 's.I05h1k65', 's.I05h1k65_s.I08h1k65',
-    's.I06h1k150', 's.I07h1k150', 's.I08h1k65', 's.I09h1k86', 's.I10h1k220', 's.I11h1k120', 's.I11h1k120_s.I12h1k120', 's.I12h1k120', 's.I13h1k320', 's.I14h1k160',
-    's.I15h1k140', 's.I16h1k200', 's.I17h1k220', 's.I18h1k220', 's.I19h1k220', 's.I20h1k320', 's.I28h1k320'];
+export const maquinas = ['s.I03h1k100', 's.I03h1k100_s.I09h1k86', 's.I04h1k120', 's.I05h1k65', 's.I05h1k65_s.I08h1k65',
+    's.I08h1k65', 's.I09h1k86', 's.I11h1k120', 's.I11h1k120_s.I12h1k120', 's.I12h1k120'];
 
 toastr.options = {
     "closeButton": true,

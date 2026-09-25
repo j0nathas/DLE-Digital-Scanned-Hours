@@ -1,6 +1,6 @@
 import { apontamentoOperador, apontamentoTeamLeader, registrarSaidaAutomaticaParaLinha } from '/js/funcoes.js';
 import { agendarOperadores, carregarOperadores } from '/js/statusOp.js';
-import { apontamentoConfirmarBtn, fecharModal, maquinas, gruposInjetorasDupla, encontrarOriginais, gruposInjetoras } from '/injecao_small/js/asideTeamLeader.js';
+import { apontamentoConfirmarBtn, fecharModal, maquinas, gruposInjetorasDupla, encontrarOriginais, gruposInjetoras } from '/injecao_5/js/asideTeamLeader.js';
 import { IpMonitor } from '/js/leituraCartao.js';
 
 

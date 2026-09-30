@@ -18,7 +18,6 @@ const PORT = process.env.PORT || 3000;
 require('./config/db');
 
 const apontamentoRoutes = require('./routes/apontamentoRoutes');
-const gestaoRoutes = require('./routes/gestaoRoutes');
 
 // =========================================================
 // === MIDDLEWARES E CONFIGURAÇÕES =========================
@@ -54,7 +53,6 @@ app.set('layout', 'layout');
 // === USO DAS ROTAS DA API ================================
 // =========================================================
 app.use('/api/apontamentos', apontamentoRoutes);
-app.use('/api/gestao', gestaoRoutes);
 
 // =========================================================
 // === ROTAS DE PÁGINAS HTML (FRONT-END ANTIGO) ============
@@ -87,60 +85,6 @@ app.get('/j.FA01_j.FA02/telaInicial.html', (req, res) => res.sendFile(path.join(
 app.get('/J.FA01_02_03_04/telaPrincipal.html', (req, res) => res.sendFile(path.join(__dirname, '..', 'public-JRN', 'J.FA01_02_03_04', 'html', 'telaInicial.html')));
 app.get('/J.FA01_02_03_04/telaPrincipal.html', (req, res) => res.sendFile(path.join(__dirname, '..', 'public-JRN', 'J.LA01_02_03_04', 'html', 'telaInicial.html')));
 app.get('/j.FA01vw_j.FA02vw/telaPrincipal.html', (req, res) => res.sendFile(path.join(__dirname, '..', 'public-JRN', 'j.FA01_j.FA02', 'html', 'telaPrincipal.html')));
-
-// =========================================================
-// === ROTAS DE PÁGINAS DE GESTÃO (EJS) ====================
-// =========================================================
-const requireLogin = (req, res, next) => {
-    if (!req.session.userId) {
-        return res.redirect('/gestao/login');
-    }
-    next();
-};
-
-// --- Páginas Públicas de Gestão ---
-app.get('/gestao/login', (req, res) => {
-    res.render('login', { layout: false });
-});
-app.get('/gestao/register', (req, res) => { res.render('register', { layout: false }); });
-app.get('/gestao/forgot-password', (req, res) => { res.render('forgot-password', { layout: false }); });
-app.get('/gestao/reset-password', (req, res) => { res.render('reset-password', { token: req.query.token, layout: false }); });
-
-// --- Páginas Protegidas de Gestão ---
-app.get('/gestao/selecao', requireLogin, (req, res) => {
-    res.render('selecao', {
-        title: 'Seleção de Unidades',
-        userName: req.session.userName,
-        userCargo: req.session.userCargo,
-        plantaId: null
-    });
-});
-app.get('/gestao/gestao-maquinas', requireLogin, (req, res) => {
-    res.render('gestao-maquinas', {
-        title: 'Gestão de Máquinas',
-        plantaId: req.query.planta,
-        userName: req.session.userName,
-        userCargo: req.session.userCargo // << CONFIRME QUE ESTA LINHA EXISTE
-    });
-});
-
-app.get('/gestao/indicadores', requireLogin, (req, res) => {
-    res.render('indicadores', {
-        title: 'Dashboard de Indicadores',
-        title: 'Dashboard de Indicadores',
-        userName: req.session.userName,
-        userCargo: req.session.userCargo,
-        plantaId: req.query.planta
-    });
-});
-app.get('/gestao/dashboard-tempo', requireLogin, (req, res) => {
-    res.render('tempo-dashboard', {
-        title: 'Dashboard de Tempo',
-        userName: req.session.userName,
-        userCargo: req.session.userCargo,
-        plantaId: req.query.planta
-    });
-});
 
 // =========================================================
 // === INICIALIZAÇÃO DO SERVIDOR ===========================

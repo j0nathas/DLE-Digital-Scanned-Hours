@@ -668,7 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const API_BASE_URL = '/api';
-    const IP_ALVO_MONITORADO = '10.109.133.242'; //241
+    const IP_ALVO_MONITORADO = '10.109.140.38'; //241
 
     const monitor = new IpMonitor(IP_ALVO_MONITORADO, API_BASE_URL, ["TL", "MOD"], 1000);
     monitor.startMonitoring();

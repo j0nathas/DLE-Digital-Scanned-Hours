@@ -908,7 +908,7 @@ GROUP BY
 
             const plantaBanco = planta === 'MJN'
                 ? '[SERVIDOR_RH_JARINU].[mjn_dle].[dbo].[Users]'
-                : 'acesso.dbo.Users';
+                : process.env.DB_DATABASE + '.dbo.Users';
 
             const request = pool.request();
             todasAsLinhas.forEach((linha, index) => {

@@ -1,6 +1,7 @@
 import { apontamentoOperador, apontamentoTeamLeader, registrarSaidaAutomaticaParaLinha, verificarStatusDaLinha } from '/js/funcoes.js';
 import { agendarOperadores, carregarOperadores } from '/js/statusOp.js';
 import { IpMonitor } from '/js/leituraCartao.js';
+import { atualizarApontadosEGA, atualizarCadastradosEGA } from '/js/apontamentoEGA.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -34,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-
+    const maquinas = ['s.LA010st'];
+    const maquinasApontamento = ['s.LA010st'];
 
 
     // --- ELEMENTOS PRINCIPAIS DA TELA ---
@@ -64,9 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let pollingInterval;
     let modalAberto = false;
     let produtoSelecionado = null;
-
-    const maquinas = ['s.LA010st'];
-    const maquinasApontamento = ['s.LA010st'];
+    let valorEsperado = 0;
 
     for (const linha of maquinas) {
         verificarStatusDaLinha(linha).then(status => {
@@ -76,6 +76,90 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+
+    let apontadosEGA = 0;
+    let cadastradosEGA = 0;
+
+    const apontadosEGAelement =
+        document.getElementById(`apontados-${maquinas[0]}`);
+
+    const cadastradosEGAelement =
+        document.getElementById(`cadastrados-${maquinas[0]}`);
+
+    async function atualizarEsperadoEGA() {
+        try {
+            cadastradosEGA =
+                await atualizarCadastradosEGA(
+                    maquinasApontamento
+                ) || 0;
+
+            cadastradosEGAelement.textContent = cadastradosEGA;
+        } catch (error) {
+            console.error('Erro ao atualizar esperado EGA:', error);
+        }
+
+    }
+
+    atualizarEsperadoEGA();
+
+
+    async function atualizarContagemEGA() {
+        try {
+
+            apontadosEGA =
+                await atualizarApontadosEGA(
+                    maquinasApontamento
+                ) || 0;
+
+            apontadosEGAelement.textContent = apontadosEGA;
+
+            atualizarCorEGA();
+
+        } catch (error) {
+            console.error('Erro ao atualizar contagens EGA:', error);
+        }
+    }
+
+    const mensagemEGA = document.querySelector('.metas-extras > .meta-item > .meta-tag');
+
+    function atualizarCorEGA() {
+
+
+        if (valorEsperado === 0) {
+            apontadosEGAelement.style.color = 'gray';
+            mensagemEGA.textContent = '';
+        } else if (apontadosEGA <= 1) {
+            apontadosEGAelement.style.color = 'rgb(209, 0, 0)';
+            mensagemEGA.textContent = 'NÃO APONTADO';
+            mensagemEGA.style.backgroundColor = 'rgb(255, 171, 171)';
+            mensagemEGA.style.color = 'rgb(209, 0, 0)';
+
+        } else if (apontadosEGA === valorEsperado) {
+            mensagemEGA.textContent = 'OK';
+            mensagemEGA.style.color = 'rgb(0, 128, 0)';
+            mensagemEGA.style.backgroundColor = 'rgb(188, 255, 188)';
+            apontadosEGAelement.style.color = 'rgb(0, 128, 0)';
+
+        } else if (apontadosEGA < valorEsperado || apontadosEGA > valorEsperado) {
+            console.log("Amarelo")
+            mensagemEGA.textContent = 'EGA DIFERENTE DO DLE';
+            mensagemEGA.style.backgroundColor = 'rgb(255, 244, 197)';
+            mensagemEGA.style.color = 'rgb(209, 171, 0)';
+
+            apontadosEGAelement.style.color = 'rgb(209, 171, 0)';
+
+        } else {
+            mensagemEGA.textContent = 'EGA MENOR QUE DLE';
+            mensagemEGA.style.color = 'rgb(0,128, 255)';
+            mensagemEGA.style.backgroundColor = 'rgb(209, 171, 0)';
+            apontadosEGAelement.style.color = 'rgb(0, 128, 255)';
+        }
+    }
+
+    setInterval(atualizarContagemEGA, 60000);
+
+
 
     async function atualizarEsperadoEColorirLinhas() {
         const API_URL = '/api/apontamentos/getesperados';
@@ -92,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (const maquina of maquinas) {
                 const esperadoObj = dados[`esperado${maquina}`] || {};
-                const valorEsperado = Number(esperadoObj.esperado) || 0;
+                valorEsperado = Number(esperadoObj.esperado) || 0;
                 const esperadosZero = valorEsperado === 0;
 
                 const formatadoApontamentoTL = maquina.split("_")[0];
@@ -204,6 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 card.style.color = novaCor;
             });
+
+            await atualizarContagemEGA();
 
 
         } catch (error) {
@@ -327,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const API_BASE_URL = '/api';
-    const IP_ALVO_MONITORADO = '10.109.140.46'; //227
+    const IP_ALVO_MONITORADO = '10.109.140.46'; //10.109.140.46
 
     const monitor = new IpMonitor(IP_ALVO_MONITORADO, API_BASE_URL, ["TL", "MOD"], 1000);
     monitor.startMonitoring();
@@ -630,7 +716,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             window.location.assign("/Linha 06/html/telaInicial.html");
         }, 1500);
-
     });
 
     // --- INICIALIZAÇÃO DA PÁGINA ---

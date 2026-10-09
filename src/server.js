@@ -18,6 +18,7 @@ const PORT = process.env.PORT || 3000;
 require('./config/db');
 
 const apontamentoRoutes = require('./routes/apontamentoRoutes');
+const egaRoutes = require('./routes/contagemEGARoutes');
 
 // =========================================================
 // === MIDDLEWARES E CONFIGURAÇÕES =========================
@@ -53,6 +54,7 @@ app.set('layout', 'layout');
 // === USO DAS ROTAS DA API ================================
 // =========================================================
 app.use('/api/apontamentos', apontamentoRoutes);
+app.use('/ega', egaRoutes);
 
 // =========================================================
 // === ROTAS DE PÁGINAS HTML (FRONT-END ANTIGO) ============

@@ -1,0 +1,126 @@
+/* O card principal deixa de ter cantos arredondados embaixo,
+   pois agora a faixa de metas fecha o card */
+.cards-Operadores {
+    border-radius: 0;
+    height: auto;
+    flex: 1;
+}
+
+/* --- FAIXA DE METAS INFORMATIVAS --- */
+.metas-extras {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 0 0 20px 20px;
+    border-top: 1px solid rgb(235, 235, 235);
+    overflow: hidden;
+}
+
+.meta-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 14px 10px 18px;
+}
+
+.meta-item+.meta-item {
+    border-left: 1px solid rgb(235, 235, 235);
+}
+
+.meta-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: rgb(110, 110, 110);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.meta-valor {
+    margin: 0;
+    font-size: 3.5rem;
+    font-weight: 600;
+    line-height: 1;
+    color: rgb(60, 60, 60);
+}
+
+/* valor que muda: leve destaque em azul */
+.meta-valor-ihm {
+    color: rgb(30, 110, 200);
+}
+
+/* valor fixo: mais discreto */
+.meta-item-fixo .meta-valor {
+    color: rgb(140, 140, 140);
+}
+
+.meta-tag {
+    margin-top: 6px;
+    padding: 2px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(130, 130, 130);
+    background-color: rgb(240, 240, 240);
+    border-radius: 20px;
+}
+
+/* indicador "ao vivo" */
+.meta-live {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: pulso 1.8s ease-in-out infinite;
+}
+
+.meta-live-red {
+    background-color: rgb(200, 30, 30);
+}
+
+.meta-live-blue {
+    background-color: rgb(30, 110, 200);
+}
+
+.meta-live-green {
+    background-color: rgb(30, 110, 200);
+}
+
+
+
+
+@keyframes pulso {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.35;
+        transform: scale(0.75);
+    }
+}
+
+/* telas ≥ 1200px (mesmo breakpoint que você já usa) */
+@media (min-width: 1200px) {
+    .meta-label {
+        font-size: 0.85rem;
+    }
+
+    .meta-valor {
+        font-size: 2.4rem;
+    }
+
+    .meta-item {
+        padding: 10px 8px 14px;
+    }
+}
